@@ -15,19 +15,19 @@
 #
 #
 # Phantom App imports
-import phantom.app as phantom
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
-from taniumrest_consts import *
-
 import ast
+import json
 import os
 import sys
-import requests
-import json
 from time import sleep
-from bs4 import BeautifulSoup
-from bs4 import UnicodeDammit
+
+import phantom.app as phantom
+import requests
+from bs4 import BeautifulSoup, UnicodeDammit
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
+
+from taniumrest_consts import *
 
 
 class RetVal(tuple):
@@ -1196,8 +1196,9 @@ class TaniumRestConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
