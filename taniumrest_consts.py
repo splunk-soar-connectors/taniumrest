@@ -25,12 +25,14 @@ TANIUMREST_GET_SAVED_QUESTION = "/api/v2/saved_questions/by-name/{saved_question
 TANIUMREST_GET_SENSOR_BY_NAME = "/api/v2/sensors/by-name/{sensor_name}"
 TANIUMREST_GET_SAVED_QUESTION_RESULT = "/api/v2/result_data/saved_question/{saved_question_id}"
 WAIT_SECONDS = 5
-TANIUMREST_RESULTS_UNAVAILABLE = ["[current results unavailable]", "[current result unavailable]", "[results currently unavailable]"]
+TANIUMREST_RESULTS_UNAVAILABLE = ["[current results unavailable]", "[current result unavailable]",
+                                  "[results currently unavailable]"]
 
 # Constants relating to 'get_error_message_from_exception'
 ERR_CODE_MSG = "Error code unavailable"
 ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
-TYPE_ERR_MSG = "Error occurred while connecting to the Tanium Server. Please check the asset configuration and|or action parameters"
+TYPE_ERR_MSG = "Error occurred while connecting to the Tanium Server. "\
+               "Please check the asset configuration and|or action parameters"
 
 # Constants relating to 'validate_integer'
 INVALID_INT_ERR_MSG = "Please provide a valid integer value in the {}"
