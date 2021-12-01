@@ -83,7 +83,7 @@ class TaniumRestConnector(BaseConnector):
                     error_code = TANIUMREST_ERR_CODE_MSG
                     error_msg = e.args[0]
         except Exception:
-            self.debug_print("Error occurred while retriving exception information")
+            self.debug_print("Error occurred while retrieving exception information")
             pass
 
         try:
