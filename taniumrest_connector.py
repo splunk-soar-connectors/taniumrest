@@ -84,7 +84,6 @@ class TaniumRestConnector(BaseConnector):
                     error_msg = e.args[0]
         except Exception:
             self.debug_print("Error occurred while retrieving exception information")
-            pass
 
         try:
             error_msg = self._handle_py_ver_compat_for_input_str(error_msg)
@@ -996,7 +995,7 @@ class TaniumRestConnector(BaseConnector):
             if 'sensor' in obj:
                 success, obj['sensor'] = self._create_sensor_dict(action_result, obj["sensor"], param_list)
                 if not success:
-                    raise
+                    raise Exception("Error occurred during creation of sensor dictionary")
             else:
                 return {k: self._sanitize_sensors(action_result, v, param_list) for k, v in obj.items()}
         return obj
