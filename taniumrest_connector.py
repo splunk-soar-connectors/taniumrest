@@ -404,8 +404,7 @@ class TaniumRestConnector(BaseConnector):
         # Add the response into the data section
         for question in response.get("data", []):
 
-            if question.get("id") and not param.get('list_saved_questions', False) \
-                    and question.get('query_text') not in question_list:
+            if question.get("id") and not param.get('list_saved_questions', False) and question.get('query_text') not in question_list:
                 question_list.append(question.get('query_text'))
                 action_result.add_data(question)
 
@@ -674,8 +673,7 @@ class TaniumRestConnector(BaseConnector):
                          wait_for_results_processing=None, return_when_n_results_available=None,
                          wait_for_n_results_available=None):
 
-        max_range = int(timeout_seconds / TANIUMREST_WAIT_SECONDS) + \
-            (1 if timeout_seconds % TANIUMREST_WAIT_SECONDS == 0 else 2)
+        max_range = int(timeout_seconds / TANIUMREST_WAIT_SECONDS) + (1 if timeout_seconds % TANIUMREST_WAIT_SECONDS == 0 else 2)
 
         for i in range(1, max_range):
             if timeout_seconds > TANIUMREST_WAIT_SECONDS:
@@ -728,7 +726,7 @@ class TaniumRestConnector(BaseConnector):
                     continue
                 elif int(percentage_returned) < int(results_percentage):
                     self.debug_print("Tanium question ID {} is {}% done out of {}%. Fetching more results . . ."
-                        .format(question_id, percentage_returned, results_percentage))
+                                     .format(question_id, percentage_returned, results_percentage))
                     continue
                 # else: return results if `columns` field present
             else:
@@ -737,11 +735,11 @@ class TaniumRestConnector(BaseConnector):
             # reformat response data to simplify data path
             if data.get("result_sets", [])[0].get("columns"):
                 rows = data.get("result_sets")[0].get("rows")
-                for i in range(len(rows)):
+                for j in range(len(rows)):
                     formatted = []
-                    for item in rows[i].get("data"):
+                    for item in rows[j].get("data"):
                         formatted.append(item[0])
-                    response["data"]["result_sets"][0]["rows"][i]["data"] = formatted
+                    response["data"]["result_sets"][0]["rows"][j]["data"] = formatted
                 return response
 
         else:
@@ -894,8 +892,7 @@ class TaniumRestConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        if return_when_n_results_available and wait_for_n_results_available \
-                and return_when_n_results_available < wait_for_n_results_available:
+        if return_when_n_results_available and wait_for_n_results_available and return_when_n_results_available < wait_for_n_results_available:
             return action_result.set_status(
                 phantom.APP_ERROR,
                 "Please provide 'return_when_n_results_available' greater than or equal to 'wait_for_n_results_available'")
@@ -988,16 +985,26 @@ class TaniumRestConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _sanitize_sensors(self, action_result, obj, param_list):
+    def _load_full_sensors_to_obj(self, action_result, obj, param_list):
+        """
+        This method recursively replaces the sensor dictionary to valid key-value mapping
+
+        :param action_result: Object of action result
+        :param obj: Object to sanitize
+        :param param_list: Parameter list contains values for the mapping
+        :return: obj: Valid sanitized object for ask question
+        """
+
         if isinstance(obj, list):
-            return [self._sanitize_sensors(action_result, item, param_list) for item in obj]
+            return [self._load_full_sensors_to_obj(action_result, item, param_list) for item in obj]
         if isinstance(obj, dict):
             if 'sensor' in obj:
+                # Process the sensor dictionary and replace in the original object
                 success, obj['sensor'] = self._create_sensor_dict(action_result, obj["sensor"], param_list)
                 if not success:
                     raise Exception("Error occurred during creation of sensor dictionary")
             else:
-                return {k: self._sanitize_sensors(action_result, v, param_list) for k, v in obj.items()}
+                return {k: self._load_full_sensors_to_obj(action_result, v, param_list) for k, v in obj.items()}
         return obj
 
     def _parameterize_query(self, query, action_result):
@@ -1017,7 +1024,7 @@ class TaniumRestConnector(BaseConnector):
             question_data["group"] = query["group"]
 
         try:
-            question_data = self._sanitize_sensors(action_result, question_data, param_list)
+            question_data = self._load_full_sensors_to_obj(action_result, question_data, param_list)
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
             self.debug_print(
@@ -1033,6 +1040,15 @@ class TaniumRestConnector(BaseConnector):
         return question_data
 
     def _create_sensor_dict(self, action_result, sensor, param_list):
+        """
+        This method fetches parameter definition for the provided sensor and creates key-value mapping
+
+        :param action_result: Object of action result
+        :param sensor: Sensor object to create key-value mapping
+        :param param_list: Parameter list contains values for the mapping
+        :return: obj: Valid sanitized object for provided sensor
+        """
+
         sensor_name = sensor["name"]
         endpoint = TANIUMREST_GET_SENSOR_BY_NAME.format(sensor_name=sensor_name)
         ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify)
@@ -1056,41 +1072,41 @@ class TaniumRestConnector(BaseConnector):
         try:
             if raw_parameter_definition:
                 parameter_definition = json.loads(raw_parameter_definition)
+
+            if not parameter_definition:
+                # Regular Sensor, can use as-is
+                return phantom.APP_SUCCESS, sensor
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
             error_msg = "Error while parsing the 'parameter_definition'. Error Code: {0}. Error Message: {1}".format(
                 error_code, error_msg)
             return action_result.set_status(phantom.APP_ERROR, error_msg), {}
 
-        param_count = 0
-        if parameter_definition:
-            # Parameterized Sensor
-            parameter_keys = [parameter["key"] for parameter in parameter_definition["parameters"]]
-            self.save_progress("Parameter Keys:\n{}".format(json.dumps(parameter_keys)))
-            param_count += len(parameter_keys)
-            parameters = []
+        # Parameterized Sensor
+        parameter_keys = [parameter["key"] for parameter in parameter_definition["parameters"]]
+        self.save_progress("Parameter Keys:\n{}".format(json.dumps(parameter_keys)))
+        parameters = []
 
-            for key in parameter_keys:
-                if self._param_idx >= len(param_list):
-                    action_result.set_status(phantom.APP_ERROR, TANIUMREST_NOT_ENOUGH_PARAMS)
-                    return
+        # Map all the keys with the respective value from parma_list
+        for key in parameter_keys:
+            if self._param_idx >= len(param_list):
+                action_result.set_status(phantom.APP_ERROR, TANIUMREST_NOT_ENOUGH_PARAMS)
+                return
 
-                parameter = {
-                    "key": "||%s||" % key,
-                    "value": param_list[self._param_idx]
-                }
-                parameters.append(parameter)
-                self._param_idx += 1
-
-            sensor_dict = {
-                "source_hash": sensor["hash"],
-                "name": sensor_name,
-                "parameters": parameters
+            parameter = {
+                "key": "||%s||" % key,
+                "value": param_list[self._param_idx]
             }
-            return phantom.APP_SUCCESS, sensor_dict
-        else:
-            # Regular Sensor, can use as-is
-            return phantom.APP_SUCCESS, sensor
+            parameters.append(parameter)
+            self._param_idx += 1
+
+        # Create a new sensor dictionary with valid format
+        sensor_dict = {
+            "source_hash": sensor["hash"],
+            "name": sensor_name,
+            "parameters": parameters
+        }
+        return phantom.APP_SUCCESS, sensor_dict
 
     def _parse_manual_question(self, query_text, action_result, group_name=None):
         # Prepare data dict for posting to /questions
@@ -1164,8 +1180,8 @@ class TaniumRestConnector(BaseConnector):
         # config = self.get_config()
         if timeout_seconds:
             data['expire_seconds'] = timeout_seconds
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_GET_QUESTIONS,
-            verify=self._verify, params=None, headers=None, json=data, method="post")
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_GET_QUESTIONS, verify=self._verify, params=None, headers=None, json=data, method="post")
 
         if phantom.is_fail(ret_val):
             action_result.set_status(phantom.APP_ERROR, "Question post failed")
@@ -1297,13 +1313,13 @@ if __name__ == '__main__':
     username = args.username
     password = args.password
 
-    if (username is not None and password is None):
+    if username is not None and password is None:
 
         # User specified a username but not a password, so ask
         import getpass
         password = getpass.getpass("Password: ")
 
-    if (username and password):
+    if username and password:
         try:
             login_url = '{}/login'.format(TaniumRestConnector._get_phantom_base_url())
 
@@ -1335,7 +1351,7 @@ if __name__ == '__main__':
         connector = TaniumRestConnector()
         connector.print_progress_message = True
 
-        if (session_id is not None):
+        if session_id is not None:
             in_json['user_session_token'] = session_id
             connector._set_csrf_info(csrftoken, headers['Referer'])
 
