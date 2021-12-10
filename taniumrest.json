@@ -12,9 +12,9 @@
     "python_version": "3",
     "license": "Copyright (c) 2019-2021 Splunk Inc.",
     "latest_tested_versions": [
-        "Build (Windows): 7.3.314.4269 | Console: 1.3.3.0150"
+        "Build (Windows): 7.5.2.3503 | Console: 3.0.64"
     ],
-    "app_version": "2.0.2",
+    "app_version": "2.1.0",
     "utctime_updated": "2021-11-10T18:51:06.000000Z",
     "package_name": "phantom_taniumrest",
     "main_module": "taniumrest_connector.py",
@@ -27,29 +27,32 @@
             "required": true,
             "order": 0
         },
+        "api_token": {
+            "description": "API Token",
+            "data_type": "password",
+            "order": 1
+        },
         "username": {
             "description": "Username",
             "data_type": "string",
-            "required": true,
             "order": 2
         },
         "password": {
             "description": "Password",
             "data_type": "password",
-            "required": true,
             "order": 3
         },
         "verify_server_cert": {
             "description": "Verify Server Certificate",
             "data_type": "boolean",
             "default": false,
-            "order": 1
+            "order": 4
         },
         "results_percentage": {
             "description": "Consider question results complete at (% out of 100)",
             "data_type": "numeric",
             "default": 99,
-            "order": 4
+            "order": 5
         }
     },
     "actions": [
