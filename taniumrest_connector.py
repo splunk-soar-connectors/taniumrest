@@ -264,8 +264,9 @@ class TaniumRestConnector(BaseConnector):
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Error occurred while making the REST call to the Tanium server. Error Code: {0}. Error Message: {1}"
-                    .format(error_code, error_msg)), None)
+            return RetVal(action_result.set_status(phantom.APP_ERROR,
+                "Error occurred while making the REST call to the Tanium server. Error Code: {0}. Error Message: {1}".format(
+                    error_code, error_msg)), None)
 
         return self._process_response(r, action_result)
 
@@ -298,13 +299,21 @@ class TaniumRestConnector(BaseConnector):
                 'Content-Type': 'application/json'
             })
 
-        ret_val, resp_json = self._make_rest_call(url, action_result, verify=verify, headers=headers, params=params, data=data, json=json, method=method)
+        ret_val, resp_json = self._make_rest_call(url,
+                                                  action_result,
+                                                  verify=verify,
+                                                  headers=headers,
+                                                  params=params,
+                                                  data=data,
+                                                  json=json,
+                                                  method=method)
 
         # If token is expired, generate a new token
         msg = action_result.get_message()
 
         if msg and ("403" in msg or "401" in msg):
-            self.debug_print("Refreshing Tanium API and re-trying request to [{0}] because API token was expired or invalid with error code [{1}]".format(url, msg))
+            self.debug_print("Refreshing Tanium API and re-trying request to [{0}] because API token was expired \
+                or invalid with error code [{1}]".format(url, msg))
             ret_val = self._get_token(action_result)
 
             if phantom.is_fail(ret_val):
@@ -313,13 +322,28 @@ class TaniumRestConnector(BaseConnector):
 
             headers.update({'session': str(self._session_id), 'Content-Type': 'application/json'})
 
-            ret_val, resp_json = self._make_rest_call(url, action_result, verify=verify, headers=headers, params=params, data=data, json=json, method=method)
+            ret_val, resp_json = self._make_rest_call(url,
+                                                      action_result,
+                                                      verify=verify,
+                                                      headers=headers,
+                                                      params=params,
+                                                      data=data,
+                                                      json=json,
+                                                      method=method)
         elif msg and ("404" in msg and "result_data/question" in endpoint):
-            # Issue seen in Tanium 7.3.314.4103. Sometimes it returns a 404 for a sensor and says that the sensor doesn't exist even though it does
+            # Issue seen in Tanium 7.3.314.4103. Sometimes it returns a 404 for a sensor and says
+            # that the sensor doesn't exist even though it does
             # A short sleep and resubmit fixes the issue
             self.debug_print("Encountered Tanium `REST Object Not Found Exception: SensorNotFound: The requested sensor was not found` error")
             sleep(5)
-            ret_val, resp_json = self._make_rest_call(url, action_result, verify=verify, headers=headers, params=params, data=data, json=json, method=method)
+            ret_val, resp_json = self._make_rest_call(url,
+                                                      action_result,
+                                                      verify=verify,
+                                                      headers=headers,
+                                                      params=params,
+                                                      data=data,
+                                                      json=json,
+                                                      method=method)
 
         if phantom.is_fail(ret_val):
             self.debug_print("REST API Call Failure! Failed call to Tanium API endpoint {0} with error code {1}".format(url, msg))
@@ -343,7 +367,8 @@ class TaniumRestConnector(BaseConnector):
             'Content-Type': 'application/json'
         }
 
-        ret_val, resp_json = self._make_rest_call("{}{}".format(self._base_url, SESSION_URL), action_result, verify=self._verify, headers=headers, json=data, method='post')
+        ret_val, resp_json = self._make_rest_call("{}{}".format(self._base_url, SESSION_URL),
+                                action_result, verify=self._verify, headers=headers, json=data, method='post')
 
         if phantom.is_fail(ret_val):
             self.debug_print("Failed to fetch a session token from Tanium API!")
@@ -371,7 +396,11 @@ class TaniumRestConnector(BaseConnector):
                 return action_result.get_status()
 
         # make rest call
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_GET_SAVED_QUESTIONS, verify=self._verify, params=None, headers=None)
+        ret_val, response = self._make_rest_call_helper(action_result,
+                                                        TANIUMREST_GET_SAVED_QUESTIONS,
+                                                        verify=self._verify,
+                                                        params=None,
+                                                        headers=None)
 
         if phantom.is_fail(ret_val):
             self.save_progress("Test Connectivity Failed")
@@ -388,10 +417,18 @@ class TaniumRestConnector(BaseConnector):
 
         if param.get('list_saved_questions', False):
             summary_txt = "num_saved_questions"
-            ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_GET_SAVED_QUESTIONS, verify=self._verify, params=None, headers=None)
+            ret_val, response = self._make_rest_call_helper(action_result,
+                                                            TANIUMREST_GET_SAVED_QUESTIONS,
+                                                            verify=self._verify,
+                                                            params=None,
+                                                            headers=None)
         else:
             summary_txt = "num_questions"
-            ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_GET_QUESTIONS, verify=self._verify, params=None, headers=None)
+            ret_val, response = self._make_rest_call_helper(action_result,
+                                                            TANIUMREST_GET_QUESTIONS,
+                                                            verify=self._verify,
+                                                            params=None,
+                                                            headers=None)
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -488,7 +525,8 @@ class TaniumRestConnector(BaseConnector):
                 parameter_definition = json.loads(parameter_definition)
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
-            action_result.set_status(phantom.APP_ERROR, "Error while fetching package details. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
+            action_result.set_status(phantom.APP_ERROR,
+                "Error while fetching package details. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
 
         if parameter_definition and len(parameter_definition.get("parameters")) != 0:
             self.debug_print("Provided package is a parameterized package")
@@ -501,10 +539,11 @@ class TaniumRestConnector(BaseConnector):
             except Exception as e:
                 error_code, error_msg = self._get_error_message_from_exception(e)
                 return action_result.set_status(phantom.APP_ERROR,
-                                                "Error while parsing the 'package_parameter' field. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
+                    "Error while parsing the 'package_parameter' field. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
 
             if len(package_parameter) != len(parameter_definition.get("parameters")):
-                return action_result.set_status(phantom.APP_ERROR, "Please provide all the required package parameters in 'package_parameter' parameter")
+                return action_result.set_status(phantom.APP_ERROR,
+                    "Please provide all the required package parameters in 'package_parameter' parameter")
 
             param_list = list()
             invalid_keys = list()
@@ -516,7 +555,8 @@ class TaniumRestConnector(BaseConnector):
                     invalid_keys.append(key)
 
             if invalid_keys:
-                return action_result.set_status(phantom.APP_ERROR, "The following key(s) are incorrect: {}. Please provide correct key(s)".format(', '.join(invalid_keys)))
+                return action_result.set_status(phantom.APP_ERROR,
+                    "The following key(s) are incorrect: {}. Please provide correct key(s)".format(', '.join(invalid_keys)))
 
         data = dict()
         package_param = dict()
@@ -597,7 +637,13 @@ class TaniumRestConnector(BaseConnector):
             data["issue_seconds"] = issue_seconds
 
         # make rest call
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_EXECUTE_ACTION, verify=self._verify, params=None, headers=None, json=data, method="post")
+        ret_val, response = self._make_rest_call_helper(action_result,
+                                                        TANIUMREST_EXECUTE_ACTION,
+                                                        verify=self._verify,
+                                                        params=None,
+                                                        headers=None,
+                                                        json=data,
+                                                        method="post")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -683,8 +729,8 @@ class TaniumRestConnector(BaseConnector):
             estimated_total = data.get("result_sets", [])[0].get("estimated_total")
             if mr_tested and estimated_total:
                 percentage_returned = float(mr_tested) / float(estimated_total) * 100
-                self.debug_print("mr_tested: {} | est_total: {} | perc_returned: {} | results_perc: {}".format(mr_tested, estimated_total,
-                                                                                                               percentage_returned, results_percentage))
+                self.debug_print("mr_tested: {} | est_total: {} | perc_returned: {} | results_perc: {}".format(
+                    mr_tested, estimated_total, percentage_returned, results_percentage))
 
                 # incomplete is when a sensor returns the value 'current results unavailable'
                 num_results_complete, num_results_incomplete = self._determine_num_results_complete(data)
@@ -707,7 +753,8 @@ class TaniumRestConnector(BaseConnector):
                     self.debug_print("Waiting for {} results to finish before completing".format(wait_for_n_results_available))
                     continue
                 elif int(percentage_returned) < int(results_percentage):
-                    self.debug_print("Tanium question ID {} is {}% done out of {}%. Fetching more results . . .".format(question_id, percentage_returned, results_percentage))
+                    self.debug_print("Tanium question ID {} is {}% done out of {}%. Fetching more results . . .".format(
+                        question_id, percentage_returned, results_percentage))
                     continue
                 # else: return results if `columns` field present
             else:
@@ -724,8 +771,9 @@ class TaniumRestConnector(BaseConnector):
                 return response
 
         else:
-            action_result.set_status(phantom.APP_ERROR, "Error while fetching the results from the Tanium server in '{}' expire seconds. Please try increasing the timeout value"
-                                        .format(timeout_seconds))
+            action_result.set_status(phantom.APP_ERROR,
+                "Error while fetching the results from the Tanium server in '{}' expire seconds. Please try \
+                    increasing the timeout value".format(timeout_seconds))
             return None
 
     def _handle_list_processes(self, param):
@@ -774,7 +822,13 @@ class TaniumRestConnector(BaseConnector):
         data["selects"] = select_list
 
         # Ask the 'List Processes' question to Tanium
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_GET_QUESTIONS, verify=self._verify, params=None, headers=None, json=data, method="post")
+        ret_val, response = self._make_rest_call_helper(action_result,
+                                                        TANIUMREST_GET_QUESTIONS,
+                                                        verify=self._verify,
+                                                        params=None,
+                                                        headers=None,
+                                                        json=data,
+                                                        method="post")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -823,7 +877,13 @@ class TaniumRestConnector(BaseConnector):
         query_text = param['query_text']
         data = {"text": query_text}
 
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_PARSE_QUESTION, verify=self._verify, params=None, headers=None, json=data, method="post")
+        ret_val, response = self._make_rest_call_helper(action_result,
+                                                        TANIUMREST_PARSE_QUESTION,
+                                                        verify=self._verify,
+                                                        params=None,
+                                                        headers=None,
+                                                        json=data,
+                                                        method="post")
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -857,17 +917,24 @@ class TaniumRestConnector(BaseConnector):
         wait_for_results_processing = param.get('wait_for_results_processing', False)
 
         # Integer validation for 'return_when_n_results_available' action parameter
-        ret_val, return_when_n_results_available = self._validate_integer(action_result, param.get('return_when_n_results_available'), RETURN_WHEN_N_RESULTS_AVAILABLE_KEY, True)
+        ret_val, return_when_n_results_available = self._validate_integer(action_result,
+                                                                          param.get('return_when_n_results_available'),
+                                                                          RETURN_WHEN_N_RESULTS_AVAILABLE_KEY,
+                                                                          True)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
         # Integer validation for 'wait_for_n_results_available' action parameter
-        ret_val, wait_for_n_results_available = self._validate_integer(action_result, param.get('wait_for_n_results_available'), WAIT_FOR_N_RESULTS_AVAILABLE_KEY, True)
+        ret_val, wait_for_n_results_available = self._validate_integer(action_result,
+                                                                       param.get('wait_for_n_results_available'),
+                                                                       WAIT_FOR_N_RESULTS_AVAILABLE_KEY,
+                                                                       True)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
         if return_when_n_results_available and wait_for_n_results_available and return_when_n_results_available < wait_for_n_results_available:
-            return action_result.set_status(phantom.APP_ERROR, "Please provide 'return_when_n_results_available' greater than or equal to 'wait_for_n_results_available'")
+            return action_result.set_status(phantom.APP_ERROR,
+                "Please provide 'return_when_n_results_available' greater than or equal to 'wait_for_n_results_available'")
 
         if is_saved_question:
             endpoint = TANIUMREST_GET_SAVED_QUESTION.format(saved_question=query_text)
@@ -939,7 +1006,9 @@ class TaniumRestConnector(BaseConnector):
 
         self.save_progress("Getting results for question {}".format(question_id))
 
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_GET_QUESTION_RESULTS.format(question_id=question_id), verify=self._verify)
+        ret_val, response = self._make_rest_call_helper(action_result,
+                                                        TANIUMREST_GET_QUESTION_RESULTS.format(question_id=question_id),
+                                                        verify=self._verify)
         if phantom.is_fail(ret_val):
             return action_result.set_status(phantom.APP_ERROR, "Getting question results failed")
 
@@ -993,7 +1062,8 @@ class TaniumRestConnector(BaseConnector):
             except Exception as e:
                 error_code, error_msg = self._get_error_message_from_exception(e)
                 return action_result.set_status(phantom.APP_ERROR,
-                                                "Error while parsing the 'parameter_definition'. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
+                    "Error while parsing the 'parameter_definition'. Error Code: {0}. Error Message: {1}".format(
+                        error_code, error_msg))
 
             if parameter_definition:
                 # Parameterized Sensor
@@ -1100,12 +1170,19 @@ class TaniumRestConnector(BaseConnector):
 
         return data
 
-    def _ask_question(self, data, action_result, timeout_seconds=None, wait_for_results_processing=None, return_when_n_results_available=None, wait_for_n_results_available=None):
+    def _ask_question(self, data, action_result, timeout_seconds=None, wait_for_results_processing=None,
+                      return_when_n_results_available=None, wait_for_n_results_available=None):
         # Post prepared data to questions endpoint and poll for results
         # config = self.get_config()
         if timeout_seconds:
             data['expire_seconds'] = timeout_seconds
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_GET_QUESTIONS, verify=self._verify, params=None, headers=None, json=data, method="post")
+        ret_val, response = self._make_rest_call_helper(action_result,
+                                                        TANIUMREST_GET_QUESTIONS,
+                                                        verify=self._verify,
+                                                        params=None,
+                                                        headers=None,
+                                                        json=data,
+                                                        method="post")
 
         if phantom.is_fail(ret_val):
             action_result.set_status(phantom.APP_ERROR, "Question post failed")
