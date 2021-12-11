@@ -164,7 +164,11 @@ class TaniumRestConnector(BaseConnector):
             resp_json = r.json()
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Unable to parse JSON response. Error Code: {0} Error Message: {1}".format(error_code, error_msg)), None)
+            return RetVal(
+                action_result.set_status(
+                    phantom.APP_ERROR,
+                    "Unable to parse JSON response. Error Code: {0} \
+                    Error Message: {1}".format(error_code, error_msg)), None)
 
         # Please specify the status codes here
         if 200 <= r.status_code < 399:
@@ -174,15 +178,22 @@ class TaniumRestConnector(BaseConnector):
         try:
             if resp_json.get('text'):
                 message = "Error from server. Status Code: {0} Data from \
-                    server: {1}".format(r.status_code, self._handle_py_ver_compat_for_input_str(resp_json.get('text')))
+                    server: {1}".format(r.status_code,
+                                        self._handle_py_ver_compat_for_input_str(
+                                            resp_json.get('text')))
             else:
-                message = "Error from server. Status Code: {0} Data from server: {1}".format(
-                        r.status_code, self._handle_py_ver_compat_for_input_str(r.text.replace('{', '{{').replace('}', '}}')))
+                message = "Error from server. Status Code: {0} Data from \
+                        server: {1}".format(r.status_code,
+                                            self._handle_py_ver_compat_for_input_str(
+                                                r.text.replace('{', '{{').replace('}', '}}')))
             if r.status_code == 404:
-                message += "\nThis error usually means the account you are using to interface to Tanium \
-                    does not have sufficient permissions to perform this action. See Tanium's documentation for more information on how to change your permissions."
+                message += "\nThis error usually means the account you are using \
+                        to interface to Tanium does not have sufficient permissions to \
+                        perform this action. See Tanium's documentation for more \
+                        information on how to change your permissions."
         except Exception:
-            message = "Error from server. Status Code: {0}. Please provide valid input".format(r.status_code)
+            message = "Error from server. Status Code: {0}. Please provide valid \
+                    input".format(r.status_code)
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -212,8 +223,10 @@ class TaniumRestConnector(BaseConnector):
             return self._process_empty_response(r, action_result)
 
         # everything else is actually an error at this point
-        message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
-                r.status_code, self._handle_py_ver_compat_for_input_str(r.text.replace('{', '{{').replace('}', '}}')))
+        message = "Can't process response from server. Status Code: {0} Data from \
+                    server: {1}".format(r.status_code,
+                                        self._handle_py_ver_compat_for_input_str(
+                                            r.text.replace('{', '{{').replace('}', '}}')))
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
