@@ -14,7 +14,7 @@
 # and limitations under the License.
 #
 #
-# Phantom App imports
+
 import ast
 import json
 import os
@@ -62,7 +62,7 @@ class TaniumRestConnector(BaseConnector):
         try:
             if input_str and self._python_version == 2:
                 input_str = UnicodeDammit(input_str).unicode_markup.encode('utf-8')
-        except:
+        except Exception:
             self.debug_print("Error occurred while handling python 2to3 compatibility for the input string")
 
         return input_str
@@ -73,27 +73,25 @@ class TaniumRestConnector(BaseConnector):
         :return: error message
         """
 
+        error_code = TANIUMREST_ERR_CODE_MSG
+        error_msg = TANIUMREST_ERR_MSG_UNAVAILABLE
         try:
             if e.args:
                 if len(e.args) > 1:
                     error_code = e.args[0]
                     error_msg = e.args[1]
                 elif len(e.args) == 1:
-                    error_code = ERR_CODE_MSG
+                    error_code = TANIUMREST_ERR_CODE_MSG
                     error_msg = e.args[0]
-            else:
-                error_code = ERR_CODE_MSG
-                error_msg = ERR_MSG_UNAVAILABLE
-        except:
-            error_code = ERR_CODE_MSG
-            error_msg = ERR_MSG_UNAVAILABLE
+        except Exception:
+            self.debug_print("Error occurred while retrieving exception information")
 
         try:
             error_msg = self._handle_py_ver_compat_for_input_str(error_msg)
         except TypeError:
-            error_msg = TYPE_ERR_MSG
-        except:
-            error_msg = ERR_MSG_UNAVAILABLE
+            error_msg = TANIUMREST_TYPE_ERR_MSG
+        except Exception:
+            error_msg = TANIUMREST_ERR_MSG_UNAVAILABLE
 
         return error_code, error_msg
 
@@ -109,16 +107,16 @@ class TaniumRestConnector(BaseConnector):
         if parameter is not None:
             try:
                 if not float(parameter).is_integer():
-                    return action_result.set_status(phantom.APP_ERROR, INVALID_INT_ERR_MSG.format(key)), None
+                    return action_result.set_status(phantom.APP_ERROR, TANIUMREST_INVALID_INT_ERR_MSG.format(key)), None
 
                 parameter = int(parameter)
-            except:
-                return action_result.set_status(phantom.APP_ERROR, INVALID_INT_ERR_MSG.format(key)), None
+            except Exception:
+                return action_result.set_status(phantom.APP_ERROR, TANIUMREST_INVALID_INT_ERR_MSG.format(key)), None
 
             if parameter < 0:
-                return action_result.set_status(phantom.APP_ERROR, INVALID_NON_NEG_INT_ERR_MSG.format(key)), None
+                return action_result.set_status(phantom.APP_ERROR, TANIUMREST_INVALID_NON_NEG_INT_ERR_MSG.format(key)), None
             if not allow_zero and parameter == 0:
-                return action_result.set_status(phantom.APP_ERROR, INVALID_NON_NEG_NON_ZERO_ERR_MSG.format(key)), None
+                return action_result.set_status(phantom.APP_ERROR, TANIUMREST_INVALID_NON_NEG_NON_ZERO_ERR_MSG.format(key)), None
 
         return phantom.APP_SUCCESS, parameter
 
@@ -127,8 +125,9 @@ class TaniumRestConnector(BaseConnector):
         if response.status_code == 200:
             return RetVal(phantom.APP_SUCCESS, {})
 
-        return RetVal(action_result.set_status(phantom.APP_ERROR, "Status Code: {}. Empty response and no information in the header".format(
-            response.status_code)), None)
+        return RetVal(action_result.set_status(
+            phantom.APP_ERROR,
+            "Status Code: {}. Empty response and no information in the header".format(response.status_code)), None)
 
     def _process_html_response(self, response, action_result):
 
@@ -144,10 +143,11 @@ class TaniumRestConnector(BaseConnector):
             split_lines = error_text.split('\n')
             split_lines = [x.strip() for x in split_lines if x.strip()]
             error_text = '\n'.join(split_lines)
-        except:
+        except Exception:
             error_text = "Cannot parse error details"
 
-        message = "Status Code: {0}. Data from server:\n{1}\n".format(status_code,
+        message = "Status Code: {0}. Data from server:\n{1}\n".format(
+                status_code,
                 self._handle_py_ver_compat_for_input_str(error_text))
 
         message = message.replace('{', '{{').replace('}', '}}')
@@ -164,11 +164,9 @@ class TaniumRestConnector(BaseConnector):
             resp_json = r.json()
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
-            return RetVal(
-                action_result.set_status(
-                    phantom.APP_ERROR,
-                    "Unable to parse JSON response. Error Code: {0} \
-                    Error Message: {1}".format(error_code, error_msg)), None)
+            return RetVal(action_result.set_status(
+                phantom.APP_ERROR,
+                "Unable to parse JSON response. Error Code: {0} Error Message: {1}".format(error_code, error_msg)), None)
 
         # Please specify the status codes here
         if 200 <= r.status_code < 399:
@@ -187,10 +185,10 @@ class TaniumRestConnector(BaseConnector):
                                             self._handle_py_ver_compat_for_input_str(
                                                 r.text.replace('{', '{{').replace('}', '}}')))
             if r.status_code == 404:
-                message += "\nThis error usually means the account you are using \
-                        to interface to Tanium does not have sufficient permissions to \
-                        perform this action. See Tanium's documentation for more \
-                        information on how to change your permissions."
+                permission_error = "\nThis error usually means the account you are using to interface to Tanium " \
+                    "does not have sufficient permissions to perform this action. See Tanium's documentation " \
+                    "for more information on how to change your permissions."
+                message = "{}{}".format(message, permission_error)
         except Exception:
             message = "Error from server. Status Code: {0}. Please provide valid \
                     input".format(r.status_code)
@@ -230,7 +228,8 @@ class TaniumRestConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _make_rest_call(self, endpoint, action_result, verify=True, headers=None, params=None, data=None, json=None, method="get"):
+    def _make_rest_call(self, endpoint, action_result, verify=True, headers=None,
+                        params=None, data=None, json=None, method="get"):
         """ Function that makes the REST call to the app.
 
         :param endpoint: REST endpoint that needs to appended to the service address
@@ -264,13 +263,15 @@ class TaniumRestConnector(BaseConnector):
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
-            return RetVal(action_result.set_status(phantom.APP_ERROR,
-                "Error occurred while making the REST call to the Tanium server. Error Code: {0}. Error Message: {1}".format(
-                    error_code, error_msg)), None)
+            return RetVal(action_result.set_status(
+                phantom.APP_ERROR,
+                "Error occurred while making the REST call to the Tanium server. Error Code: {0}. Error Message: {1}"
+                .format(error_code, error_msg)), None)
 
         return self._process_response(r, action_result)
 
-    def _make_rest_call_helper(self, action_result, endpoint, verify=True, headers=None, params=None, data=None, json=None, method="get"):
+    def _make_rest_call_helper(self, action_result, endpoint, verify=True, headers=None,
+                               params=None, data=None, json=None, method="get"):
         """ Function that helps setting REST call to the app.
 
         :param endpoint: REST endpoint that needs to appended to the service address
@@ -299,21 +300,15 @@ class TaniumRestConnector(BaseConnector):
                 'Content-Type': 'application/json'
             })
 
-        ret_val, resp_json = self._make_rest_call(url,
-                                                  action_result,
-                                                  verify=verify,
-                                                  headers=headers,
-                                                  params=params,
-                                                  data=data,
-                                                  json=json,
-                                                  method=method)
+        ret_val, resp_json = self._make_rest_call(
+            url, action_result, verify=verify, headers=headers, params=params, data=data, json=json, method=method)
 
         # If token is expired, generate a new token
         msg = action_result.get_message()
 
         if msg and ("403" in msg or "401" in msg):
-            self.debug_print("Refreshing Tanium API and re-trying request to [{0}] because API token was expired \
-                or invalid with error code [{1}]".format(url, msg))
+            self.debug_print("Refreshing Tanium API and re-trying request to [{0}] because API "
+                             "token was expired or invalid with error code [{1}]".format(url, msg))
             ret_val = self._get_token(action_result)
 
             if phantom.is_fail(ret_val):
@@ -322,28 +317,16 @@ class TaniumRestConnector(BaseConnector):
 
             headers.update({'session': str(self._session_id), 'Content-Type': 'application/json'})
 
-            ret_val, resp_json = self._make_rest_call(url,
-                                                      action_result,
-                                                      verify=verify,
-                                                      headers=headers,
-                                                      params=params,
-                                                      data=data,
-                                                      json=json,
-                                                      method=method)
+            ret_val, resp_json = self._make_rest_call(
+                url, action_result, verify=verify, headers=headers, params=params, data=data, json=json, method=method)
         elif msg and ("404" in msg and "result_data/question" in endpoint):
-            # Issue seen in Tanium 7.3.314.4103. Sometimes it returns a 404 for a sensor and says
-            # that the sensor doesn't exist even though it does
-            # A short sleep and resubmit fixes the issue
-            self.debug_print("Encountered Tanium `REST Object Not Found Exception: SensorNotFound: The requested sensor was not found` error")
+            # Issue seen in Tanium 7.3.314.4103. Sometimes it returns a 404 for a sensor and says that the sensor
+            # doesn't exist even though it does. A short sleep and resubmit fixes the issue
+            self.debug_print("Encountered Tanium `REST Object Not Found Exception: "
+                             "SensorNotFound: The requested sensor was not found` error")
             sleep(5)
-            ret_val, resp_json = self._make_rest_call(url,
-                                                      action_result,
-                                                      verify=verify,
-                                                      headers=headers,
-                                                      params=params,
-                                                      data=data,
-                                                      json=json,
-                                                      method=method)
+            ret_val, resp_json = self._make_rest_call(
+                url, action_result, verify=verify, headers=headers, params=params, data=data, json=json, method=method)
 
         if phantom.is_fail(ret_val):
             self.debug_print("REST API Call Failure! Failed call to Tanium API endpoint {0} with error code {1}".format(url, msg))
@@ -367,8 +350,9 @@ class TaniumRestConnector(BaseConnector):
             'Content-Type': 'application/json'
         }
 
-        ret_val, resp_json = self._make_rest_call("{}{}".format(self._base_url, SESSION_URL),
-                                action_result, verify=self._verify, headers=headers, json=data, method='post')
+        ret_val, resp_json = self._make_rest_call(
+            "{}{}".format(self._base_url, TANIUMREST_SESSION_URL), action_result,
+            verify=self._verify, headers=headers, json=data, method='post')
 
         if phantom.is_fail(ret_val):
             self.debug_print("Failed to fetch a session token from Tanium API!")
@@ -396,11 +380,8 @@ class TaniumRestConnector(BaseConnector):
                 return action_result.get_status()
 
         # make rest call
-        ret_val, response = self._make_rest_call_helper(action_result,
-                                                        TANIUMREST_GET_SAVED_QUESTIONS,
-                                                        verify=self._verify,
-                                                        params=None,
-                                                        headers=None)
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_GET_SAVED_QUESTIONS, verify=self._verify, params=None, headers=None)
 
         if phantom.is_fail(ret_val):
             self.save_progress("Test Connectivity Failed")
@@ -417,18 +398,12 @@ class TaniumRestConnector(BaseConnector):
 
         if param.get('list_saved_questions', False):
             summary_txt = "num_saved_questions"
-            ret_val, response = self._make_rest_call_helper(action_result,
-                                                            TANIUMREST_GET_SAVED_QUESTIONS,
-                                                            verify=self._verify,
-                                                            params=None,
-                                                            headers=None)
+            ret_val, response = self._make_rest_call_helper(
+                action_result, TANIUMREST_GET_SAVED_QUESTIONS, verify=self._verify, params=None, headers=None)
         else:
             summary_txt = "num_questions"
-            ret_val, response = self._make_rest_call_helper(action_result,
-                                                            TANIUMREST_GET_QUESTIONS,
-                                                            verify=self._verify,
-                                                            params=None,
-                                                            headers=None)
+            ret_val, response = self._make_rest_call_helper(
+                action_result, TANIUMREST_GET_QUESTIONS, verify=self._verify, params=None, headers=None)
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -480,17 +455,18 @@ class TaniumRestConnector(BaseConnector):
         group_name = self._handle_py_ver_compat_for_input_str(param.get('group_name'))
 
         # Integer validation for 'distribute_seconds' action parameter
-        ret_val, distribute_seconds = self._validate_integer(action_result, param.get('distribute_seconds'), DISTRIBUTE_SECONDS_KEY)
+        ret_val, distribute_seconds = self._validate_integer(
+            action_result, param.get('distribute_seconds'), TANIUMREST_DISTRIBUTE_SECONDS_KEY)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
         # Integer validation for 'expire_seconds' action parameter
-        ret_val, expire_seconds = self._validate_integer(action_result, param['expire_seconds'], EXPIRE_SECONDS_KEY)
+        ret_val, expire_seconds = self._validate_integer(action_result, param['expire_seconds'], TANIUMREST_EXPIRE_SECONDS_KEY)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
         # Integer validation for 'issue_seconds' action parameter
-        ret_val, issue_seconds = self._validate_integer(action_result, param.get('issue_seconds'), ISSUE_SECONDS_KEY)
+        ret_val, issue_seconds = self._validate_integer(action_result, param.get('issue_seconds'), TANIUMREST_ISSUE_SECONDS_KEY)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -504,8 +480,7 @@ class TaniumRestConnector(BaseConnector):
         response_data = response.get("data")
 
         if not response_data:
-            return action_result.set_status(phantom.APP_ERROR, "No package exists with name {}. \
-                    Also, please verify that your account has sufficient permissions to access the packages".format(package_name))
+            return action_result.set_status(phantom.APP_ERROR, TANIUMREST_RESOURCE_NOT_EXIST.format(package_name, "package"))
 
         resp_data = self._get_response_data(response_data, action_result, "package")
 
@@ -525,24 +500,30 @@ class TaniumRestConnector(BaseConnector):
                 parameter_definition = json.loads(parameter_definition)
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
-            action_result.set_status(phantom.APP_ERROR,
+            action_result.set_status(
+                phantom.APP_ERROR,
                 "Error while fetching package details. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
 
         if parameter_definition and len(parameter_definition.get("parameters")) != 0:
             self.debug_print("Provided package is a parameterized package")
             if package_parameter is None:
-                return action_result.set_status(phantom.APP_ERROR, 'Please provide the required package parameter in the following format\
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    'Please provide the required package parameter in the following format\
                     :- [{"<parameter_label_1>": "<parameter_value_1>"}, {"<parameter_label_2>": "<parameter_value_2>"}]')
 
             try:
                 package_parameter = json.loads(package_parameter)
             except Exception as e:
                 error_code, error_msg = self._get_error_message_from_exception(e)
-                return action_result.set_status(phantom.APP_ERROR,
-                    "Error while parsing the 'package_parameter' field. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    "Error while parsing the 'package_parameter' field. Error Code: {0}. Error Message: {1}"
+                    .format(error_code, error_msg))
 
             if len(package_parameter) != len(parameter_definition.get("parameters")):
-                return action_result.set_status(phantom.APP_ERROR,
+                return action_result.set_status(
+                    phantom.APP_ERROR,
                     "Please provide all the required package parameters in 'package_parameter' parameter")
 
             param_list = list()
@@ -555,7 +536,8 @@ class TaniumRestConnector(BaseConnector):
                     invalid_keys.append(key)
 
             if invalid_keys:
-                return action_result.set_status(phantom.APP_ERROR,
+                return action_result.set_status(
+                    phantom.APP_ERROR,
                     "The following key(s) are incorrect: {}. Please provide correct key(s)".format(', '.join(invalid_keys)))
 
         data = dict()
@@ -582,7 +564,8 @@ class TaniumRestConnector(BaseConnector):
                 data["target_group"] = group_as_obj
             else:
                 endpoint = TANIUMREST_GET_GROUP.format(group_name=group_name)
-                ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
+                ret_val, response = self._make_rest_call_helper(
+                    action_result, endpoint, verify=self._verify, params=None, headers=None)
 
                 if phantom.is_fail(ret_val):
                     return action_result.get_status()
@@ -590,8 +573,7 @@ class TaniumRestConnector(BaseConnector):
                 response_data = response.get("data")
 
                 if not response_data:
-                    return action_result.set_status(phantom.APP_ERROR, "No group exists with name {}. \
-                            Also, please verify that your account has sufficient permissions to access the groups".format(group_name))
+                    return action_result.set_status(phantom.APP_ERROR, TANIUMREST_RESOURCE_NOT_EXIST.format(group_name, "group"))
 
                 resp_data = self._get_response_data(response_data, action_result, "group")
 
@@ -613,8 +595,7 @@ class TaniumRestConnector(BaseConnector):
         response_data = response.get("data")
 
         if not response_data:
-            return action_result.set_status(phantom.APP_ERROR, "No action group exists with name {}. \
-                    Also, please verify that your account has sufficient permissions to access the action groups".format(action_grp))
+            return action_result.set_status(phantom.APP_ERROR, TANIUMREST_RESOURCE_NOT_EXIST.format(action_grp, "action group"))
 
         resp_data = self._get_response_data(response_data, action_result, "action group")
 
@@ -637,13 +618,8 @@ class TaniumRestConnector(BaseConnector):
             data["issue_seconds"] = issue_seconds
 
         # make rest call
-        ret_val, response = self._make_rest_call_helper(action_result,
-                                                        TANIUMREST_EXECUTE_ACTION,
-                                                        verify=self._verify,
-                                                        params=None,
-                                                        headers=None,
-                                                        json=data,
-                                                        method="post")
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_EXECUTE_ACTION, verify=self._verify, params=None, headers=None, json=data, method="post")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -703,27 +679,31 @@ class TaniumRestConnector(BaseConnector):
         return num_complete, num_incomplete
 
     def _question_result(self, timeout_seconds, results_percentage, endpoint, action_result,
-                         wait_for_results_processing=None, return_when_n_results_available=None, wait_for_n_results_available=None):
+                         wait_for_results_processing=None, return_when_n_results_available=None,
+                         wait_for_n_results_available=None):
 
-        max_range = int(timeout_seconds / WAIT_SECONDS) + (1 if timeout_seconds % WAIT_SECONDS == 0 else 2)
+        max_range = int(timeout_seconds / TANIUMREST_WAIT_SECONDS) + (1 if timeout_seconds % TANIUMREST_WAIT_SECONDS == 0 else 2)
 
         for i in range(1, max_range):
-            if timeout_seconds > WAIT_SECONDS:
+            if timeout_seconds > TANIUMREST_WAIT_SECONDS:
                 if i == max_range - 1:
-                    sleep(timeout_seconds - (i - 1) * WAIT_SECONDS - 1)
+                    sleep(timeout_seconds - (i - 1) * TANIUMREST_WAIT_SECONDS - 1)
                 else:
-                    sleep(WAIT_SECONDS)
+                    sleep(TANIUMREST_WAIT_SECONDS)
             else:
                 sleep(timeout_seconds - 1)
 
-            ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
+            ret_val, response = self._make_rest_call_helper(
+                action_result, endpoint, verify=self._verify, params=None, headers=None)
 
             if phantom.is_fail(ret_val):
                 return None
 
-            # Checking to see if all the results have been returned by the question. Keeps questioning until all results have been returned.
+            # Checking to see if all the results have been returned by the question.
+            # Keeps questioning until all results have been returned.
             question_id = os.path.basename(endpoint)
-            self.debug_print("Checking if Tanium question ID {} has completed and returned all results . . .".format(question_id))
+            self.debug_print(
+                "Checking if Tanium question ID {} has completed and returned all results . . .".format(question_id))
             data = response.get("data", {})
             mr_tested = data.get("result_sets", [])[0].get("mr_tested")
             estimated_total = data.get("result_sets", [])[0].get("estimated_total")
@@ -746,15 +726,16 @@ class TaniumRestConnector(BaseConnector):
                     continue
                 elif return_when_n_results_available and num_results >= return_when_n_results_available:
                     self.debug_print("'wait_for_results_processing' is {}".format(wait_for_results_processing))
-                    self.debug_print("Returning results because 'num_results_complete' ({}) >= 'return_when_n_results_available' ({})".format(
-                        num_results_complete, return_when_n_results_available))
+                    self.debug_print(
+                        "Returning results because 'num_results_complete' ({}) >= 'return_when_n_results_available' ({})"
+                        .format(num_results_complete, return_when_n_results_available))
                     return response
                 elif wait_for_n_results_available and num_results_complete < wait_for_n_results_available:
                     self.debug_print("Waiting for {} results to finish before completing".format(wait_for_n_results_available))
                     continue
                 elif int(percentage_returned) < int(results_percentage):
-                    self.debug_print("Tanium question ID {} is {}% done out of {}%. Fetching more results . . .".format(
-                        question_id, percentage_returned, results_percentage))
+                    self.debug_print("Tanium question ID {} is {}% done out of {}%. Fetching more results . . ."
+                                     .format(question_id, percentage_returned, results_percentage))
                     continue
                 # else: return results if `columns` field present
             else:
@@ -763,17 +744,18 @@ class TaniumRestConnector(BaseConnector):
             # reformat response data to simplify data path
             if data.get("result_sets", [])[0].get("columns"):
                 rows = data.get("result_sets")[0].get("rows")
-                for i in range(len(rows)):
+                for j in range(len(rows)):
                     formatted = []
-                    for item in rows[i].get("data"):
+                    for item in rows[j].get("data"):
                         formatted.append(item[0])
-                    response["data"]["result_sets"][0]["rows"][i]["data"] = formatted
+                    response["data"]["result_sets"][0]["rows"][j]["data"] = formatted
                 return response
 
         else:
-            action_result.set_status(phantom.APP_ERROR,
-                "Error while fetching the results from the Tanium server in '{}' expire seconds. Please try \
-                    increasing the timeout value".format(timeout_seconds))
+            action_result.set_status(
+                phantom.APP_ERROR,
+                "Error while fetching the results from the Tanium server in '{}' expire seconds. \
+                    Please try increasing the timeout value".format(timeout_seconds))
             return None
 
     def _handle_list_processes(self, param):
@@ -787,7 +769,7 @@ class TaniumRestConnector(BaseConnector):
         group_name = self._handle_py_ver_compat_for_input_str(param.get('group_name'))
         timeout_seconds = param.get('timeout_seconds', 600)
         # Integer validation for 'timeout_seconds' action parameter
-        ret_val, timeout_seconds = self._validate_integer(action_result, timeout_seconds, TIMEOUT_SECONDS_KEY)
+        ret_val, timeout_seconds = self._validate_integer(action_result, timeout_seconds, TANIUMREST_TIMEOUT_SECONDS_KEY)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -796,7 +778,8 @@ class TaniumRestConnector(BaseConnector):
 
         if group_name:
             endpoint = TANIUMREST_GET_GROUP.format(group_name=group_name)
-            ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
+            ret_val, response = self._make_rest_call_helper(
+                action_result, endpoint, verify=self._verify, params=None, headers=None)
 
             if phantom.is_fail(ret_val):
                 return action_result.get_status()
@@ -804,8 +787,7 @@ class TaniumRestConnector(BaseConnector):
             response_data = response.get("data")
 
             if not response_data:
-                return action_result.set_status(phantom.APP_ERROR, "No group exists with name {}. \
-                        Also, please verify that your account has sufficient permissions to access the groups".format(group_name))
+                return action_result.set_status(phantom.APP_ERROR, TANIUMREST_RESOURCE_NOT_EXIST.format(group_name, "group"))
 
             resp_data = self._get_response_data(response_data, action_result, "group")
 
@@ -822,20 +804,16 @@ class TaniumRestConnector(BaseConnector):
         data["selects"] = select_list
 
         # Ask the 'List Processes' question to Tanium
-        ret_val, response = self._make_rest_call_helper(action_result,
-                                                        TANIUMREST_GET_QUESTIONS,
-                                                        verify=self._verify,
-                                                        params=None,
-                                                        headers=None,
-                                                        json=data,
-                                                        method="post")
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_GET_QUESTIONS, verify=self._verify, params=None, headers=None, json=data, method="post")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
         # Now that the question has been processed, fetch the results from the Tanium API
         question_id = response.get("data", {}).get("id")
-        self.debug_print("Successfully queried Tanium for 'list_processes' action, got question results id {0}".format(question_id))
+        self.debug_print(
+            "Successfully queried Tanium for 'list_processes' action, got question results id {0}".format(question_id))
         endpoint = TANIUMREST_GET_QUESTION_RESULTS.format(question_id=question_id)
 
         response = self._question_result(timeout_seconds, self._percentage, endpoint, action_result)
@@ -877,13 +855,8 @@ class TaniumRestConnector(BaseConnector):
         query_text = param['query_text']
         data = {"text": query_text}
 
-        ret_val, response = self._make_rest_call_helper(action_result,
-                                                        TANIUMREST_PARSE_QUESTION,
-                                                        verify=self._verify,
-                                                        params=None,
-                                                        headers=None,
-                                                        json=data,
-                                                        method="post")
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_PARSE_QUESTION, verify=self._verify, params=None, headers=None, json=data, method="post")
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -906,7 +879,7 @@ class TaniumRestConnector(BaseConnector):
         group_name = self._handle_py_ver_compat_for_input_str(param.get('group_name'))
         timeout_seconds = param.get('timeout_seconds', 600)
         # Integer validation for 'timeout_seconds' action parameter
-        ret_val, timeout_seconds = self._validate_integer(action_result, timeout_seconds, TIMEOUT_SECONDS_KEY)
+        ret_val, timeout_seconds = self._validate_integer(action_result, timeout_seconds, TANIUMREST_TIMEOUT_SECONDS_KEY)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -917,29 +890,27 @@ class TaniumRestConnector(BaseConnector):
         wait_for_results_processing = param.get('wait_for_results_processing', False)
 
         # Integer validation for 'return_when_n_results_available' action parameter
-        ret_val, return_when_n_results_available = self._validate_integer(action_result,
-                                                                          param.get('return_when_n_results_available'),
-                                                                          RETURN_WHEN_N_RESULTS_AVAILABLE_KEY,
-                                                                          True)
+        ret_val, return_when_n_results_available = self._validate_integer(
+            action_result, param.get('return_when_n_results_available'), TANIUMREST_RETURN_WHEN_N_RESULTS_AVAILABLE_KEY, True)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
         # Integer validation for 'wait_for_n_results_available' action parameter
-        ret_val, wait_for_n_results_available = self._validate_integer(action_result,
-                                                                       param.get('wait_for_n_results_available'),
-                                                                       WAIT_FOR_N_RESULTS_AVAILABLE_KEY,
-                                                                       True)
+        ret_val, wait_for_n_results_available = self._validate_integer(
+            action_result, param.get('wait_for_n_results_available'), TANIUMREST_WAIT_FOR_N_RESULTS_AVAILABLE_KEY, True)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
         if return_when_n_results_available and wait_for_n_results_available and return_when_n_results_available < wait_for_n_results_available:
-            return action_result.set_status(phantom.APP_ERROR,
+            return action_result.set_status(
+                phantom.APP_ERROR,
                 "Please provide 'return_when_n_results_available' greater than or equal to 'wait_for_n_results_available'")
 
         if is_saved_question:
             endpoint = TANIUMREST_GET_SAVED_QUESTION.format(saved_question=query_text)
 
-            ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
+            ret_val, response = self._make_rest_call_helper(
+                action_result, endpoint, verify=self._verify, params=None, headers=None)
 
             if phantom.is_fail(ret_val):
                 return action_result.get_status()
@@ -947,8 +918,8 @@ class TaniumRestConnector(BaseConnector):
             response_data = response.get("data")
 
             if not response_data:
-                return action_result.set_status(phantom.APP_ERROR, "No saved question exists with name {}. \
-                        Also, please verify that your account has sufficient permissions to access the saved questions".format(query_text))
+                return action_result.set_status(
+                    phantom.APP_ERROR, TANIUMREST_RESOURCE_NOT_EXIST.format(query_text, "saved question"))
 
             resp_data = self._get_response_data(response_data, action_result, "saved question")
 
@@ -959,15 +930,15 @@ class TaniumRestConnector(BaseConnector):
 
             endpoint = TANIUMREST_GET_SAVED_QUESTION_RESULT.format(saved_question_id=saved_question_id)
 
-            response = self._question_result(timeout_seconds, self._percentage, endpoint, action_result, wait_for_results_processing,
-                                             return_when_n_results_available, wait_for_n_results_available)
+            response = self._question_result(
+                timeout_seconds, self._percentage, endpoint, action_result, wait_for_results_processing,
+                return_when_n_results_available, wait_for_n_results_available)
 
             if response is None:
                 return action_result.get_status()
 
             action_result.add_data(response)
         else:
-
             question_data = self._parse_manual_question(query_text, action_result, group_name=group_name or None)
             if not question_data:
                 return action_result.get_status()
@@ -999,16 +970,15 @@ class TaniumRestConnector(BaseConnector):
         question_id = param.get('question_id')
 
         # Integer validation for 'question_id' action parameter
-        ret_val, question_id = self._validate_integer(action_result, question_id, QUESTION_ID_KEY, True)
+        ret_val, question_id = self._validate_integer(action_result, question_id, TANIUMREST_QUESTION_ID_KEY, True)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
         summary = action_result.update_summary({})
 
         self.save_progress("Getting results for question {}".format(question_id))
 
-        ret_val, response = self._make_rest_call_helper(action_result,
-                                                        TANIUMREST_GET_QUESTION_RESULTS.format(question_id=question_id),
-                                                        verify=self._verify)
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_GET_QUESTION_RESULTS.format(question_id=question_id), verify=self._verify)
         if phantom.is_fail(ret_val):
             return action_result.set_status(phantom.APP_ERROR, "Getting question results failed")
 
@@ -1024,86 +994,128 @@ class TaniumRestConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    def _load_full_sensors_to_obj(self, action_result, obj, param_list):
+        """
+        This method recursively replaces the sensor dictionary to valid key-value mapping
+
+        :param action_result: Object of action result
+        :param obj: Object to sanitize
+        :param param_list: Parameter list contains values for the mapping
+        :return: obj: Valid sanitized object for ask question
+        """
+
+        if isinstance(obj, list):
+            return [self._load_full_sensors_to_obj(action_result, item, param_list) for item in obj]
+        if isinstance(obj, dict):
+            if 'sensor' in obj:
+                # Process the sensor dictionary and replace in the original object
+                success, obj['sensor'] = self._create_sensor_dict(action_result, obj["sensor"], param_list)
+                if not success:
+                    raise Exception("Error occurred during creation of sensor dictionary")
+            else:
+                return {k: self._load_full_sensors_to_obj(action_result, v, param_list) for k, v in obj.items()}
+        return obj
+
     def _parameterize_query(self, query, action_result):
         """ Creates a data structure to send a parameterized sensor query to Tanium """
-        sensors = [select["sensor"] for select in query["selects"]]
-        self.save_progress("Sensors:\n{}".format(json.dumps(sensors)))
+        selects = query["selects"]
+        self.save_progress("Sensors:\n{}".format(json.dumps(selects)))
         # Set param index counter
-        param_idx = 0
-        total_params = 0
+        self._param_idx = 0
         param_list = query["parameter_values"]
         sensor_data = []
 
-        for sensor in sensors:
-            sensor_name = sensor["name"]
-            endpoint = TANIUMREST_GET_SENSOR_BY_NAME.format(sensor_name=sensor_name)
-            ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify)
-            if phantom.is_fail(ret_val):
-                action_result.set_status(phantom.APP_ERROR, "Failed to get sensor definition from Tanium")
-                return
+        question_data = {
+            "selects": selects,
+            "question_text": query["question_text"]
+        }
+        if "group" in query:
+            question_data["group"] = query["group"]
 
-            response_data = response.get("data")
-            if not response_data:
-                action_result.set_status(phantom.APP_ERROR, "No sensor exists with name {}. \
-                        Please verify that your account has sufficient permissions to access the sensors".format(sensor_name))
-                return
-
-            resp_data = self._get_response_data(response_data, action_result, "sensor")
-            if resp_data is None:
-                return
-
-            self.save_progress("Parameter Definition:\n{}".format(resp_data.get("parameter_definition", "")))
-
-            raw_parameter_definition = resp_data.get("parameter_definition", "")
-            parameter_definition = None
-            try:
-                if raw_parameter_definition:
-                    parameter_definition = json.loads(raw_parameter_definition)
-            except Exception as e:
-                error_code, error_msg = self._get_error_message_from_exception(e)
-                return action_result.set_status(phantom.APP_ERROR,
-                    "Error while parsing the 'parameter_definition'. Error Code: {0}. Error Message: {1}".format(
-                        error_code, error_msg))
-
-            if parameter_definition:
-                # Parameterized Sensor
-                parameter_keys = [parameter["key"] for parameter in parameter_definition["parameters"]]
-                self.save_progress("Parameter Keys:\n{}".format(json.dumps(parameter_keys)))
-                total_params += len(parameter_keys)
-                parameters = []
-
-                for key in parameter_keys:
-                    if param_idx >= len(param_list):
-                        action_result.set_status(phantom.APP_ERROR, "For parameters which you do not want to add value, please use double quotes(\"\").\
-                                    For more details refer to the documentation")
-                        return
-
-                    parameter = {
-                        "key": "||%s||" % key,
-                        "value": param_list[param_idx] }
-                    parameters.append(parameter)
-                    param_idx += 1
-
-                sensor_dict = {
-                    "source_hash": sensor["hash"],
-                    "parameters": parameters }
-                sensor_data.append({"sensor": sensor_dict})
-            else:
-                # Regular Sensor, can use as-is
-                sensor_data.append({"sensor": sensor})
-
-        if total_params and total_params != len(param_list):
-            action_result.set_status(phantom.APP_ERROR, "Please provide the exact number of parameters expected by the sensor")
+        try:
+            question_data = self._load_full_sensors_to_obj(action_result, question_data, param_list)
+        except Exception as e:
+            error_code, error_msg = self._get_error_message_from_exception(e)
+            self.debug_print(
+                "Error occurred while converting the sensors. Error code: {}, Message: {}".format(error_code, error_msg))
             return
 
         self.save_progress("Sensor Data:\n{}".format(json.dumps(sensor_data)))
-        question_data = { "selects": sensor_data,
-                          "question_text": query["question_text"]}
-        if "group" in query:
-            # Add in filters
-            question_data["group"] = query["group"]
+
+        if self._param_idx and self._param_idx != len(param_list):
+            action_result.set_status(phantom.APP_ERROR, "Please provide the exact number of parameters expected by the sensor")
+            return
 
         return question_data
+
+    def _create_sensor_dict(self, action_result, sensor, param_list):
+        """
+        This method fetches parameter definition for the provided sensor and creates key-value mapping
+
+        :param action_result: Object of action result
+        :param sensor: Sensor object to create key-value mapping
+        :param param_list: Parameter list contains values for the mapping
+        :return: obj: Valid sanitized object for provided sensor
+        """
+
+        sensor_name = sensor["name"]
+        endpoint = TANIUMREST_GET_SENSOR_BY_NAME.format(sensor_name=sensor_name)
+        ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify)
+        if phantom.is_fail(ret_val):
+            action_result.set_status(phantom.APP_ERROR, "Failed to get sensor definition from Tanium")
+            return phantom.APP_ERROR, {}
+
+        response_data = response.get("data")
+        if not response_data:
+            action_result.set_status(phantom.APP_ERROR, TANIUMREST_RESOURCE_NOT_EXIST.format(sensor_name, "sensor"))
+            return phantom.APP_ERROR, {}
+
+        resp_data = self._get_response_data(response_data, action_result, "sensor")
+        if resp_data is None:
+            return phantom.APP_ERROR, {}
+
+        self.save_progress("Parameter Definition:\n{}".format(resp_data.get("parameter_definition", "")))
+
+        raw_parameter_definition = resp_data.get("parameter_definition", "")
+        parameter_definition = None
+        try:
+            if raw_parameter_definition:
+                parameter_definition = json.loads(raw_parameter_definition)
+
+            if not parameter_definition:
+                # Regular Sensor, can use as-is
+                return phantom.APP_SUCCESS, sensor
+        except Exception as e:
+            error_code, error_msg = self._get_error_message_from_exception(e)
+            error_msg = "Error while parsing the 'parameter_definition'. Error Code: {0}. Error Message: {1}".format(
+                error_code, error_msg)
+            return action_result.set_status(phantom.APP_ERROR, error_msg), {}
+
+        # Parameterized Sensor
+        parameter_keys = [parameter["key"] for parameter in parameter_definition["parameters"]]
+        self.save_progress("Parameter Keys:\n{}".format(json.dumps(parameter_keys)))
+        parameters = []
+
+        # Map all the keys with the respective value from parma_list
+        for key in parameter_keys:
+            if self._param_idx >= len(param_list):
+                action_result.set_status(phantom.APP_ERROR, TANIUMREST_NOT_ENOUGH_PARAMS)
+                return
+
+            parameter = {
+                "key": "||%s||" % key,
+                "value": param_list[self._param_idx]
+            }
+            parameters.append(parameter)
+            self._param_idx += 1
+
+        # Create a new sensor dictionary with valid format
+        sensor_dict = {
+            "source_hash": sensor["hash"],
+            "name": sensor_name,
+            "parameters": parameters
+        }
+        return phantom.APP_SUCCESS, sensor_dict
 
     def _parse_manual_question(self, query_text, action_result, group_name=None):
         # Prepare data dict for posting to /questions
@@ -1112,7 +1124,8 @@ class TaniumRestConnector(BaseConnector):
         # If a group_name was supplied, validate the group name is valid
         if group_name:
             endpoint = TANIUMREST_GET_GROUP.format(group_name=group_name)
-            ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
+            ret_val, response = self._make_rest_call_helper(
+                action_result, endpoint, verify=self._verify, params=None, headers=None)
 
             if phantom.is_fail(ret_val):
                 action_result.set_status(phantom.APP_ERROR, "Failed to get group. Please provide a valid group name")
@@ -1121,8 +1134,7 @@ class TaniumRestConnector(BaseConnector):
             response_data = response.get("data")
 
             if not response_data:
-                action_result.set_status(phantom.APP_ERROR, "No group exists with name {}. \
-                        Also, please verify that your account has sufficient permissions to access the groups".format(group_name))
+                action_result.set_status(phantom.APP_ERROR, TANIUMREST_RESOURCE_NOT_EXIST.format(group_name, "group"))
                 return
 
             resp_data = self._get_response_data(response_data, action_result, "group")
@@ -1137,8 +1149,9 @@ class TaniumRestConnector(BaseConnector):
         # to ensure the query is in a valid Tanium syntax
         query_to_parse = {"text": query_text}
 
-        ret_val, response = self._make_rest_call_helper(action_result, TANIUMREST_PARSE_QUESTION, verify=self._verify, params=None, headers=None,
-                                                        json=query_to_parse, method="post")
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_PARSE_QUESTION, verify=self._verify, params=None,
+            headers=None, json=query_to_parse, method="post")
         self.save_progress("Parsed Question:\n{}".format(json.dumps(response)))
 
         if phantom.is_fail(ret_val):
@@ -1176,13 +1189,8 @@ class TaniumRestConnector(BaseConnector):
         # config = self.get_config()
         if timeout_seconds:
             data['expire_seconds'] = timeout_seconds
-        ret_val, response = self._make_rest_call_helper(action_result,
-                                                        TANIUMREST_GET_QUESTIONS,
-                                                        verify=self._verify,
-                                                        params=None,
-                                                        headers=None,
-                                                        json=data,
-                                                        method="post")
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_GET_QUESTIONS, verify=self._verify, params=None, headers=None, json=data, method="post")
 
         if phantom.is_fail(ret_val):
             action_result.set_status(phantom.APP_ERROR, "Question post failed")
@@ -1242,11 +1250,16 @@ class TaniumRestConnector(BaseConnector):
     def initialize(self):
 
         self._state = self.load_state()
+        if not isinstance(self._state, dict):
+            self.debug_print("Resetting the state file with the default format")
+            self._state = {
+                "app_version": self.get_app_json().get('app_version')
+            }
 
         # Fetching the Python major version
         try:
             self._python_version = int(sys.version_info[0])
-        except:
+        except Exception:
             return self.set_status(phantom.APP_ERROR, "Error occurred while fetching the Phantom server's Python major version.")
 
         config = self.get_config()
@@ -1264,11 +1277,14 @@ class TaniumRestConnector(BaseConnector):
         self._percentage = config.get('results_percentage', 99)
 
         # Integer validation for 'results_percentage' configuration parameter
-        ret_val, self._percentage = self._validate_integer(self, self._percentage, RESULTS_PERCENTAGE_KEY, True)
+        ret_val, self._percentage = self._validate_integer(self, self._percentage, TANIUMREST_RESULTS_PERCENTAGE_KEY, True)
         if phantom.is_fail(ret_val):
             self.get_status()
         if self._percentage > 100:
-            return self.set_status(phantom.APP_ERROR, "Please provide a valid integer in range of 0-100 in {}".format(RESULTS_PERCENTAGE_KEY))
+            return self.set_status(
+                phantom.APP_ERROR,
+                "Please provide a valid integer in range of 0-100 in {}".format(TANIUMREST_RESULTS_PERCENTAGE_KEY)
+            )
 
         self._base_url = self._handle_py_ver_compat_for_input_str(config['base_url'])
 
@@ -1315,15 +1331,15 @@ if __name__ == '__main__':
     username = args.username
     password = args.password
 
-    if (username is not None and password is None):
+    if username is not None and password is None:
 
         # User specified a username but not a password, so ask
         import getpass
         password = getpass.getpass("Password: ")
 
-    if (username and password):
+    if username and password:
         try:
-            login_url = TaniumRestConnector._get_phantom_base_url() + '/login'
+            login_url = '{}/login'.format(TaniumRestConnector._get_phantom_base_url())
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=False)
@@ -1335,14 +1351,14 @@ if __name__ == '__main__':
             data['csrfmiddlewaretoken'] = csrftoken
 
             headers = dict()
-            headers['Cookie'] = 'csrftoken=' + csrftoken
+            headers['Cookie'] = 'csrftoken={}'.format(csrftoken)
             headers['Referer'] = login_url
 
             print("Logging into Platform to get the session id")
             r2 = requests.post(login_url, verify=False, data=data, headers=headers)
             session_id = r2.cookies['sessionid']
         except Exception as e:
-            print("Unable to get session id from the platform. Error: " + str(e))
+            print("Unable to get session id from the platform. Error: {}".format(str(e)))
             exit(1)
 
     with open(args.input_test_json) as f:
@@ -1353,7 +1369,7 @@ if __name__ == '__main__':
         connector = TaniumRestConnector()
         connector.print_progress_message = True
 
-        if (session_id is not None):
+        if session_id is not None:
             in_json['user_session_token'] = session_id
             connector._set_csrf_info(csrftoken, headers['Referer'])
 
