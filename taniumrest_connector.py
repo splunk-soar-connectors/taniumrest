@@ -176,22 +176,17 @@ class TaniumRestConnector(BaseConnector):
         try:
             if resp_json.get('text'):
                 message = "Error from server. Status Code: {0} Data from \
-                    server: {1}".format(r.status_code,
-                                        self._handle_py_ver_compat_for_input_str(
-                                            resp_json.get('text')))
+                    server: {1}".format(r.status_code, self._handle_py_ver_compat_for_input_str(resp_json.get('text')))
             else:
-                message = "Error from server. Status Code: {0} Data from \
-                        server: {1}".format(r.status_code,
-                                            self._handle_py_ver_compat_for_input_str(
-                                                r.text.replace('{', '{{').replace('}', '}}')))
+                message = "Error from server. Status Code: {0} Data from server: {1}".format(
+                    r.status_code, self._handle_py_ver_compat_for_input_str(r.text.replace('{', '{{').replace('}', '}}')))
             if r.status_code == 404:
                 permission_error = "\nThis error usually means the account you are using to interface to Tanium " \
                     "does not have sufficient permissions to perform this action. See Tanium's documentation " \
                     "for more information on how to change your permissions."
                 message = "{}{}".format(message, permission_error)
         except Exception:
-            message = "Error from server. Status Code: {0}. Please provide valid \
-                    input".format(r.status_code)
+            message = "Error from server. Status Code: {0}. Please provide valid input".format(r.status_code)
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -221,10 +216,8 @@ class TaniumRestConnector(BaseConnector):
             return self._process_empty_response(r, action_result)
 
         # everything else is actually an error at this point
-        message = "Can't process response from server. Status Code: {0} Data from \
-                    server: {1}".format(r.status_code,
-                                        self._handle_py_ver_compat_for_input_str(
-                                            r.text.replace('{', '{{').replace('}', '}}')))
+        message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
+            r.status_code, self._handle_py_ver_compat_for_input_str(r.text.replace('{', '{{').replace('}', '}}')))
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
