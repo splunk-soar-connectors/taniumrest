@@ -44,6 +44,7 @@ class TaniumRestConnector(BaseConnector):
 
         self._state = None
         self._base_url = None
+        self._api_token = None
         self._username = None
         self._password = None
         self._verify = None
@@ -327,7 +328,7 @@ class TaniumRestConnector(BaseConnector):
         return phantom.APP_SUCCESS, resp_json
 
     def _get_token(self, action_result, from_action=False):
-        """ This function is used to get a token via REST Call.
+        """ If an API token is not already provided, this function is used to get a token via REST call.
 
         :param action_result: Object of action result
         :param from_action: Boolean object of from_action
@@ -365,11 +366,12 @@ class TaniumRestConnector(BaseConnector):
 
         self.save_progress("Connecting to endpoint")
 
-        ret_val = self._get_token(action_result)
+        if not self._api_token:
+            ret_val = self._get_token(action_result)
+            if phantom.is_fail(ret_val):
+                self.save_progress("Test Connectivity Failed")
+                return action_result.get_status()
 
-        if phantom.is_fail(ret_val):
-            self.save_progress("Test Connectivity Failed")
-            return action_result.get_status()
         # make rest call
         ret_val, response = self._make_rest_call_helper(
             action_result, TANIUMREST_GET_SAVED_QUESTIONS, verify=self._verify, params=None, headers=None)
@@ -1254,8 +1256,16 @@ class TaniumRestConnector(BaseConnector):
             return self.set_status(phantom.APP_ERROR, "Error occurred while fetching the Phantom server's Python major version.")
 
         config = self.get_config()
-        self._username = self._handle_py_ver_compat_for_input_str(config['username'])
-        self._password = config['password']
+        self._api_token = config.get('api_token')
+        if self._api_token:
+            self._session_id = self._api_token  # API uses token in place of session id
+        else:
+            self._username = self._handle_py_ver_compat_for_input_str(config.get('username'))
+            self._password = config.get('password')
+
+        if not self._api_token and not (self._username and self._password):
+            return self.set_status(phantom.APP_ERROR, "Please provide either an API token, or username and password credentials")
+
         self._verify = config.get('verify_server_cert', False)
         self._percentage = config.get('results_percentage', 99)
 
@@ -1283,7 +1293,8 @@ class TaniumRestConnector(BaseConnector):
         elif self._base_url.startswith('\\'):
             self._base_url = self._base_url.strip('\\').strip('/')
 
-        self._session_id = self._state.get('session_id', '')
+        if not self._session_id:
+            self._session_id = self._state.get('session_id', '')
 
         return phantom.APP_SUCCESS
 
@@ -1324,7 +1335,7 @@ if __name__ == '__main__':
             login_url = '{}/login'.format(TaniumRestConnector._get_phantom_base_url())
 
             print("Accessing the Login page")
-            r = requests.get(login_url, verify=False)
+            r = requests.get(login_url, verify=False)  # nosemgrep
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -1337,11 +1348,11 @@ if __name__ == '__main__':
             headers['Referer'] = login_url
 
             print("Logging into Platform to get the session id")
-            r2 = requests.post(login_url, verify=False, data=data, headers=headers)
+            r2 = requests.post(login_url, verify=False, data=data, headers=headers)  # nosemgrep
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platform. Error: {}".format(str(e)))
-            exit(1)
+            exit(1)  # nosemgrep
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -1358,4 +1369,4 @@ if __name__ == '__main__':
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    exit(0)  # nosemgrep
