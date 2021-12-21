@@ -2,7 +2,7 @@
 # Tanium REST
 
 Publisher: Splunk  
-Connector Version: 2\.1\.3  
+Connector Version: 2\.1\.4  
 Product Vendor: Tanium  
 Product Name: Tanium REST  
 Product Version Supported (regex): "\.\*"  
