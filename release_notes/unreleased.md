@@ -1,1 +1,1 @@
-[PAPP-23910] - updated API token generation documentation
+- Updated API token generation documentation [PAPP-23910]
