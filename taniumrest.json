@@ -11,15 +11,15 @@
     "publisher": "Splunk",
     "python_version": "3",
     "fips_compliant": true,
-    "license": "Copyright (c) 2019-2021 Splunk Inc.",
+    "license": "Copyright (c) 2019-2022 Splunk Inc.",
     "latest_tested_versions": [
         "Build (Windows): 7.5.2.3503 | Console: 3.0.64"
     ],
-    "app_version": "2.1.4",
-    "utctime_updated": "2021-12-21T06:29:11.000000Z",
+    "app_version": "2.1.5",
+    "utctime_updated": "2022-01-07T20:22:22.000000Z",
     "package_name": "phantom_taniumrest",
     "main_module": "taniumrest_connector.py",
-    "min_phantom_version": "5.0.0",
+    "min_phantom_version": "5.1.0",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "base_url": {

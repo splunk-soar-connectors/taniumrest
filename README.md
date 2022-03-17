@@ -2,16 +2,16 @@
 # Tanium REST
 
 Publisher: Splunk  
-Connector Version: 2\.1\.4  
+Connector Version: 2\.1\.5  
 Product Vendor: Tanium  
 Product Name: Tanium REST  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.0\.0  
+Minimum Product Version: 5\.1\.0  
 
 This app supports investigative and generic actions on Tanium
 
-[comment]: # " File: readme.md"
-[comment]: # "  Copyright (c) 2019-2021 Splunk Inc."
+[comment]: # " File: README.md"
+[comment]: # "  Copyright (c) 2019-2022 Splunk Inc."
 [comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "  you may not use this file except in compliance with the License."
 [comment]: # "  You may obtain a copy of the License at"
@@ -23,6 +23,7 @@ This app supports investigative and generic actions on Tanium
 [comment]: # "  either express or implied. See the License for the specific language governing permissions"
 [comment]: # "  and limitations under the License."
 [comment]: # ""
+[comment]: # " pragma: allowlist secret "
 ## Playbook Backward Compatibility
 
 -   The existing action parameters have been modified for the action given below. Hence, it is
@@ -86,6 +87,10 @@ ports used by Splunk SOAR.
     process to generate a new token before the current token expires. Failure to do so will cause
     integration to break as your token will no longer be valid after such date.**
 
+-   **The end user will need to add the SOAR source IP address as a "Trusted IP Address" when
+    creating a Tanium API Token. They will also need to note the expiration time and create a new
+    token accordingly.**
+
 -   **The following information regarding API calls using curl commands and additional notes have
     been taken from the "Tanium Server REST API Reference" documentation. More information can be
     gathered by contacting Tanium Support.**
@@ -108,16 +113,15 @@ ports used by Splunk SOAR.
 
 -   To generate an API token using this method, a session string or token string will need to be
     acquired first through the Login API endpoint. Then, the session or token string will be passed
-    in the header to get the API token. In the examples below, either an empty data set or optional
-    fields can be passed in the API token request; the latter allows one to specify the trusted ips
-    at the token level and also set a name and any notes about the token. This can be useful in
-    identifying the token after it is created, since the token string is not visible in the UI using
-    this method.
+    in the header to get the API token. In the examples below, fields need to be passed in the API
+    token request. **You MUST include the SOAR IP address as a trusted IP address.** It is also
+    useful to include the **notes** field, as this can be useful in identifying the token after it
+    is created since the token string is not visible in the UI using this method.
 
 -   #### Login API Endpoint
 
       
-    `       /api/v2/login      `
+    `       /api/v2/session/login      `
 
     #### Example Request
 
@@ -127,7 +131,7 @@ ports used by Splunk SOAR.
               # {
               #   "username": "jane.doe",
               #   "domain": "dev",
-              #   "password": "JanesPassword"
+              #   "password": "JanesPassword" 
               # }
               
 
@@ -147,7 +151,7 @@ ports used by Splunk SOAR.
 
     #### Example Request (session string):
 
-    `       $ curl -s -X POST -H "session:{string}" --data "{ }" https://localhost/api/v2/api_tokens      `
+    `       $ curl -s -X POST -H "session:{string}" --data "{json object}" https://localhost/api/v2/api_tokens      `
 
     #### Header Parameters
 
@@ -157,18 +161,17 @@ ports used by Splunk SOAR.
 
     #### Body Parameters
 
-    | Field  | Type             | Description                                                                                                                                           |
-    |--------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-    | object | application/json | (Required) An empty data set. You can also pass the data set on the header as `          --data "{ }"         ` or `          --data null         ` . |
+    | Field  | Type             | Description                                                                                                                                                                         |
+    |--------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | object | application/json | (Required) A json object containing fields "expire_in_days", "notes", and "trusted_ip_addresses". Be sure that the SOAR IP address is included in the "trusted_ip_addresses" field. |
 
     #### Example Request (with fields):
 
-    `       $ curl -s -X POST -H "session:{string}" --data-binary @new_token.json https://localhost/api/v2/tokens      `
+    `       $ curl -s -X POST -H "session:{string}" --data-binary @new_token.json https://localhost/api/v2/api_tokens      `
 
               # where new_token.json contains:
               # {
               #   "expire_in_days": 365,
-              #   "name": "my_token",
               #   "notes": "My module token.",
               #   "trusted_ip_addresses": "10.10.10.15,192.168.3.0/24"
               # }
