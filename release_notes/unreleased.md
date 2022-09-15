@@ -1,1 +1,2 @@
 **Unreleased**
+* Fixed the custom view for 'get question results' action

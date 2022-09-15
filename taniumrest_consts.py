@@ -25,6 +25,7 @@ TANIUMREST_GET_SAVED_QUESTION = "/api/v2/saved_questions/by-name/{saved_question
 TANIUMREST_GET_SENSOR_BY_NAME = "/api/v2/sensors/by-name/{sensor_name}"
 TANIUMREST_GET_SAVED_QUESTION_RESULT = "/api/v2/result_data/saved_question/{saved_question_id}"
 TANIUMREST_WAIT_SECONDS = 5
+TANIUMREST_DEFAULT_TIMEOUT = 30  # in seconds
 TANIUMREST_RESULTS_UNAVAILABLE = [
     "[current results unavailable]",
     "[current result unavailable]",

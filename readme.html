@@ -139,10 +139,10 @@
     Please ensure the account you used to configure the Tanium REST API app has access to any machines you run queries or actions on.</li>
   </ul>
   <br>
-  <li>Suggested Roles for Phantom Account in Tanium</li>
+  <li>Suggested Roles for SOAR Account in Tanium</li>
   <ul>
-    <li>The following Tanium Roles shown below can be configured within Tanium and applied to the account used to connect to Phantom.
-      Note that these roles represent guidance by the Splunk Phantom team based on testing against Tanium 7.3.314.
+    <li>The following Tanium Roles shown below can be configured within Tanium and applied to the account used to connect to SOAR.
+      Note that these roles represent guidance by the Splunk SOAR team based on testing against Tanium 7.3.314.
       <b>The permissions required in your environment may vary.</b></li>
     <li>On Tanium 7.3.314, roles can be configured by selecting Permissions > Roles in the Tanium UI.
         Roles can be applied to a user account by selecting Administration > Users > (View User) > Edit Roles in the Tanium UI.</li>
@@ -150,7 +150,7 @@
         the roles described below are attached to this app's folder.</li>
       <br>
       <code>
-        <b>Role #1 Name:</b> Phantom All Questions
+        <b>Role #1 Name:</b> SOAR All Questions
         <ul>
           <li><b>Permissions:</b> Can Ask Question and Saved Question.  Needed for run query and list processes actions. </li>
           <li><b>Ask Dynamic Question:</b> Yes</li>
@@ -158,7 +158,7 @@
           <li><b>Advanced Permissions:</b> Read Sensor, Read Saved Question</li>
         </ul>
         <br>
-        <b>Role #2 Name:</b> Phantom Actions
+        <b>Role #2 Name:</b> SOAR Actions
         <ul>
         <li><b>Permissions:</b> Can execute actions only. Needed for execute action and terminate process.</li>
         <li><b>Show Interact:</b> Yes</li>
