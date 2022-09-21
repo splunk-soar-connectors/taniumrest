@@ -18,6 +18,7 @@
 import ast
 import json
 import os
+import traceback
 from time import sleep
 
 import encryption_helper
@@ -62,9 +63,10 @@ class TaniumRestConnector(BaseConnector):
             return state
 
         try:
-            state["session_id"] = encryption_helper.decrypt(state.get("session_id"), self._asset_id)
+            if state.get("session_id"):
+                state["session_id"] = encryption_helper.decrypt(state.get("session_id"), self._asset_id)
         except Exception as e:
-            self.debug_print("{}: {}".format("Error occurred while decrypting the session id", str(e)))
+            self.error_print("Error occurred while decrypting the session id", e)
             state = {}
 
         return state
@@ -77,10 +79,11 @@ class TaniumRestConnector(BaseConnector):
         :return: status
         """
         try:
-            state["session_id"] = encryption_helper.encrypt(state["session_id"], self._asset_id)
-            state["is_encrypted"] = True
+            if state.get("session_id"):
+                state["session_id"] = encryption_helper.encrypt(state["session_id"], self._asset_id)
+                state["is_encrypted"] = True
         except Exception as e:
-            self.debug_print("{}: {}".format("Error occurred while encrypting the session id", str(e)))
+            self.error_print("Error occurred while encrypting the session id", e)
             state.pop("session_id", None)
             state.pop("is_encrypted", None)
 
@@ -92,18 +95,18 @@ class TaniumRestConnector(BaseConnector):
         :return: error message
         """
 
-        error_code = TANIUMREST_ERR_CODE_MSG
+        self.error_print("Traceback: {}".format(traceback.format_stack()))
+        error_code = None
         error_msg = TANIUMREST_ERR_MSG_UNAVAILABLE
         try:
-            if e.args:
+            if hasattr(e, "args"):
                 if len(e.args) > 1:
                     error_code = e.args[0]
                     error_msg = e.args[1]
                 elif len(e.args) == 1:
-                    error_code = TANIUMREST_ERR_CODE_MSG
                     error_msg = e.args[0]
-        except Exception:
-            self.debug_print("Error occurred while retrieving exception information")
+        except Exception as e:
+            self.error_print("Error occurred while retrieving exception information", e)
 
         if not error_code:
             error_text = "Error Message: {}".format(error_msg)
@@ -179,10 +182,10 @@ class TaniumRestConnector(BaseConnector):
             resp_json = r.json()
         except Exception as e:
             self.error_print("Unable to parse JSON response", e)
-            error_code, error_msg = self._get_error_message_from_exception(e)
+            error_msg = self._get_error_message_from_exception(e)
             return RetVal(action_result.set_status(
                 phantom.APP_ERROR,
-                "Unable to parse JSON response. Error Code: {0} Error Message: {1}".format(error_code, error_msg)), None)
+                "Unable to parse JSON response. Error: {}".format(error_msg)), None)
 
         # Please specify the status codes here
         if 200 <= r.status_code < 399:
@@ -272,11 +275,11 @@ class TaniumRestConnector(BaseConnector):
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except Exception as e:
             self.error_print("Error occurred while making the REST call to the Tanium server", e)
-            error_code, error_msg = self._get_error_message_from_exception(e)
+            error_msg = self._get_error_message_from_exception(e)
             return RetVal(action_result.set_status(
                 phantom.APP_ERROR,
-                "Error occurred while making the REST call to the Tanium server. Error Code: {0}. Error Message: {1}"
-                .format(error_code, error_msg)), None)
+                "Error occurred while making the REST call to the Tanium server. Error: {}"
+                .format(error_msg)), None)
 
         return self._process_response(r, action_result)
 
@@ -367,7 +370,8 @@ class TaniumRestConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             self.debug_print("Failed to fetch a session token from Tanium API!")
             self.save_progress("Failed to fetch a session token from Tanium API!")
-            self._state['session_id'] = None
+            self._state.pop('session_id', None)
+            self._state.pop('is_encrypted', None)
             self._session_id = None
             return action_result.get_status()
 
@@ -509,10 +513,10 @@ class TaniumRestConnector(BaseConnector):
                 parameter_definition = json.loads(parameter_definition)
         except Exception as e:
             self.error_print("Error while fetching package details", e)
-            error_code, error_msg = self._get_error_message_from_exception(e)
+            error_msg = self._get_error_message_from_exception(e)
             action_result.set_status(
                 phantom.APP_ERROR,
-                "Error while fetching package details. Error Code: {0}. Error Message: {1}".format(error_code, error_msg))
+                "Error while fetching package details. Error: {}".format(error_msg))
 
         if parameter_definition and len(parameter_definition.get("parameters")) != 0:
             self.debug_print("Provided package is a parameterized package")
@@ -526,11 +530,11 @@ class TaniumRestConnector(BaseConnector):
                 package_parameter = json.loads(package_parameter)
             except Exception as e:
                 self.error_print("Error while  parsing the 'package_parameter' field", e)
-                error_code, error_msg = self._get_error_message_from_exception(e)
+                error_msg = self._get_error_message_from_exception(e)
                 return action_result.set_status(
                     phantom.APP_ERROR,
-                    "Error while parsing the 'package_parameter' field. Error Code: {0}. Error Message: {1}"
-                    .format(error_code, error_msg))
+                    "Error while parsing the 'package_parameter' field. Error: {}"
+                    .format(error_msg))
 
             if len(package_parameter) != len(parameter_definition.get("parameters")):
                 return action_result.set_status(
@@ -1046,9 +1050,9 @@ class TaniumRestConnector(BaseConnector):
             question_data = self._load_full_sensors_to_obj(action_result, question_data, param_list)
         except Exception as e:
             self.error_print("Error occurred while converting the sensors", e)
-            error_code, error_msg = self._get_error_message_from_exception(e)
+            error_msg = self._get_error_message_from_exception(e)
             self.debug_print(
-                "Error occurred while converting the sensors. Error code: {}, Message: {}".format(error_code, error_msg))
+                "Error occurred while converting the sensors. Error: {}".format(error_msg))
             return
 
         if self._param_idx and self._param_idx != len(param_list):
@@ -1096,9 +1100,9 @@ class TaniumRestConnector(BaseConnector):
                 return phantom.APP_SUCCESS, sensor
         except Exception as e:
             self.error_print("Error while parsing the 'parameter_definition'", e)
-            error_code, error_msg = self._get_error_message_from_exception(e)
-            error_msg = "Error while parsing the 'parameter_definition'. Error Code: {0}. Error Message: {1}".format(
-                error_code, error_msg)
+            error_msg = self._get_error_message_from_exception(e)
+            error_msg = "Error while parsing the 'parameter_definition'. Error: {}".format(
+                error_msg)
             return action_result.set_status(phantom.APP_ERROR, error_msg), {}
 
         # Parameterized Sensor

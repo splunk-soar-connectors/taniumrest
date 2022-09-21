@@ -773,6 +773,9 @@
                     "example_values": [
                         26
                     ],
+                    "contains": [
+                        "taniumrest question id"
+                    ],
                     "column_name": "Question ID",
                     "column_order": 0
                 },
@@ -869,6 +872,9 @@
                     "data_type": "numeric",
                     "example_values": [
                         56071
+                    ],
+                    "contains": [
+                        "taniumrest question id"
                     ]
                 },
                 {
@@ -919,6 +925,9 @@
                     "data_type": "numeric",
                     "example_values": [
                         56071
+                    ],
+                    "contains": [
+                        "taniumrest question id"
                     ]
                 },
                 {
