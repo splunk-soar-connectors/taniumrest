@@ -18,7 +18,6 @@
 import ast
 import json
 import os
-import traceback
 from time import sleep
 
 import encryption_helper
@@ -59,6 +58,10 @@ class TaniumRestConnector(BaseConnector):
         :return: loaded state
         """
         state = super().load_state()
+        if not isinstance(state, dict):
+            self.debug_print("The state file is corrupted. Resetting the file")
+            return {}
+
         if not state.get("is_encrypted"):
             return state
 
@@ -95,7 +98,7 @@ class TaniumRestConnector(BaseConnector):
         :return: error message
         """
 
-        self.error_print("Traceback: {}".format(traceback.format_stack()))
+        self.error_print("Traceback: ", e)
         error_code = None
         error_msg = TANIUMREST_ERR_MSG_UNAVAILABLE
         try:
@@ -142,7 +145,7 @@ class TaniumRestConnector(BaseConnector):
 
     def _process_empty_response(self, response, action_result):
 
-        if response.status_code in [200, 204]:
+        if response.status_code in [200, 201, 204]:
             return RetVal(phantom.APP_SUCCESS, {})
 
         return RetVal(action_result.set_status(
@@ -181,7 +184,6 @@ class TaniumRestConnector(BaseConnector):
         try:
             resp_json = r.json()
         except Exception as e:
-            self.error_print("Unable to parse JSON response", e)
             error_msg = self._get_error_message_from_exception(e)
             return RetVal(action_result.set_status(
                 phantom.APP_ERROR,
@@ -274,7 +276,6 @@ class TaniumRestConnector(BaseConnector):
             error_message = 'Error connecting to server. Connection Refused from the Server for %s' % endpoint
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except Exception as e:
-            self.error_print("Error occurred while making the REST call to the Tanium server", e)
             error_msg = self._get_error_message_from_exception(e)
             return RetVal(action_result.set_status(
                 phantom.APP_ERROR,
@@ -512,7 +513,6 @@ class TaniumRestConnector(BaseConnector):
             if parameter_definition and not isinstance(parameter_definition, dict):
                 parameter_definition = json.loads(parameter_definition)
         except Exception as e:
-            self.error_print("Error while fetching package details", e)
             error_msg = self._get_error_message_from_exception(e)
             action_result.set_status(
                 phantom.APP_ERROR,
@@ -529,7 +529,6 @@ class TaniumRestConnector(BaseConnector):
             try:
                 package_parameter = json.loads(package_parameter)
             except Exception as e:
-                self.error_print("Error while  parsing the 'package_parameter' field", e)
                 error_msg = self._get_error_message_from_exception(e)
                 return action_result.set_status(
                     phantom.APP_ERROR,
@@ -1049,7 +1048,6 @@ class TaniumRestConnector(BaseConnector):
         try:
             question_data = self._load_full_sensors_to_obj(action_result, question_data, param_list)
         except Exception as e:
-            self.error_print("Error occurred while converting the sensors", e)
             error_msg = self._get_error_message_from_exception(e)
             self.debug_print(
                 "Error occurred while converting the sensors. Error: {}".format(error_msg))
@@ -1099,7 +1097,6 @@ class TaniumRestConnector(BaseConnector):
                 # Regular Sensor, can use as-is
                 return phantom.APP_SUCCESS, sensor
         except Exception as e:
-            self.error_print("Error while parsing the 'parameter_definition'", e)
             error_msg = self._get_error_message_from_exception(e)
             error_msg = "Error while parsing the 'parameter_definition'. Error: {}".format(
                 error_msg)
@@ -1265,11 +1262,6 @@ class TaniumRestConnector(BaseConnector):
 
         self._asset_id = self.get_asset_id()
         self._state = self.load_state()
-        if not isinstance(self._state, dict):
-            self.debug_print("Resetting the state file with the default format")
-            self._state = {
-                "app_version": self.get_app_json().get('app_version')
-            }
 
         config = self.get_config()
         self._api_token = config.get('api_token')

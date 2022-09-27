@@ -23,7 +23,7 @@
     "app_wizard_version": "1.0.0",
     "configuration": {
         "base_url": {
-            "description": "Base URL (e.g. https://10.1.16.94)",
+            "description": "Base URL (e.g. https://taniumserver)",
             "data_type": "string",
             "required": true,
             "order": 0

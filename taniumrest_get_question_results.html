@@ -164,6 +164,7 @@
     $.extend(true, $.fn.dataTable.defaults, {
         "searching": false,
         "bLengthChange": false,
+        "ordering": true,
         "language": {
             "paginate": {
                 "previous": "<i class='fa fa-angle-left fa-lg'></i>",
@@ -177,6 +178,8 @@
         }
     });
     $.fn.DataTable.ext.pager.numbers_length = 5;
-    $('.datatable').DataTable();
+    $('.datatable').DataTable({
+        order: []
+    });
 </script>
 {% endblock %} <!-- Main Start Block -->
