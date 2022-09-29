@@ -2,11 +2,11 @@
 # Tanium REST
 
 Publisher: Splunk  
-Connector Version: 2\.1\.5  
+Connector Version: 2\.2\.0  
 Product Vendor: Tanium  
 Product Name: Tanium REST  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.1\.0  
+Minimum Product Version: 5\.3\.3  
 
 This app supports investigative and generic actions on Tanium
 
@@ -197,14 +197,14 @@ ports used by Splunk SOAR.
 
       
 
--   Suggested Roles for Phantom Account in Tanium
+-   Suggested Roles for SOAR Account in Tanium
 
       
 
     -   The following Tanium Roles shown below can be configured within Tanium and applied to the
-        account used to connect to Phantom. Note that these roles represent guidance by the Splunk
-        Phantom team based on testing against Tanium 7.3.314. **The permissions required in your
-        environment may vary.**
+        account used to connect to SOAR. Note that these roles represent guidance by the Splunk SOAR
+        team based on testing against Tanium 7.3.314. **The permissions required in your environment
+        may vary.**
 
     -   On Tanium 7.3.314, roles can be configured by selecting Permissions \> Roles in the Tanium
         UI. Roles can be applied to a user account by selecting Administration \> Users \> (View
@@ -215,14 +215,14 @@ ports used by Splunk SOAR.
 
           
           
-        `                     Role #1 Name:                    Phantom All Questions         `
+        `                     Role #1 Name:                    SOAR All Questions         `
 
         -   `                         Permissions:                        Can Ask Question and Saved Question. Needed for run query and list processes actions.           `
         -   `                         Ask Dynamic Question:                        Yes           `
         -   `                         Show Interact:                        Yes           `
         -   `                         Advanced Permissions:                        Read Sensor, Read Saved Question           `
 
-        `                               Role #2 Name:                    Phantom Actions         `
+        `                               Role #2 Name:                    SOAR Actions         `
 
         -   `                         Permissions:                        Can execute actions only. Needed for execute action and terminate process.           `
         -   `                         Show Interact:                        Yes           `
@@ -544,7 +544,7 @@ The below configuration variables are required for this Connector to operate.  T
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
-**base\_url** |  required  | string | Base URL \(e\.g\. https\://10\.1\.16\.94\)
+**base\_url** |  required  | string | Base URL \(e\.g\. https\://taniumserver\)
 **api\_token** |  optional  | password | API Token
 **username** |  optional  | string | Username
 **password** |  optional  | password | Password
@@ -591,6 +591,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
+action\_result\.status | string | 
 action\_result\.parameter\.group\_name | string | 
 action\_result\.parameter\.sensor | string | 
 action\_result\.parameter\.timeout\_seconds | numeric | 
@@ -626,10 +627,9 @@ action\_result\.data\.\*\.data\.result\_sets\.\*\.saved\_question\_id | numeric 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.seconds\_since\_issued | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.select\_count | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.tested | numeric | 
-action\_result\.status | string | 
-action\_result\.message | string | 
 action\_result\.summary\.num\_results | numeric | 
 action\_result\.summary\.timeout\_seconds | numeric | 
+action\_result\.message | string | 
 summary\.total\_objects | numeric | 
 summary\.total\_objects\_successful | numeric |   
 
@@ -649,18 +649,39 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
+action\_result\.status | string | 
 action\_result\.parameter\.query\_text | string |  `taniumrest question text` 
+action\_result\.data\.\*\.expire\_seconds | numeric | 
+action\_result\.data\.\*\.force\_computer\_id\_flag | numeric | 
 action\_result\.data\.\*\.from\_canonical\_text | numeric | 
 action\_result\.data\.\*\.group | string |  `taniumrest group definition` 
 action\_result\.data\.\*\.question\_text | string |  `taniumrest question text` 
+action\_result\.data\.\*\.score | numeric | 
+action\_result\.data\.\*\.selects\.\*\.filter\.all\_values\_flag | boolean | 
+action\_result\.data\.\*\.selects\.\*\.filter\.delimiter | string | 
+action\_result\.data\.\*\.selects\.\*\.filter\.delimiter\_index | numeric | 
+action\_result\.data\.\*\.selects\.\*\.filter\.ignore\_case\_flag | boolean | 
+action\_result\.data\.\*\.selects\.\*\.filter\.max\_age\_seconds | numeric | 
+action\_result\.data\.\*\.selects\.\*\.filter\.not\_flag | boolean | 
+action\_result\.data\.\*\.selects\.\*\.filter\.operator | string | 
+action\_result\.data\.\*\.selects\.\*\.filter\.substring\_flag | boolean | 
+action\_result\.data\.\*\.selects\.\*\.filter\.substring\_length | numeric | 
+action\_result\.data\.\*\.selects\.\*\.filter\.substring\_start | numeric | 
+action\_result\.data\.\*\.selects\.\*\.filter\.value | string | 
+action\_result\.data\.\*\.selects\.\*\.filter\.value\_type | string | 
+action\_result\.data\.\*\.selects\.\*\.sensor\.delimiter | string | 
 action\_result\.data\.\*\.selects\.\*\.sensor\.hash | numeric | 
+action\_result\.data\.\*\.selects\.\*\.sensor\.id | numeric | 
+action\_result\.data\.\*\.selects\.\*\.sensor\.max\_age\_seconds | numeric | 
 action\_result\.data\.\*\.selects\.\*\.sensor\.name | string | 
+action\_result\.data\.\*\.selects\.\*\.sensor\.parameter\_definition | string | 
+action\_result\.data\.\*\.selects\.\*\.sensor\.value\_type | string | 
 action\_result\.data\.\*\.sensor\_references\.\*\.name | string | 
 action\_result\.data\.\*\.sensor\_references\.\*\.real\_ms\_avg | numeric | 
 action\_result\.data\.\*\.sensor\_references\.\*\.start\_char | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
+action\_result\.data\.\*\.skip\_lock\_flag | numeric | 
 action\_result\.summary\.number\_of\_parsed\_questions | numeric | 
+action\_result\.message | string | 
 summary\.total\_objects | numeric | 
 summary\.total\_objects\_successful | numeric |   
 
@@ -680,6 +701,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
+action\_result\.status | string | 
 action\_result\.parameter\.list\_saved\_questions | boolean | 
 action\_result\.data\.\*\.action\_tracking\_flag | boolean | 
 action\_result\.data\.\*\.archive\_enabled\_flag | boolean | 
@@ -688,12 +710,16 @@ action\_result\.data\.\*\.archive\_owner\.id | numeric |
 action\_result\.data\.\*\.archive\_owner\.name | string | 
 action\_result\.data\.\*\.content\_set\.id | numeric | 
 action\_result\.data\.\*\.content\_set\.name | string | 
+action\_result\.data\.\*\.context\_group\.id | numeric | 
+action\_result\.data\.\*\.expiration | string | 
 action\_result\.data\.\*\.expire\_seconds | numeric | 
 action\_result\.data\.\*\.hidden\_flag | boolean | 
-action\_result\.data\.\*\.id | numeric | 
+action\_result\.data\.\*\.id | numeric |  `taniumrest question id` 
+action\_result\.data\.\*\.is\_expired | boolean | 
 action\_result\.data\.\*\.issue\_seconds | numeric | 
 action\_result\.data\.\*\.issue\_seconds\_never\_flag | boolean | 
 action\_result\.data\.\*\.keep\_seconds | numeric | 
+action\_result\.data\.\*\.management\_rights\_group\.id | numeric | 
 action\_result\.data\.\*\.metadata\.\*\.admin\_flag | boolean | 
 action\_result\.data\.\*\.metadata\.\*\.name | string | 
 action\_result\.data\.\*\.metadata\.\*\.value | string | 
@@ -702,21 +728,23 @@ action\_result\.data\.\*\.mod\_user\.display\_name | string |
 action\_result\.data\.\*\.mod\_user\.domain | string |  `domain` 
 action\_result\.data\.\*\.mod\_user\.id | numeric | 
 action\_result\.data\.\*\.mod\_user\.name | string | 
-action\_result\.data\.\*\.most\_recent\_question\_id | numeric | 
+action\_result\.data\.\*\.most\_recent\_question\_id | numeric |  `taniumrest question id` 
 action\_result\.data\.\*\.name | string | 
 action\_result\.data\.\*\.packages\.\*\.id | numeric | 
 action\_result\.data\.\*\.packages\.\*\.name | string | 
 action\_result\.data\.\*\.public\_flag | boolean | 
 action\_result\.data\.\*\.query\_text | string |  `taniumrest question text` 
-action\_result\.data\.\*\.question\.id | numeric | 
+action\_result\.data\.\*\.question\.id | numeric |  `taniumrest question id` 
 action\_result\.data\.\*\.row\_count\_flag | boolean | 
+action\_result\.data\.\*\.saved\_question\.id | numeric | 
+action\_result\.data\.\*\.skip\_lock\_flag | boolean | 
 action\_result\.data\.\*\.sort\_column | numeric | 
 action\_result\.data\.\*\.user\.deleted\_flag | boolean | 
 action\_result\.data\.\*\.user\.id | numeric | 
 action\_result\.data\.\*\.user\.name | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
+action\_result\.summary\.num\_questions | numeric | 
 action\_result\.summary\.num\_saved\_questions | numeric | 
+action\_result\.message | string | 
 summary\.total\_objects | numeric | 
 summary\.total\_objects\_successful | numeric |   
 
@@ -741,6 +769,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
+action\_result\.status | string | 
 action\_result\.parameter\.action\_group | string | 
 action\_result\.parameter\.action\_name | string | 
 action\_result\.parameter\.distribute\_seconds | numeric | 
@@ -776,6 +805,18 @@ action\_result\.data\.\*\.package\_spec\.creation\_time | string |
 action\_result\.data\.\*\.package\_spec\.deleted\_flag | boolean | 
 action\_result\.data\.\*\.package\_spec\.display\_name | string | 
 action\_result\.data\.\*\.package\_spec\.expire\_seconds | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_downloaded | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_total | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.cache\_status | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_seconds | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_start\_time | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.hash | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.id | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.last\_download\_progress\_time | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.name | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.size | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.source | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.status | numeric | 
 action\_result\.data\.\*\.package\_spec\.hidden\_flag | boolean | 
 action\_result\.data\.\*\.package\_spec\.id | numeric | 
 action\_result\.data\.\*\.package\_spec\.last\_modified\_by | string | 
@@ -803,9 +844,8 @@ action\_result\.data\.\*\.target\_group\.id | numeric |
 action\_result\.data\.\*\.user\.id | numeric | 
 action\_result\.data\.\*\.user\.name | string | 
 action\_result\.data\.\*\.user\_start\_time | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
 action\_result\.summary | string | 
+action\_result\.message | string | 
 summary\.total\_objects | numeric | 
 summary\.total\_objects\_successful | numeric |   
 
@@ -832,6 +872,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
+action\_result\.status | string | 
 action\_result\.parameter\.action\_group | string | 
 action\_result\.parameter\.action\_name | string | 
 action\_result\.parameter\.distribute\_seconds | numeric | 
@@ -867,6 +908,18 @@ action\_result\.data\.\*\.package\_spec\.creation\_time | string |
 action\_result\.data\.\*\.package\_spec\.deleted\_flag | boolean | 
 action\_result\.data\.\*\.package\_spec\.display\_name | string | 
 action\_result\.data\.\*\.package\_spec\.expire\_seconds | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_downloaded | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_total | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.cache\_status | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_seconds | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_start\_time | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.hash | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.id | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.last\_download\_progress\_time | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.name | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.size | numeric | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.source | string | 
+action\_result\.data\.\*\.package\_spec\.files\.\*\.status | numeric | 
 action\_result\.data\.\*\.package\_spec\.hidden\_flag | boolean | 
 action\_result\.data\.\*\.package\_spec\.id | numeric | 
 action\_result\.data\.\*\.package\_spec\.last\_modified\_by | string | 
@@ -897,9 +950,8 @@ action\_result\.data\.\*\.target\_group\.id | numeric |
 action\_result\.data\.\*\.user\.id | numeric | 
 action\_result\.data\.\*\.user\.name | string | 
 action\_result\.data\.\*\.user\_start\_time | string | 
-action\_result\.status | string | 
-action\_result\.message | string | 
 action\_result\.summary | string | 
+action\_result\.message | string | 
 summary\.total\_objects | numeric | 
 summary\.total\_objects\_successful | numeric |   
 
@@ -909,7 +961,7 @@ Run a search query on the devices registered on the Tanium server
 Type: **investigate**  
 Read only: **True**
 
-See top\-level app documentation for example parameters\. For manual questions only, the action waits for <b>timeout\_seconds</b> provided by the user in intervals of 5 seconds to fetch the results\. The action is a success as soon as the results are retrieved or else it will timeout and fail\. As pagination is not implemented, the result\(s\) of the action will be the result\(s\) that are fetched in a single API call\.
+See top\-level app documentation for example parameters\. For manual questions only, the action waits for <b>timeout\_seconds</b> provided by the user in intervals of 5 seconds to fetch the results\. The action is a success as soon as the results are retrieved or else it will timeout and fail\. As pagination is not implemented, the result\(s\) of the action will be the result\(s\) that are fetched in a single API call\. If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer\[current results unavailable\] to the answer message that it passes along the linear chain and ultimately to the Tanium Server\. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer\. Reference Link\: ~https\://docs\.tanium\.com/interact/interact/results\.html\.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
@@ -925,13 +977,14 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
+action\_result\.status | string | 
 action\_result\.parameter\.group\_name | string | 
 action\_result\.parameter\.is\_saved\_question | boolean | 
 action\_result\.parameter\.query\_text | string |  `taniumrest question text` 
-action\_result\.parameter\.timeout\_seconds | numeric | 
-action\_result\.parameter\.wait\_for\_results\_processing | boolean | 
 action\_result\.parameter\.return\_when\_n\_results\_available | numeric | 
+action\_result\.parameter\.timeout\_seconds | numeric | 
 action\_result\.parameter\.wait\_for\_n\_results\_available | numeric | 
+action\_result\.parameter\.wait\_for\_results\_processing | boolean | 
 action\_result\.data\.\*\.data\.max\_available\_age | string | 
 action\_result\.data\.\*\.data\.now | string | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.age | numeric | 
@@ -964,10 +1017,9 @@ action\_result\.data\.\*\.data\.result\_sets\.\*\.saved\_question\_id | numeric 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.seconds\_since\_issued | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.select\_count | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.tested | numeric | 
-action\_result\.status | string | 
-action\_result\.message | string | 
 action\_result\.summary\.number\_of\_rows | numeric | 
 action\_result\.summary\.timeout\_seconds | numeric | 
+action\_result\.message | string | 
 summary\.total\_objects | numeric | 
 summary\.total\_objects\_successful | numeric |   
 
@@ -985,6 +1037,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 DATA PATH | TYPE | CONTAINS
 --------- | ---- | --------
+action\_result\.status | string | 
 action\_result\.parameter\.question\_id | numeric |  `taniumrest question id` 
 action\_result\.data\.\*\.data\.max\_available\_age | string | 
 action\_result\.data\.\*\.data\.now | string | 
@@ -1012,15 +1065,14 @@ action\_result\.data\.\*\.data\.result\_sets\.\*\.report\_count | numeric |
 action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count\_machines | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.cid | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.data\.\*\.text | string | 
+action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.data\.\*\.\*\.text | string | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.id | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.saved\_question\_id | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.seconds\_since\_issued | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.select\_count | numeric | 
 action\_result\.data\.\*\.data\.result\_sets\.\*\.tested | numeric | 
-action\_result\.status | string | 
-action\_result\.message | string | 
 action\_result\.summary\.number\_of\_rows | numeric | 
 action\_result\.summary\.timeout\_seconds | numeric | 
+action\_result\.message | string | 
 summary\.total\_objects | numeric | 
 summary\.total\_objects\_successful | numeric | 
