@@ -9,7 +9,7 @@
 
 {% block widget_content %} <!-- Main Start Block -->
 
-<!-- File: taniumrest_run_query.html
+<!-- File: taniumrest_get_question_results.html
   Copyright (c) 2019-2022 Splunk Inc.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -123,21 +123,23 @@
                                         {% if forloop.counter == forloop.parentloop.counter %}
                                             <td>
                                                 <ul style="list-style: none;">
+                                                    {% for row_data in item %}
                                                     {% if column.name|lower == "user name" %}
-                                                            <li><a class="no-word-wrap" href="javascript:;" onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ item.text }}' }], 0, {{ container.id }}, null, false);">
-                                                                {{ item.text }}
+                                                            <li><a class="no-word-wrap" href="javascript:;" onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ row_data.text }}' }], 0, {{ container.id }}, null, false);">
+                                                                {{ row_data.text }}
                                                                 &nbsp;
                                                                 <span class="fa fa-caret-down" style="font-size: smaller;"></span>
                                                             </a></li>
                                                     {% elif column.name|lower == "hash" %}
-                                                            <li><a class="no-word-wrap" href="javascript:;" onclick="context_menu(this, [{'contains': ['hash', 'sha256'], 'value':'{{ item.text }}' }], 0, {{ container.id }}, null, false);">
-                                                                {{ item.text }}
+                                                            <li><a class="no-word-wrap" href="javascript:;" onclick="context_menu(this, [{'contains': ['hash', 'sha256'], 'value':'{{ row_data.text }}' }], 0, {{ container.id }}, null, false);">
+                                                                {{ row_data.text }}
                                                                 &nbsp;
                                                                 <span class="fa fa-caret-down" style="font-size: smaller;"></span>
                                                             </a></li>
                                                     {% else %}
-                                                            <li>{{ item.text }}</li>
+                                                            <li>{{ row_data.text }}</li>
                                                     {% endif %}
+                                                    {% endfor %}
                                                 </ul>
                                             </td>
                                         {% endif %}
@@ -162,6 +164,7 @@
     $.extend(true, $.fn.dataTable.defaults, {
         "searching": false,
         "bLengthChange": false,
+        "ordering": true,
         "language": {
             "paginate": {
                 "previous": "<i class='fa fa-angle-left fa-lg'></i>",
@@ -175,6 +178,8 @@
         }
     });
     $.fn.DataTable.ext.pager.numbers_length = 5;
-    $('.datatable').DataTable();
+    $('.datatable').DataTable({
+        order: []
+    });
 </script>
 {% endblock %} <!-- Main Start Block -->
