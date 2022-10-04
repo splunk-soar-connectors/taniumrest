@@ -15,15 +15,15 @@
     "latest_tested_versions": [
         "Build (Windows): 7.5.2.3503 | Console: 3.0.64"
     ],
-    "app_version": "2.1.5",
+    "app_version": "2.2.0",
     "utctime_updated": "2022-01-07T20:22:22.000000Z",
     "package_name": "phantom_taniumrest",
     "main_module": "taniumrest_connector.py",
-    "min_phantom_version": "5.1.0",
+    "min_phantom_version": "5.3.3",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "base_url": {
-            "description": "Base URL (e.g. https://10.1.16.94)",
+            "description": "Base URL (e.g. https://taniumserver)",
             "data_type": "string",
             "required": true,
             "order": 0
@@ -96,6 +96,16 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 0,
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.group_name",
                     "data_type": "string",
@@ -348,23 +358,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "column_name": "Status",
-                    "column_order": 0,
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Num results: 864"
-                    ]
-                },
-                {
                     "data_path": "action_result.summary.num_results",
                     "data_type": "numeric",
                     "example_values": [
@@ -376,6 +369,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         10
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Num results: 864"
                     ]
                 },
                 {
@@ -422,6 +422,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.query_text",
                     "data_type": "string",
                     "example_values": [
@@ -430,6 +438,17 @@
                     "contains": [
                         "taniumrest question text"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.expire_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        600
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.force_computer_id_flag",
+                    "data_type": "numeric"
                 },
                 {
                     "data_path": "action_result.data.*.from_canonical_text",
@@ -461,6 +480,90 @@
                     "column_order": 0
                 },
                 {
+                    "data_path": "action_result.data.*.score",
+                    "data_type": "numeric",
+                    "example_values": [
+                        7082
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.all_values_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.delimiter",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.delimiter_index",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.ignore_case_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.max_age_seconds",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.not_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.operator",
+                    "data_type": "string",
+                    "example_values": [
+                        "RegexMatch"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.substring_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.substring_length",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.substring_start",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.value",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.filter.value_type",
+                    "data_type": "string",
+                    "example_values": [
+                        "String"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.sensor.delimiter",
+                    "data_type": "string",
+                    "example_values": [
+                        ","
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.selects.*.sensor.hash",
                     "data_type": "numeric",
                     "example_values": [
@@ -468,10 +571,35 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.selects.*.sensor.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        350
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.sensor.max_age_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        86400
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.selects.*.sensor.name",
                     "data_type": "string",
                     "example_values": [
                         "Child Processes"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.sensor.parameter_definition",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.selects.*.sensor.value_type",
+                    "data_type": "string",
+                    "example_values": [
+                        "String"
                     ]
                 },
                 {
@@ -496,11 +624,14 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.data.*.skip_lock_flag",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary.number_of_parsed_questions",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
+                        7
                     ]
                 },
                 {
@@ -508,13 +639,6 @@
                     "data_type": "string",
                     "example_values": [
                         "Num parsed questions: 7"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.number_of_parsed_questions",
-                    "data_type": "numeric",
-                    "example_values": [
-                        7
                     ]
                 },
                 {
@@ -553,6 +677,14 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.list_saved_questions",
                     "data_type": "boolean",
@@ -610,6 +742,17 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.context_group.id",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.expiration",
+                    "data_type": "string",
+                    "example_values": [
+                        "2001-01-01T00:00:00Z"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.expire_seconds",
                     "data_type": "numeric",
                     "example_values": [
@@ -630,8 +773,19 @@
                     "example_values": [
                         26
                     ],
+                    "contains": [
+                        "taniumrest question id"
+                    ],
                     "column_name": "Question ID",
                     "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.is_expired",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.issue_seconds",
@@ -654,6 +808,10 @@
                     "example_values": [
                         0
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.management_rights_group.id",
+                    "data_type": "numeric"
                 },
                 {
                     "data_path": "action_result.data.*.metadata.*.admin_flag",
@@ -714,6 +872,9 @@
                     "data_type": "numeric",
                     "example_values": [
                         56071
+                    ],
+                    "contains": [
+                        "taniumrest question id"
                     ]
                 },
                 {
@@ -764,10 +925,28 @@
                     "data_type": "numeric",
                     "example_values": [
                         56071
+                    ],
+                    "contains": [
+                        "taniumrest question id"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.row_count_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.saved_question.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        15
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.skip_lock_flag",
                     "data_type": "boolean",
                     "example_values": [
                         true,
@@ -804,18 +983,10 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.summary.num_questions",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Num saved questions: 32"
+                        818
                     ]
                 },
                 {
@@ -823,6 +994,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         32
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Num saved questions: 32"
                     ]
                 },
                 {
@@ -899,6 +1077,16 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 0
+                },
                 {
                     "data_path": "action_result.parameter.action_group",
                     "data_type": "string",
@@ -1147,6 +1335,81 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.package_spec.files.*.bytes_downloaded",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.bytes_total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        39221
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.cache_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cached"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.download_seconds",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.download_start_time",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-11-16T18:53:31Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.hash",
+                    "data_type": "string",
+                    "example_values": [
+                        "b6c7534b828ff6e28f1467041a6f6f9a5ad7a7f4ac367c5425f16e249c77ec30"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        73
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.last_download_progress_time",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-11-16T18:53:31Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "clean-stale-tanium-client-data.vbs"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.size",
+                    "data_type": "numeric",
+                    "example_values": [
+                        39221
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.source",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.status",
+                    "data_type": "numeric",
+                    "example_values": [
+                        200
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.package_spec.hidden_flag",
                     "data_type": "boolean",
                     "example_values": [
@@ -1343,14 +1606,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 0
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -1358,10 +1615,6 @@
                     "example_values": [
                         "Successfully executed the action"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -1443,6 +1696,16 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 0
+                },
                 {
                     "data_path": "action_result.parameter.action_group",
                     "data_type": "string",
@@ -1700,6 +1963,81 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.package_spec.files.*.bytes_downloaded",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.bytes_total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        39221
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.cache_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cached"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.download_seconds",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.download_start_time",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-11-16T18:53:31Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.hash",
+                    "data_type": "string",
+                    "example_values": [
+                        "b6c7534b828ff6e28f1467041a6f6f9a5ad7a7f4ac367c5425f16e249c77ec30"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        73
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.last_download_progress_time",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-11-16T18:53:31Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "clean-stale-tanium-client-data.vbs"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.size",
+                    "data_type": "numeric",
+                    "example_values": [
+                        39221
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.source",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.files.*.status",
+                    "data_type": "numeric",
+                    "example_values": [
+                        200
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.package_spec.hidden_flag",
                     "data_type": "boolean",
                     "example_values": [
@@ -1917,14 +2255,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 0
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -1932,10 +2264,6 @@
                     "example_values": [
                         "Successfully executed the action"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -1960,7 +2288,7 @@
         {
             "action": "run query",
             "description": "Run a search query on the devices registered on the Tanium server",
-            "verbose": "See top-level app documentation for example parameters. For manual questions only, the action waits for <b>timeout_seconds</b> provided by the user in intervals of 5 seconds to fetch the results. The action is a success as soon as the results are retrieved or else it will timeout and fail. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.",
+            "verbose": "See top-level app documentation for example parameters. For manual questions only, the action waits for <b>timeout_seconds</b> provided by the user in intervals of 5 seconds to fetch the results. The action is a success as soon as the results are retrieved or else it will timeout and fail. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call. If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer[current results unavailable] to the answer message that it passes along the linear chain and ultimately to the Tanium Server. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer. Reference Link: ~https://docs.tanium.com/interact/interact/results.html.",
             "type": "investigate",
             "identifier": "run_query",
             "read_only": true,
@@ -1998,7 +2326,6 @@
                 },
                 "wait_for_results_processing": {
                     "description": "Flag to wait for endpoint to return full results",
-                    "verbose": "If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer[current results unavailable] to the answer message that it passes along the linear chain and ultimately to the Tanium Server. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer. Reference Link: ~https://docs.tanium.com/interact/interact/results.html",
                     "data_type": "boolean",
                     "default": false,
                     "order": 4
@@ -2015,6 +2342,14 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.group_name",
                     "data_type": "string",
@@ -2041,10 +2376,24 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.return_when_n_results_available",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.timeout_seconds",
                     "data_type": "numeric",
                     "example_values": [
                         600
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.wait_for_n_results_available",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10
                     ]
                 },
                 {
@@ -2053,20 +2402,6 @@
                     "example_values": [
                         false,
                         true
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.return_when_n_results_available",
-                    "data_type": "numeric",
-                    "example_values": [
-                        10
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.wait_for_n_results_available",
-                    "data_type": "numeric",
-                    "example_values": [
-                        10
                     ]
                 },
                 {
@@ -2297,21 +2632,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Number of rows: 3"
-                    ]
-                },
-                {
                     "data_path": "action_result.summary.number_of_rows",
                     "data_type": "numeric",
                     "example_values": [
@@ -2323,6 +2643,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         10
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Number of rows: 3"
                     ]
                 },
                 {
@@ -2370,6 +2697,14 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.question_id",
                     "data_type": "numeric",
@@ -2566,10 +2901,10 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.data.result_sets.*.rows.*.data.*.text",
+                    "data_path": "action_result.data.*.data.result_sets.*.rows.*.data.*.*.text",
                     "data_type": "string",
                     "example_values": [
-                        "10.1.16.5"
+                        "test"
                     ]
                 },
                 {
@@ -2608,21 +2943,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Number of rows: 3"
-                    ]
-                },
-                {
                     "data_path": "action_result.summary.number_of_rows",
                     "data_type": "numeric",
                     "example_values": [
@@ -2634,6 +2954,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         10
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Number of rows: 3"
                     ]
                 },
                 {
@@ -2664,31 +2991,31 @@
         "wheel": [
             {
                 "module": "beautifulsoup4",
-                "input_file": "wheels/beautifulsoup4-4.9.1-py3-none-any.whl"
+                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/certifi-2021.10.8-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.9.14-py3-none-any.whl"
             },
             {
                 "module": "chardet",
-                "input_file": "wheels/chardet-3.0.4-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
             },
             {
                 "module": "idna",
-                "input_file": "wheels/idna-2.10-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
             },
             {
                 "module": "requests",
-                "input_file": "wheels/requests-2.25.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/soupsieve-2.3-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/urllib3-1.26.7-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.12-py2.py3-none-any.whl"
             }
         ]
     }

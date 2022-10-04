@@ -57,4 +57,7 @@ def display_invoke(provides, all_app_runs, context):
                 continue
             results.append(ctx_result)
 
-    return "taniumrest_run_query.html"
+    if provides in ['list processes', 'run query']:
+        return 'taniumrest_run_query.html'
+    elif provides == 'get question results':
+        return 'taniumrest_get_question_results.html'
