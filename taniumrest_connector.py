@@ -184,10 +184,10 @@ class TaniumRestConnector(BaseConnector):
         try:
             resp_json = r.json()
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
+            error_message = self._get_error_message_from_exception(e)
             return RetVal(action_result.set_status(
                 phantom.APP_ERROR,
-                "Unable to parse JSON response. Error: {}".format(error_msg)), None)
+                "Unable to parse JSON response. Error: {}".format(error_message)), None)
 
         # Please specify the status codes here
         if 200 <= r.status_code < 399:
@@ -276,11 +276,11 @@ class TaniumRestConnector(BaseConnector):
             error_message = 'Error connecting to server. Connection Refused from the Server for %s' % endpoint
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
+            error_message = self._get_error_message_from_exception(e)
             return RetVal(action_result.set_status(
                 phantom.APP_ERROR,
                 "Error occurred while making the REST call to the Tanium server. Error: {}"
-                .format(error_msg)), None)
+                .format(error_message)), None)
 
         return self._process_response(r, action_result)
 
@@ -513,10 +513,10 @@ class TaniumRestConnector(BaseConnector):
             if parameter_definition and not isinstance(parameter_definition, dict):
                 parameter_definition = json.loads(parameter_definition)
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
+            error_message = self._get_error_message_from_exception(e)
             action_result.set_status(
                 phantom.APP_ERROR,
-                "Error while fetching package details. Error: {}".format(error_msg))
+                "Error while fetching package details. Error: {}".format(error_message))
 
         if parameter_definition and len(parameter_definition.get("parameters")) != 0:
             self.debug_print("Provided package is a parameterized package")
@@ -529,11 +529,11 @@ class TaniumRestConnector(BaseConnector):
             try:
                 package_parameter = json.loads(package_parameter)
             except Exception as e:
-                error_msg = self._get_error_message_from_exception(e)
+                error_message = self._get_error_message_from_exception(e)
                 return action_result.set_status(
                     phantom.APP_ERROR,
                     "Error while parsing the 'package_parameter' field. Error: {}"
-                    .format(error_msg))
+                    .format(error_message))
 
             if len(package_parameter) != len(parameter_definition.get("parameters")):
                 return action_result.set_status(
@@ -1048,9 +1048,9 @@ class TaniumRestConnector(BaseConnector):
         try:
             question_data = self._load_full_sensors_to_obj(action_result, question_data, param_list)
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
+            error_message = self._get_error_message_from_exception(e)
             self.debug_print(
-                "Error occurred while converting the sensors. Error: {}".format(error_msg))
+                "Error occurred while converting the sensors. Error: {}".format(error_message))
             return
 
         if self._param_idx and self._param_idx != len(param_list):
@@ -1097,10 +1097,10 @@ class TaniumRestConnector(BaseConnector):
                 # Regular Sensor, can use as-is
                 return phantom.APP_SUCCESS, sensor
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
-            error_msg = "Error while parsing the 'parameter_definition'. Error: {}".format(
-                error_msg)
-            return action_result.set_status(phantom.APP_ERROR, error_msg), {}
+            error_message = self._get_error_message_from_exception(e)
+            error_message = "Error while parsing the 'parameter_definition'. Error: {}".format(
+                error_message)
+            return action_result.set_status(phantom.APP_ERROR, error_message), {}
 
         # Parameterized Sensor
         parameter_keys = [parameter["key"] for parameter in parameter_definition["parameters"]]
