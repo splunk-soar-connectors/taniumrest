@@ -1,5 +1,5 @@
 [comment]: # " File: README.md"
-[comment]: # "  Copyright (c) 2019-2022 Splunk Inc."
+[comment]: # "  Copyright (c) 2019-2024 Splunk Inc."
 [comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "  you may not use this file except in compliance with the License."
 [comment]: # "  You may obtain a copy of the License at"
@@ -119,7 +119,7 @@ ports used by Splunk SOAR.
               # {
               #   "username": "jane.doe",
               #   "domain": "dev",
-              #   "password": "JanesPassword" 
+              #   "password": "TESTPASS" 
               # }
               
 
