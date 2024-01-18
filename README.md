@@ -2,16 +2,16 @@
 # Tanium REST
 
 Publisher: Splunk  
-Connector Version: 2\.2\.0  
+Connector Version: 2.2.1  
 Product Vendor: Tanium  
 Product Name: Tanium REST  
-Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.3\.3  
+Product Version Supported (regex): ".\*"  
+Minimum Product Version: 5.3.3  
 
 This app supports investigative and generic actions on Tanium
 
 [comment]: # " File: README.md"
-[comment]: # "  Copyright (c) 2019-2022 Splunk Inc."
+[comment]: # "  Copyright (c) 2019-2024 Splunk Inc."
 [comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "  you may not use this file except in compliance with the License."
 [comment]: # "  You may obtain a copy of the License at"
@@ -27,8 +27,8 @@ This app supports investigative and generic actions on Tanium
 ## Playbook Backward Compatibility
 
 -   The existing action parameters have been modified for the action given below. Hence, it is
-    requested to the end-user to please update their existing playbooks by re-inserting \| modifying
-    \| deleting the corresponding action blocks or by providing appropriate values to these action
+    requested to the end-user to please update their existing playbooks by re-inserting | modifying
+    | deleting the corresponding action blocks or by providing appropriate values to these action
     parameters to ensure the correct functioning of the playbooks created on the earlier versions of
     the app.
 
@@ -131,7 +131,7 @@ ports used by Splunk SOAR.
               # {
               #   "username": "jane.doe",
               #   "domain": "dev",
-              #   "password": "JanesPassword" 
+              #   "password": "TESTPASS" 
               # }
               
 
@@ -544,12 +544,12 @@ The below configuration variables are required for this Connector to operate.  T
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
-**base\_url** |  required  | string | Base URL \(e\.g\. https\://taniumserver\)
-**api\_token** |  optional  | password | API Token
+**base_url** |  required  | string | Base URL (e.g. https://taniumserver)
+**api_token** |  optional  | password | API Token
 **username** |  optional  | string | Username
 **password** |  optional  | password | Password
-**verify\_server\_cert** |  optional  | boolean | Verify Server Certificate
-**results\_percentage** |  optional  | numeric | Consider question results complete at \(% out of 100\)
+**verify_server_cert** |  optional  | boolean | Verify Server Certificate
+**results_percentage** |  optional  | numeric | Consider question results complete at (% out of 100)
 
 ### Supported Actions  
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration  
@@ -579,59 +579,59 @@ List the running processes of the devices registered on the Tanium server
 Type: **investigate**  
 Read only: **True**
 
-This action requires specifying a sensor to be used to list processes\. A standard Tanium sensor, 'Process Details' is used by default but a different sensor can be specified instead\. Note that the 'Process Details' sensor may not be available on all Tanium deployments\. Note that at this time this action only supports limiting the query to specified computer groups, but a generic Run Query action can be constructed to query an in individual computer's processes\. As pagination is not implemented, the result\(s\) of the action will be the result\(s\) that are fetched in a single API call\.
+This action requires specifying a sensor to be used to list processes. A standard Tanium sensor, 'Process Details' is used by default but a different sensor can be specified instead. Note that the 'Process Details' sensor may not be available on all Tanium deployments. Note that at this time this action only supports limiting the query to specified computer groups, but a generic Run Query action can be constructed to query an in individual computer's processes. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **sensor** |  required  | Sensor which will list all the processes | string | 
-**group\_name** |  optional  | Computer group name of which the processes will be listed | string | 
-**timeout\_seconds** |  required  | The number of seconds before the question expires | numeric | 
+**group_name** |  optional  | Computer group name of which the processes will be listed | string | 
+**timeout_seconds** |  required  | The number of seconds before the question expires | numeric | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.group\_name | string | 
-action\_result\.parameter\.sensor | string | 
-action\_result\.parameter\.timeout\_seconds | numeric | 
-action\_result\.data\.\*\.data\.max\_available\_age | string | 
-action\_result\.data\.\*\.data\.now | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.age | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.archived\_question\_id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.cache\_id | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.hash | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.name | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.type | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.error\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.estimated\_total | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.expiration | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.filtered\_row\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.filtered\_row\_count\_machines | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.issue\_seconds | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.item\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.mr\_passed | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.mr\_tested | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.no\_results\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.passed | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.question\_id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.report\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count\_machines | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.cid | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.data\.\*\.text | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.saved\_question\_id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.seconds\_since\_issued | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.select\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.tested | numeric | 
-action\_result\.summary\.num\_results | numeric | 
-action\_result\.summary\.timeout\_seconds | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.group_name | string |  |   tanium-01 
+action_result.parameter.sensor | string |  |   Running Processes With User 
+action_result.parameter.timeout_seconds | numeric |  |   60 
+action_result.data.\*.data.max_available_age | string |  |  
+action_result.data.\*.data.now | string |  |   2019/07/24 11:43:42 GMT-0000 
+action_result.data.\*.data.result_sets.\*.age | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.archived_question_id | numeric |  `taniumrest question id`  |   0 
+action_result.data.\*.data.result_sets.\*.cache_id | string |  |   12418149 
+action_result.data.\*.data.result_sets.\*.columns.\*.hash | numeric |  |   3744593586 
+action_result.data.\*.data.result_sets.\*.columns.\*.name | string |  |   Process 
+action_result.data.\*.data.result_sets.\*.columns.\*.type | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.error_count | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.estimated_total | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.expiration | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.expire_seconds | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.filtered_row_count | numeric |  |   35 
+action_result.data.\*.data.result_sets.\*.filtered_row_count_machines | numeric |  |   53 
+action_result.data.\*.data.result_sets.\*.id | numeric |  `taniumrest question id`  |   58456 
+action_result.data.\*.data.result_sets.\*.issue_seconds | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.item_count | numeric |  |   35 
+action_result.data.\*.data.result_sets.\*.mr_passed | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.mr_tested | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.no_results_count | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.passed | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.question_id | numeric |  `taniumrest question id`  |   58456 
+action_result.data.\*.data.result_sets.\*.report_count | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.row_count | numeric |  |   35 
+action_result.data.\*.data.result_sets.\*.row_count_machines | numeric |  |   53 
+action_result.data.\*.data.result_sets.\*.rows.\*.cid | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.rows.\*.data.\*.text | string |  |   TaniumModuleServer.exe 
+action_result.data.\*.data.result_sets.\*.rows.\*.id | numeric |  |   58783672 
+action_result.data.\*.data.result_sets.\*.saved_question_id | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.seconds_since_issued | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.select_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.tested | numeric |  |   2 
+action_result.summary.num_results | numeric |  |   864 
+action_result.summary.timeout_seconds | numeric |  |   10 
+action_result.message | string |  |   Num results: 864 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'parse question'
 Parses the supplied text into a valid Tanium query string
@@ -639,51 +639,51 @@ Parses the supplied text into a valid Tanium query string
 Type: **investigate**  
 Read only: **True**
 
-<p>When asked a non\-saved question in the <b>query\_text</b> parameter, it will parse the given query and give a list of suggestions that are related to it\.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions\:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most\-related to least\-related\.</p>
+<p>When asked a non-saved question in the <b>query_text</b> parameter, it will parse the given query and give a list of suggestions that are related to it.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.</p>
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**query\_text** |  required  | Query text to parse | string |  `taniumrest question text` 
+**query_text** |  required  | Query text to parse | string |  `taniumrest question text` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.query\_text | string |  `taniumrest question text` 
-action\_result\.data\.\*\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.force\_computer\_id\_flag | numeric | 
-action\_result\.data\.\*\.from\_canonical\_text | numeric | 
-action\_result\.data\.\*\.group | string |  `taniumrest group definition` 
-action\_result\.data\.\*\.question\_text | string |  `taniumrest question text` 
-action\_result\.data\.\*\.score | numeric | 
-action\_result\.data\.\*\.selects\.\*\.filter\.all\_values\_flag | boolean | 
-action\_result\.data\.\*\.selects\.\*\.filter\.delimiter | string | 
-action\_result\.data\.\*\.selects\.\*\.filter\.delimiter\_index | numeric | 
-action\_result\.data\.\*\.selects\.\*\.filter\.ignore\_case\_flag | boolean | 
-action\_result\.data\.\*\.selects\.\*\.filter\.max\_age\_seconds | numeric | 
-action\_result\.data\.\*\.selects\.\*\.filter\.not\_flag | boolean | 
-action\_result\.data\.\*\.selects\.\*\.filter\.operator | string | 
-action\_result\.data\.\*\.selects\.\*\.filter\.substring\_flag | boolean | 
-action\_result\.data\.\*\.selects\.\*\.filter\.substring\_length | numeric | 
-action\_result\.data\.\*\.selects\.\*\.filter\.substring\_start | numeric | 
-action\_result\.data\.\*\.selects\.\*\.filter\.value | string | 
-action\_result\.data\.\*\.selects\.\*\.filter\.value\_type | string | 
-action\_result\.data\.\*\.selects\.\*\.sensor\.delimiter | string | 
-action\_result\.data\.\*\.selects\.\*\.sensor\.hash | numeric | 
-action\_result\.data\.\*\.selects\.\*\.sensor\.id | numeric | 
-action\_result\.data\.\*\.selects\.\*\.sensor\.max\_age\_seconds | numeric | 
-action\_result\.data\.\*\.selects\.\*\.sensor\.name | string | 
-action\_result\.data\.\*\.selects\.\*\.sensor\.parameter\_definition | string | 
-action\_result\.data\.\*\.selects\.\*\.sensor\.value\_type | string | 
-action\_result\.data\.\*\.sensor\_references\.\*\.name | string | 
-action\_result\.data\.\*\.sensor\_references\.\*\.real\_ms\_avg | numeric | 
-action\_result\.data\.\*\.sensor\_references\.\*\.start\_char | string | 
-action\_result\.data\.\*\.skip\_lock\_flag | numeric | 
-action\_result\.summary\.number\_of\_parsed\_questions | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.query_text | string |  `taniumrest question text`  |   processes 
+action_result.data.\*.expire_seconds | numeric |  |   600 
+action_result.data.\*.force_computer_id_flag | numeric |  |  
+action_result.data.\*.from_canonical_text | numeric |  |   0 
+action_result.data.\*.group | string |  `taniumrest group definition`  |   { group id object } 
+action_result.data.\*.question_text | string |  `taniumrest question text`  |   Get Child Processes from all machines 
+action_result.data.\*.score | numeric |  |   7082 
+action_result.data.\*.selects.\*.filter.all_values_flag | boolean |  |   True  False 
+action_result.data.\*.selects.\*.filter.delimiter | string |  |  
+action_result.data.\*.selects.\*.filter.delimiter_index | numeric |  |  
+action_result.data.\*.selects.\*.filter.ignore_case_flag | boolean |  |   True  False 
+action_result.data.\*.selects.\*.filter.max_age_seconds | numeric |  |  
+action_result.data.\*.selects.\*.filter.not_flag | boolean |  |   True  False 
+action_result.data.\*.selects.\*.filter.operator | string |  |   RegexMatch 
+action_result.data.\*.selects.\*.filter.substring_flag | boolean |  |   True  False 
+action_result.data.\*.selects.\*.filter.substring_length | numeric |  |  
+action_result.data.\*.selects.\*.filter.substring_start | numeric |  |  
+action_result.data.\*.selects.\*.filter.value | string |  |  
+action_result.data.\*.selects.\*.filter.value_type | string |  |   String 
+action_result.data.\*.selects.\*.sensor.delimiter | string |  |   , 
+action_result.data.\*.selects.\*.sensor.hash | numeric |  |   3867657808 
+action_result.data.\*.selects.\*.sensor.id | numeric |  |   350 
+action_result.data.\*.selects.\*.sensor.max_age_seconds | numeric |  |   86400 
+action_result.data.\*.selects.\*.sensor.name | string |  |   Child Processes 
+action_result.data.\*.selects.\*.sensor.parameter_definition | string |  |  
+action_result.data.\*.selects.\*.sensor.value_type | string |  |   String 
+action_result.data.\*.sensor_references.\*.name | string |  |   Child Processes 
+action_result.data.\*.sensor_references.\*.real_ms_avg | numeric |  |   0 
+action_result.data.\*.sensor_references.\*.start_char | string |  |   4 
+action_result.data.\*.skip_lock_flag | numeric |  |  
+action_result.summary.number_of_parsed_questions | numeric |  |   7 
+action_result.message | string |  |   Num parsed questions: 7 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'list questions'
 Retrieves either a history of the most recent questions or a list of saved questions
@@ -691,62 +691,62 @@ Retrieves either a history of the most recent questions or a list of saved quest
 Type: **investigate**  
 Read only: **True**
 
-If the <b>list\_saved\_questions</b> parameter is true, this action will return a list of saved questions\. If the flag is not set, this action will return the history of recently asked questions\. As pagination is not implemented, the result\(s\) of the action will be the result\(s\) that are fetched in a single API call\.
+If the <b>list_saved_questions</b> parameter is true, this action will return a list of saved questions. If the flag is not set, this action will return the history of recently asked questions. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**list\_saved\_questions** |  optional  | Retrieve Saved Questions | boolean | 
+**list_saved_questions** |  optional  | Retrieve Saved Questions | boolean | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.list\_saved\_questions | boolean | 
-action\_result\.data\.\*\.action\_tracking\_flag | boolean | 
-action\_result\.data\.\*\.archive\_enabled\_flag | boolean | 
-action\_result\.data\.\*\.archive\_owner | string | 
-action\_result\.data\.\*\.archive\_owner\.id | numeric | 
-action\_result\.data\.\*\.archive\_owner\.name | string | 
-action\_result\.data\.\*\.content\_set\.id | numeric | 
-action\_result\.data\.\*\.content\_set\.name | string | 
-action\_result\.data\.\*\.context\_group\.id | numeric | 
-action\_result\.data\.\*\.expiration | string | 
-action\_result\.data\.\*\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.hidden\_flag | boolean | 
-action\_result\.data\.\*\.id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.is\_expired | boolean | 
-action\_result\.data\.\*\.issue\_seconds | numeric | 
-action\_result\.data\.\*\.issue\_seconds\_never\_flag | boolean | 
-action\_result\.data\.\*\.keep\_seconds | numeric | 
-action\_result\.data\.\*\.management\_rights\_group\.id | numeric | 
-action\_result\.data\.\*\.metadata\.\*\.admin\_flag | boolean | 
-action\_result\.data\.\*\.metadata\.\*\.name | string | 
-action\_result\.data\.\*\.metadata\.\*\.value | string | 
-action\_result\.data\.\*\.mod\_time | string | 
-action\_result\.data\.\*\.mod\_user\.display\_name | string | 
-action\_result\.data\.\*\.mod\_user\.domain | string |  `domain` 
-action\_result\.data\.\*\.mod\_user\.id | numeric | 
-action\_result\.data\.\*\.mod\_user\.name | string | 
-action\_result\.data\.\*\.most\_recent\_question\_id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.name | string | 
-action\_result\.data\.\*\.packages\.\*\.id | numeric | 
-action\_result\.data\.\*\.packages\.\*\.name | string | 
-action\_result\.data\.\*\.public\_flag | boolean | 
-action\_result\.data\.\*\.query\_text | string |  `taniumrest question text` 
-action\_result\.data\.\*\.question\.id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.row\_count\_flag | boolean | 
-action\_result\.data\.\*\.saved\_question\.id | numeric | 
-action\_result\.data\.\*\.skip\_lock\_flag | boolean | 
-action\_result\.data\.\*\.sort\_column | numeric | 
-action\_result\.data\.\*\.user\.deleted\_flag | boolean | 
-action\_result\.data\.\*\.user\.id | numeric | 
-action\_result\.data\.\*\.user\.name | string | 
-action\_result\.summary\.num\_questions | numeric | 
-action\_result\.summary\.num\_saved\_questions | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.list_saved_questions | boolean |  |   True  False 
+action_result.data.\*.action_tracking_flag | boolean |  |   True  False 
+action_result.data.\*.archive_enabled_flag | boolean |  |   True  False 
+action_result.data.\*.archive_owner | string |  |  
+action_result.data.\*.archive_owner.id | numeric |  |   1 
+action_result.data.\*.archive_owner.name | string |  |   administrator 
+action_result.data.\*.content_set.id | numeric |  |   7 
+action_result.data.\*.content_set.name | string |  |   Detect Service 
+action_result.data.\*.context_group.id | numeric |  |  
+action_result.data.\*.expiration | string |  |   2001-01-01T00:00:00Z 
+action_result.data.\*.expire_seconds | numeric |  |   600 
+action_result.data.\*.hidden_flag | boolean |  |   True  False 
+action_result.data.\*.id | numeric |  `taniumrest question id`  |   26 
+action_result.data.\*.is_expired | boolean |  |   True  False 
+action_result.data.\*.issue_seconds | numeric |  |   300 
+action_result.data.\*.issue_seconds_never_flag | boolean |  |   True  False 
+action_result.data.\*.keep_seconds | numeric |  |   0 
+action_result.data.\*.management_rights_group.id | numeric |  |  
+action_result.data.\*.metadata.\*.admin_flag | boolean |  |   True  False 
+action_result.data.\*.metadata.\*.name | string |  |   SQPreference_Default 
+action_result.data.\*.metadata.\*.value | string |  |   {"default_grid_zoom_level":0,"default_line_zoom_level":12,"default_tab":1,"merge_flag":0,"drilldown_flag":0} 
+action_result.data.\*.mod_time | string |  |   2019-02-11T21:22:25Z 
+action_result.data.\*.mod_user.display_name | string |  |  
+action_result.data.\*.mod_user.domain | string |  `domain`  |  
+action_result.data.\*.mod_user.id | numeric |  |   1 
+action_result.data.\*.mod_user.name | string |  |   administrator 
+action_result.data.\*.most_recent_question_id | numeric |  `taniumrest question id`  |   56071 
+action_result.data.\*.name | string |  |   Detect Managed Unix Endpoints 
+action_result.data.\*.packages.\*.id | numeric |  |   1 
+action_result.data.\*.packages.\*.name | string |  |   Distribute Tanium Standard Utilities 
+action_result.data.\*.public_flag | boolean |  |   True  False 
+action_result.data.\*.query_text | string |  `taniumrest question text`  |   Get Detect Tools Status from all machines with ( Detect Tools Status contains engine version and Detect Tools Status contains Unix ) 
+action_result.data.\*.question.id | numeric |  `taniumrest question id`  |   56071 
+action_result.data.\*.row_count_flag | boolean |  |   True  False 
+action_result.data.\*.saved_question.id | numeric |  |   15 
+action_result.data.\*.skip_lock_flag | boolean |  |   True  False 
+action_result.data.\*.sort_column | numeric |  |   0 
+action_result.data.\*.user.deleted_flag | boolean |  |   True  False 
+action_result.data.\*.user.id | numeric |  |   1 
+action_result.data.\*.user.name | string |  |   administrator 
+action_result.summary.num_questions | numeric |  |   818 
+action_result.summary.num_saved_questions | numeric |  |   32 
+action_result.message | string |  |   Num saved questions: 32 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'terminate process'
 Kill a running process of the devices registered on the Tanium server
@@ -757,97 +757,97 @@ Read only: **False**
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**action\_name** |  required  | Name of the action | string | 
-**action\_group** |  required  | Group of the action | string | 
-**package\_name** |  required  | Package name that will be executed | string | 
-**package\_parameters** |  optional  | Package parameters of the corresponding package | string | 
-**group\_name** |  optional  | Computer group name of which the process will be terminated | string | 
-**distribute\_seconds** |  optional  | The number of seconds over which to deploy the action | numeric | 
-**issue\_seconds** |  optional  | The number of seconds to reissue an action from the saved action | numeric | 
-**expire\_seconds** |  required  | The duration from the start time before the action expires | numeric | 
+**action_name** |  required  | Name of the action | string | 
+**action_group** |  required  | Group of the action | string | 
+**package_name** |  required  | Package name that will be executed | string | 
+**package_parameters** |  optional  | Package parameters of the corresponding package | string | 
+**group_name** |  optional  | Computer group name of which the process will be terminated | string | 
+**distribute_seconds** |  optional  | The number of seconds over which to deploy the action | numeric | 
+**issue_seconds** |  optional  | The number of seconds to reissue an action from the saved action | numeric | 
+**expire_seconds** |  required  | The duration from the start time before the action expires | numeric | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.action\_group | string | 
-action\_result\.parameter\.action\_name | string | 
-action\_result\.parameter\.distribute\_seconds | numeric | 
-action\_result\.parameter\.expire\_seconds | numeric | 
-action\_result\.parameter\.group\_name | string | 
-action\_result\.parameter\.issue\_seconds | numeric | 
-action\_result\.parameter\.package\_name | string | 
-action\_result\.parameter\.package\_parameters | string | 
-action\_result\.data\.\*\.action\_group\_id | numeric | 
-action\_result\.data\.\*\.approved\_flag | boolean | 
-action\_result\.data\.\*\.approver\.id | numeric | 
-action\_result\.data\.\*\.approver\.name | string | 
-action\_result\.data\.\*\.comment | string | 
-action\_result\.data\.\*\.creation\_time | string | 
-action\_result\.data\.\*\.distribute\_seconds | numeric | 
-action\_result\.data\.\*\.end\_time | string | 
-action\_result\.data\.\*\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.id | numeric | 
-action\_result\.data\.\*\.issue\_count | numeric | 
-action\_result\.data\.\*\.issue\_seconds | numeric | 
-action\_result\.data\.\*\.last\_action\.id | numeric | 
-action\_result\.data\.\*\.last\_action\.start\_time | string | 
-action\_result\.data\.\*\.last\_action\.target\_group\.id | numeric | 
-action\_result\.data\.\*\.last\_start\_time | string | 
-action\_result\.data\.\*\.name | string | 
-action\_result\.data\.\*\.next\_start\_time | string | 
-action\_result\.data\.\*\.package\_spec\.available\_time | string | 
-action\_result\.data\.\*\.package\_spec\.command | string | 
-action\_result\.data\.\*\.package\_spec\.command\_timeout | numeric | 
-action\_result\.data\.\*\.package\_spec\.content\_set\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.content\_set\.name | string | 
-action\_result\.data\.\*\.package\_spec\.creation\_time | string | 
-action\_result\.data\.\*\.package\_spec\.deleted\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.display\_name | string | 
-action\_result\.data\.\*\.package\_spec\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_downloaded | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_total | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.cache\_status | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_seconds | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_start\_time | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.hash | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.last\_download\_progress\_time | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.name | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.size | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.source | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.status | numeric | 
-action\_result\.data\.\*\.package\_spec\.hidden\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.last\_modified\_by | string | 
-action\_result\.data\.\*\.package\_spec\.last\_update | string | 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.display\_name | string | 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.domain | string |  `domain` 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.name | string | 
-action\_result\.data\.\*\.package\_spec\.modification\_time | string | 
-action\_result\.data\.\*\.package\_spec\.name | string | 
-action\_result\.data\.\*\.package\_spec\.process\_group\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.skip\_lock\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.source\_hash | string |  `sha256` 
-action\_result\.data\.\*\.package\_spec\.source\_hash\_changed\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.source\_id | numeric | 
-action\_result\.data\.\*\.package\_spec\.verify\_expire\_seconds | numeric | 
-action\_result\.data\.\*\.package\_spec\.verify\_group\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.verify\_group\_id | numeric | 
-action\_result\.data\.\*\.policy\_flag | boolean | 
-action\_result\.data\.\*\.public\_flag | boolean | 
-action\_result\.data\.\*\.start\_now\_flag | boolean | 
-action\_result\.data\.\*\.start\_time | string | 
-action\_result\.data\.\*\.status | numeric | 
-action\_result\.data\.\*\.target\_group\.id | numeric | 
-action\_result\.data\.\*\.user\.id | numeric | 
-action\_result\.data\.\*\.user\.name | string | 
-action\_result\.data\.\*\.user\_start\_time | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.action_group | string |  |   Default 
+action_result.parameter.action_name | string |  |   test terminate process 
+action_result.parameter.distribute_seconds | numeric |  |   60 
+action_result.parameter.expire_seconds | numeric |  |   600 
+action_result.parameter.group_name | string |  |   tanium-01 
+action_result.parameter.issue_seconds | numeric |  |   30 
+action_result.parameter.package_name | string |  |   terminate process 
+action_result.parameter.package_parameters | string |  |  
+action_result.data.\*.action_group_id | numeric |  |   151 
+action_result.data.\*.approved_flag | boolean |  |   True  False 
+action_result.data.\*.approver.id | numeric |  |   1 
+action_result.data.\*.approver.name | string |  |   administrator 
+action_result.data.\*.comment | string |  |  
+action_result.data.\*.creation_time | string |  |   2019-09-18T04:53:58Z 
+action_result.data.\*.distribute_seconds | numeric |  |   0 
+action_result.data.\*.end_time | string |  |   Never 
+action_result.data.\*.expire_seconds | numeric |  |   600 
+action_result.data.\*.id | numeric |  |   523 
+action_result.data.\*.issue_count | numeric |  |   0 
+action_result.data.\*.issue_seconds | numeric |  |   0 
+action_result.data.\*.last_action.id | numeric |  |   272936 
+action_result.data.\*.last_action.start_time | string |  |   Never 
+action_result.data.\*.last_action.target_group.id | numeric |  |   3646 
+action_result.data.\*.last_start_time | string |  |   Never 
+action_result.data.\*.name | string |  |   test terminate process 
+action_result.data.\*.next_start_time | string |  |   Never 
+action_result.data.\*.package_spec.available_time | string |  |   2001-01-01T00:00:00Z 
+action_result.data.\*.package_spec.command | string |  |   cmd /c mkdir C:\\Users\\Administrator\\some_dir\\ 
+action_result.data.\*.package_spec.command_timeout | numeric |  |   600 
+action_result.data.\*.package_spec.content_set.id | numeric |  |   9 
+action_result.data.\*.package_spec.content_set.name | string |  |  
+action_result.data.\*.package_spec.creation_time | string |  |   2001-01-01T00:00:00Z 
+action_result.data.\*.package_spec.deleted_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.display_name | string |  |  
+action_result.data.\*.package_spec.expire_seconds | numeric |  |   3600 
+action_result.data.\*.package_spec.files.\*.bytes_downloaded | numeric |  |  
+action_result.data.\*.package_spec.files.\*.bytes_total | numeric |  |   39221 
+action_result.data.\*.package_spec.files.\*.cache_status | string |  |   Cached 
+action_result.data.\*.package_spec.files.\*.download_seconds | numeric |  |  
+action_result.data.\*.package_spec.files.\*.download_start_time | string |  |   2021-11-16T18:53:31Z 
+action_result.data.\*.package_spec.files.\*.hash | string |  |   b6c7534b828ff6e28f1467041a6f6f9a5ad7a7f4ac367c5425f16e249c77ec30 
+action_result.data.\*.package_spec.files.\*.id | numeric |  |   73 
+action_result.data.\*.package_spec.files.\*.last_download_progress_time | string |  |   2021-11-16T18:53:31Z 
+action_result.data.\*.package_spec.files.\*.name | string |  |   clean-stale-tanium-client-data.vbs 
+action_result.data.\*.package_spec.files.\*.size | numeric |  |   39221 
+action_result.data.\*.package_spec.files.\*.source | string |  |  
+action_result.data.\*.package_spec.files.\*.status | numeric |  |   200 
+action_result.data.\*.package_spec.hidden_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.id | numeric |  |   600 
+action_result.data.\*.package_spec.last_modified_by | string |  |  
+action_result.data.\*.package_spec.last_update | string |  |   2019-09-18T04:53:58Z 
+action_result.data.\*.package_spec.mod_user.display_name | string |  |  
+action_result.data.\*.package_spec.mod_user.domain | string |  `domain`  |  
+action_result.data.\*.package_spec.mod_user.id | numeric |  |   0 
+action_result.data.\*.package_spec.mod_user.name | string |  |  
+action_result.data.\*.package_spec.modification_time | string |  |   2001-01-01T00:00:00Z 
+action_result.data.\*.package_spec.name | string |  |   terminate process 
+action_result.data.\*.package_spec.process_group_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.skip_lock_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.source_hash | string |  `sha256`  |   b75af868db6d80c0e603ce8827146e2e44f2728c6ae98fd6082003412cf3a207 
+action_result.data.\*.package_spec.source_hash_changed_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.source_id | numeric |  |   221 
+action_result.data.\*.package_spec.verify_expire_seconds | numeric |  |   3600 
+action_result.data.\*.package_spec.verify_group.id | numeric |  |   0 
+action_result.data.\*.package_spec.verify_group_id | numeric |  |   0 
+action_result.data.\*.policy_flag | boolean |  |   True  False 
+action_result.data.\*.public_flag | boolean |  |   True  False 
+action_result.data.\*.start_now_flag | boolean |  |   True  False 
+action_result.data.\*.start_time | string |  |   2019-09-18T04:53:58Z 
+action_result.data.\*.status | numeric |  |   0 
+action_result.data.\*.target_group.id | numeric |  |   3646 
+action_result.data.\*.user.id | numeric |  |   1 
+action_result.data.\*.user.name | string |  |   administrator 
+action_result.data.\*.user_start_time | string |  |   2001-01-01T00:00:00Z 
+action_result.summary | string |  |  
+action_result.message | string |  |   Successfully executed the action 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'execute action'
 Execute an action on the Tanium server
@@ -855,105 +855,105 @@ Execute an action on the Tanium server
 Type: **generic**  
 Read only: **False**
 
-<li>See top\-level app documentation for example parameters\.</li><li>If a parameterized package is used for executing an action all the parameters must be provided with correct and unique keys\. If any key is repeated then the value of that key will be overwritten\.</li><li>If the <b>issue\_seconds</b> parameter is provided, then the action will respawn after a time interval provided in the <b>issue\_seconds</b> parameter\.</li>
+<li>See top-level app documentation for example parameters.</li><li>If a parameterized package is used for executing an action all the parameters must be provided with correct and unique keys. If any key is repeated then the value of that key will be overwritten.</li><li>If the <b>issue_seconds</b> parameter is provided, then the action will respawn after a time interval provided in the <b>issue_seconds</b> parameter.</li>
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**action\_name** |  required  | Creates a name for the action executed | string | 
-**action\_group** |  required  | Group of the action | string | 
-**package\_name** |  required  | Name of the Tanium package to be executed | string | 
-**package\_parameters** |  optional  | Parameter inputs of the corresponding package\. Provide JSON format \(i\.e\. \{"$1"\: "Standard\_Collection", "$2"\: "SCP"\}\) | string | 
-**group\_name** |  optional  | The Tanium Computer Group name on which the action will be executed\. If left blank, will execute on all registered IP addresses/hostnames in your Tanium instance | string |  `taniumrest group definition` 
-**distribute\_seconds** |  optional  | The number of seconds over which to deploy the action | numeric | 
-**issue\_seconds** |  optional  | The number of seconds to reissue an action from the saved action | numeric | 
-**expire\_seconds** |  required  | The duration from the start time before the action expires | numeric | 
+**action_name** |  required  | Creates a name for the action executed | string | 
+**action_group** |  required  | Group of the action | string | 
+**package_name** |  required  | Name of the Tanium package to be executed | string | 
+**package_parameters** |  optional  | Parameter inputs of the corresponding package. Provide JSON format (i.e. {"$1": "Standard_Collection", "$2": "SCP"}) | string | 
+**group_name** |  optional  | The Tanium Computer Group name on which the action will be executed. If left blank, will execute on all registered IP addresses/hostnames in your Tanium instance | string |  `taniumrest group definition` 
+**distribute_seconds** |  optional  | The number of seconds over which to deploy the action | numeric | 
+**issue_seconds** |  optional  | The number of seconds to reissue an action from the saved action | numeric | 
+**expire_seconds** |  required  | The duration from the start time before the action expires | numeric | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.action\_group | string | 
-action\_result\.parameter\.action\_name | string | 
-action\_result\.parameter\.distribute\_seconds | numeric | 
-action\_result\.parameter\.expire\_seconds | numeric | 
-action\_result\.parameter\.group\_name | string |  `taniumrest group definition` 
-action\_result\.parameter\.issue\_seconds | numeric | 
-action\_result\.parameter\.package\_name | string | 
-action\_result\.parameter\.package\_parameters | string | 
-action\_result\.data\.\*\.action\_group\_id | numeric | 
-action\_result\.data\.\*\.approved\_flag | boolean | 
-action\_result\.data\.\*\.approver\.id | numeric | 
-action\_result\.data\.\*\.approver\.name | string | 
-action\_result\.data\.\*\.comment | string | 
-action\_result\.data\.\*\.creation\_time | string | 
-action\_result\.data\.\*\.distribute\_seconds | numeric | 
-action\_result\.data\.\*\.end\_time | string | 
-action\_result\.data\.\*\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.issue\_count | numeric | 
-action\_result\.data\.\*\.issue\_seconds | numeric | 
-action\_result\.data\.\*\.last\_action\.id | numeric | 
-action\_result\.data\.\*\.last\_action\.start\_time | string | 
-action\_result\.data\.\*\.last\_action\.target\_group\.id | numeric | 
-action\_result\.data\.\*\.last\_start\_time | string | 
-action\_result\.data\.\*\.name | string | 
-action\_result\.data\.\*\.next\_start\_time | string | 
-action\_result\.data\.\*\.package\_spec\.available\_time | string | 
-action\_result\.data\.\*\.package\_spec\.command | string | 
-action\_result\.data\.\*\.package\_spec\.command\_timeout | numeric | 
-action\_result\.data\.\*\.package\_spec\.content\_set\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.content\_set\.name | string | 
-action\_result\.data\.\*\.package\_spec\.creation\_time | string | 
-action\_result\.data\.\*\.package\_spec\.deleted\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.display\_name | string | 
-action\_result\.data\.\*\.package\_spec\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_downloaded | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.bytes\_total | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.cache\_status | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_seconds | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.download\_start\_time | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.hash | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.last\_download\_progress\_time | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.name | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.size | numeric | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.source | string | 
-action\_result\.data\.\*\.package\_spec\.files\.\*\.status | numeric | 
-action\_result\.data\.\*\.package\_spec\.hidden\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.last\_modified\_by | string | 
-action\_result\.data\.\*\.package\_spec\.last\_update | string | 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.display\_name | string | 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.domain | string |  `domain` 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.mod\_user\.name | string | 
-action\_result\.data\.\*\.package\_spec\.modification\_time | string | 
-action\_result\.data\.\*\.package\_spec\.name | string | 
-action\_result\.data\.\*\.package\_spec\.parameters\.\*\.key | string | 
-action\_result\.data\.\*\.package\_spec\.parameters\.\*\.type | numeric | 
-action\_result\.data\.\*\.package\_spec\.parameters\.\*\.value | string | 
-action\_result\.data\.\*\.package\_spec\.process\_group\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.skip\_lock\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.source\_hash | string |  `sha256` 
-action\_result\.data\.\*\.package\_spec\.source\_hash\_changed\_flag | boolean | 
-action\_result\.data\.\*\.package\_spec\.source\_id | numeric | 
-action\_result\.data\.\*\.package\_spec\.verify\_expire\_seconds | numeric | 
-action\_result\.data\.\*\.package\_spec\.verify\_group\.id | numeric | 
-action\_result\.data\.\*\.package\_spec\.verify\_group\_id | numeric | 
-action\_result\.data\.\*\.policy\_flag | boolean | 
-action\_result\.data\.\*\.public\_flag | boolean | 
-action\_result\.data\.\*\.start\_now\_flag | boolean | 
-action\_result\.data\.\*\.start\_time | string | 
-action\_result\.data\.\*\.status | numeric | 
-action\_result\.data\.\*\.target\_group\.id | numeric | 
-action\_result\.data\.\*\.user\.id | numeric | 
-action\_result\.data\.\*\.user\.name | string | 
-action\_result\.data\.\*\.user\_start\_time | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.action_group | string |  |   Default 
+action_result.parameter.action_name | string |  |   test action start 7 
+action_result.parameter.distribute_seconds | numeric |  |   60 
+action_result.parameter.expire_seconds | numeric |  |   600 
+action_result.parameter.group_name | string |  `taniumrest group definition`  |   tanium-01 
+action_result.parameter.issue_seconds | numeric |  |   30 
+action_result.parameter.package_name | string |  |   make directory 
+action_result.parameter.package_parameters | string |  |   {"$1": "TestDirectory"} 
+action_result.data.\*.action_group_id | numeric |  |   151 
+action_result.data.\*.approved_flag | boolean |  |   True  False 
+action_result.data.\*.approver.id | numeric |  |   1 
+action_result.data.\*.approver.name | string |  |   administrator 
+action_result.data.\*.comment | string |  |  
+action_result.data.\*.creation_time | string |  |   2019-09-16T07:43:57Z 
+action_result.data.\*.distribute_seconds | numeric |  |   0 
+action_result.data.\*.end_time | string |  |   Never 
+action_result.data.\*.expire_seconds | numeric |  |   600 
+action_result.data.\*.id | numeric |  `taniumrest question id`  |   482 
+action_result.data.\*.issue_count | numeric |  |   0 
+action_result.data.\*.issue_seconds | numeric |  |   0 
+action_result.data.\*.last_action.id | numeric |  |   272568 
+action_result.data.\*.last_action.start_time | string |  |   Never 
+action_result.data.\*.last_action.target_group.id | numeric |  |   3614 
+action_result.data.\*.last_start_time | string |  |   Never 
+action_result.data.\*.name | string |  |   test action start 7 
+action_result.data.\*.next_start_time | string |  |   Never 
+action_result.data.\*.package_spec.available_time | string |  |   2001-01-01T00:00:00Z 
+action_result.data.\*.package_spec.command | string |  |   cmd /c mkdir C:\\Users\\Administrator\\test123\\"TestDirectory" 
+action_result.data.\*.package_spec.command_timeout | numeric |  |   600 
+action_result.data.\*.package_spec.content_set.id | numeric |  |   2 
+action_result.data.\*.package_spec.content_set.name | string |  |  
+action_result.data.\*.package_spec.creation_time | string |  |   2001-01-01T00:00:00Z 
+action_result.data.\*.package_spec.deleted_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.display_name | string |  |  
+action_result.data.\*.package_spec.expire_seconds | numeric |  |   3600 
+action_result.data.\*.package_spec.files.\*.bytes_downloaded | numeric |  |  
+action_result.data.\*.package_spec.files.\*.bytes_total | numeric |  |   39221 
+action_result.data.\*.package_spec.files.\*.cache_status | string |  |   Cached 
+action_result.data.\*.package_spec.files.\*.download_seconds | numeric |  |  
+action_result.data.\*.package_spec.files.\*.download_start_time | string |  |   2021-11-16T18:53:31Z 
+action_result.data.\*.package_spec.files.\*.hash | string |  |   b6c7534b828ff6e28f1467041a6f6f9a5ad7a7f4ac367c5425f16e249c77ec30 
+action_result.data.\*.package_spec.files.\*.id | numeric |  |   73 
+action_result.data.\*.package_spec.files.\*.last_download_progress_time | string |  |   2021-11-16T18:53:31Z 
+action_result.data.\*.package_spec.files.\*.name | string |  |   clean-stale-tanium-client-data.vbs 
+action_result.data.\*.package_spec.files.\*.size | numeric |  |   39221 
+action_result.data.\*.package_spec.files.\*.source | string |  |  
+action_result.data.\*.package_spec.files.\*.status | numeric |  |   200 
+action_result.data.\*.package_spec.hidden_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.id | numeric |  |   559 
+action_result.data.\*.package_spec.last_modified_by | string |  |  
+action_result.data.\*.package_spec.last_update | string |  |   2019-09-16T07:43:57Z 
+action_result.data.\*.package_spec.mod_user.display_name | string |  |  
+action_result.data.\*.package_spec.mod_user.domain | string |  `domain`  |  
+action_result.data.\*.package_spec.mod_user.id | numeric |  |   0 
+action_result.data.\*.package_spec.mod_user.name | string |  |  
+action_result.data.\*.package_spec.modification_time | string |  |   2001-01-01T00:00:00Z 
+action_result.data.\*.package_spec.name | string |  |   make directory 
+action_result.data.\*.package_spec.parameters.\*.key | string |  |   $1 
+action_result.data.\*.package_spec.parameters.\*.type | numeric |  |   0 
+action_result.data.\*.package_spec.parameters.\*.value | string |  |   TestDirectory 
+action_result.data.\*.package_spec.process_group_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.skip_lock_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.source_hash | string |  `sha256`  |   d36e609e026380ce117388858503384ecd50f8fb9321ccaeab9647b4131cc7a7 
+action_result.data.\*.package_spec.source_hash_changed_flag | boolean |  |   True  False 
+action_result.data.\*.package_spec.source_id | numeric |  |   500 
+action_result.data.\*.package_spec.verify_expire_seconds | numeric |  |   3600 
+action_result.data.\*.package_spec.verify_group.id | numeric |  |   0 
+action_result.data.\*.package_spec.verify_group_id | numeric |  |   0 
+action_result.data.\*.policy_flag | boolean |  |   True  False 
+action_result.data.\*.public_flag | boolean |  |   True  False 
+action_result.data.\*.start_now_flag | boolean |  |   True  False 
+action_result.data.\*.start_time | string |  |   2019-09-16T07:43:57Z 
+action_result.data.\*.status | numeric |  |   0 
+action_result.data.\*.target_group.id | numeric |  |   3614 
+action_result.data.\*.user.id | numeric |  |   1 
+action_result.data.\*.user.name | string |  |   administrator 
+action_result.data.\*.user_start_time | string |  |   2001-01-01T00:00:00Z 
+action_result.summary | string |  |  
+action_result.message | string |  |   Successfully executed the action 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'run query'
 Run a search query on the devices registered on the Tanium server
@@ -961,67 +961,67 @@ Run a search query on the devices registered on the Tanium server
 Type: **investigate**  
 Read only: **True**
 
-See top\-level app documentation for example parameters\. For manual questions only, the action waits for <b>timeout\_seconds</b> provided by the user in intervals of 5 seconds to fetch the results\. The action is a success as soon as the results are retrieved or else it will timeout and fail\. As pagination is not implemented, the result\(s\) of the action will be the result\(s\) that are fetched in a single API call\. If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer\[current results unavailable\] to the answer message that it passes along the linear chain and ultimately to the Tanium Server\. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer\. Reference Link\: ~https\://docs\.tanium\.com/interact/interact/results\.html\.
+See top-level app documentation for example parameters. For manual questions only, the action waits for <b>timeout_seconds</b> provided by the user in intervals of 5 seconds to fetch the results. The action is a success as soon as the results are retrieved or else it will timeout and fail. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call. If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer[current results unavailable] to the answer message that it passes along the linear chain and ultimately to the Tanium Server. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer. Reference Link: ~https://docs.tanium.com/interact/interact/results.html.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**query\_text** |  required  | Query to run \(in Tanium Question Syntax\) | string |  `taniumrest question text` 
-**group\_name** |  optional  | The Tanium Computer Group name on which the query will be executed \(manual query only\) | string | 
-**is\_saved\_question** |  optional  | Check this box if the query text parameter refers to a 'Saved Question' on your Tanium | boolean | 
-**timeout\_seconds** |  required  | The number of seconds before the question expires \(manual query only\) | numeric | 
-**wait\_for\_results\_processing** |  optional  | Flag to wait for endpoint to return full results | boolean | 
-**return\_when\_n\_results\_available** |  optional  | Return results as soon as 'n' answers are available | numeric | 
-**wait\_for\_n\_results\_available** |  optional  | Wait until 'n' results are present, even if hit the percent complete threshold | numeric | 
+**query_text** |  required  | Query to run (in Tanium Question Syntax) | string |  `taniumrest question text` 
+**group_name** |  optional  | The Tanium Computer Group name on which the query will be executed (manual query only) | string | 
+**is_saved_question** |  optional  | Check this box if the query text parameter refers to a 'Saved Question' on your Tanium | boolean | 
+**timeout_seconds** |  required  | The number of seconds before the question expires (manual query only) | numeric | 
+**wait_for_results_processing** |  optional  | Flag to wait for endpoint to return full results | boolean | 
+**return_when_n_results_available** |  optional  | Return results as soon as 'n' answers are available | numeric | 
+**wait_for_n_results_available** |  optional  | Wait until 'n' results are present, even if hit the percent complete threshold | numeric | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.group\_name | string | 
-action\_result\.parameter\.is\_saved\_question | boolean | 
-action\_result\.parameter\.query\_text | string |  `taniumrest question text` 
-action\_result\.parameter\.return\_when\_n\_results\_available | numeric | 
-action\_result\.parameter\.timeout\_seconds | numeric | 
-action\_result\.parameter\.wait\_for\_n\_results\_available | numeric | 
-action\_result\.parameter\.wait\_for\_results\_processing | boolean | 
-action\_result\.data\.\*\.data\.max\_available\_age | string | 
-action\_result\.data\.\*\.data\.now | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.age | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.archived\_question\_id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.cache\_id | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.hash | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.name | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.type | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.error\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.estimated\_total | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.expiration | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.filtered\_row\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.filtered\_row\_count\_machines | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.issue\_seconds | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.item\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.mr\_passed | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.mr\_tested | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.no\_results\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.passed | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.question\_id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.report\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count\_machines | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.cid | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.data\.\*\.text | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.saved\_question\_id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.seconds\_since\_issued | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.select\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.tested | numeric | 
-action\_result\.summary\.number\_of\_rows | numeric | 
-action\_result\.summary\.timeout\_seconds | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.group_name | string |  |   tanium-01 
+action_result.parameter.is_saved_question | boolean |  |   False  True 
+action_result.parameter.query_text | string |  `taniumrest question text`  |   Computer name 
+action_result.parameter.return_when_n_results_available | numeric |  |   10 
+action_result.parameter.timeout_seconds | numeric |  |   600 
+action_result.parameter.wait_for_n_results_available | numeric |  |   10 
+action_result.parameter.wait_for_results_processing | boolean |  |   False  True 
+action_result.data.\*.data.max_available_age | string |  |  
+action_result.data.\*.data.now | string |  |   2019/07/24 07:53:06 GMT-0000 
+action_result.data.\*.data.result_sets.\*.age | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.archived_question_id | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.cache_id | string |  |   2668614289 
+action_result.data.\*.data.result_sets.\*.columns.\*.hash | numeric |  |   3112892791 
+action_result.data.\*.data.result_sets.\*.columns.\*.name | string |  |   DNS Server 
+action_result.data.\*.data.result_sets.\*.columns.\*.type | numeric |  |   5 
+action_result.data.\*.data.result_sets.\*.error_count | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.estimated_total | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.expiration | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.expire_seconds | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.filtered_row_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.filtered_row_count_machines | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.id | numeric |  `taniumrest question id`  |   58377 
+action_result.data.\*.data.result_sets.\*.issue_seconds | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.item_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.mr_passed | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.mr_tested | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.no_results_count | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.passed | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.question_id | numeric |  `taniumrest question id`  |   58377 
+action_result.data.\*.data.result_sets.\*.report_count | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.row_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.row_count_machines | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.rows.\*.cid | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.rows.\*.data.\*.text | string |  |   10.1.16.5 
+action_result.data.\*.data.result_sets.\*.rows.\*.id | numeric |  |   1306085003 
+action_result.data.\*.data.result_sets.\*.saved_question_id | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.seconds_since_issued | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.select_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.tested | numeric |  |   1 
+action_result.summary.number_of_rows | numeric |  |   3 
+action_result.summary.timeout_seconds | numeric |  |   10 
+action_result.message | string |  |   Number of rows: 3 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'get question results'
 Return the results for an already asked question
@@ -1032,47 +1032,47 @@ Read only: **True**
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**question\_id** |  required  | The ID of the question | numeric |  `taniumrest question id` 
+**question_id** |  required  | The ID of the question | numeric |  `taniumrest question id` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.question\_id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.max\_available\_age | string | 
-action\_result\.data\.\*\.data\.now | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.age | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.archived\_question\_id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.cache\_id | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.hash | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.name | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.columns\.\*\.type | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.error\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.estimated\_total | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.expiration | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.expire\_seconds | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.filtered\_row\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.filtered\_row\_count\_machines | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.issue\_seconds | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.item\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.mr\_passed | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.mr\_tested | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.no\_results\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.passed | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.question\_id | numeric |  `taniumrest question id` 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.report\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.row\_count\_machines | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.cid | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.data\.\*\.\*\.text | string | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.rows\.\*\.id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.saved\_question\_id | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.seconds\_since\_issued | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.select\_count | numeric | 
-action\_result\.data\.\*\.data\.result\_sets\.\*\.tested | numeric | 
-action\_result\.summary\.number\_of\_rows | numeric | 
-action\_result\.summary\.timeout\_seconds | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric | 
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.question_id | numeric |  `taniumrest question id`  |   11111111 
+action_result.data.\*.data.max_available_age | string |  |  
+action_result.data.\*.data.now | string |  |   2019/07/24 07:53:06 GMT-0000 
+action_result.data.\*.data.result_sets.\*.age | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.archived_question_id | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.cache_id | string |  |   2668614289 
+action_result.data.\*.data.result_sets.\*.columns.\*.hash | numeric |  |   3112892791 
+action_result.data.\*.data.result_sets.\*.columns.\*.name | string |  |   DNS Server 
+action_result.data.\*.data.result_sets.\*.columns.\*.type | numeric |  |   5 
+action_result.data.\*.data.result_sets.\*.error_count | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.estimated_total | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.expiration | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.expire_seconds | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.filtered_row_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.filtered_row_count_machines | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.id | numeric |  `taniumrest question id`  |   58377 
+action_result.data.\*.data.result_sets.\*.issue_seconds | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.item_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.mr_passed | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.mr_tested | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.no_results_count | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.passed | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.question_id | numeric |  `taniumrest question id`  |   58377 
+action_result.data.\*.data.result_sets.\*.report_count | numeric |  |   2 
+action_result.data.\*.data.result_sets.\*.row_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.row_count_machines | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.rows.\*.cid | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.rows.\*.data.\*.\*.text | string |  |   test 
+action_result.data.\*.data.result_sets.\*.rows.\*.id | numeric |  |   1306085003 
+action_result.data.\*.data.result_sets.\*.saved_question_id | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.seconds_since_issued | numeric |  |   0 
+action_result.data.\*.data.result_sets.\*.select_count | numeric |  |   1 
+action_result.data.\*.data.result_sets.\*.tested | numeric |  |   1 
+action_result.summary.number_of_rows | numeric |  |   3 
+action_result.summary.timeout_seconds | numeric |  |   10 
+action_result.message | string |  |   Number of rows: 3 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1 
