@@ -555,15 +555,15 @@ class TaniumRestConnector(BaseConnector):
                     "The following key(s) are incorrect: {}. Please provide correct key(s)".format(', '.join(invalid_keys)))
 
         data = dict()
-        package_param = dict()
+        package_param = list()
         package_spec = {
             "source_id": package_id
         }
         if package_parameter and parameter_definition and len(parameter_definition.get("parameters")) != 0:
             for parameter_key, parameter_value in list(package_parameter.items()):
-                package_param.update({"key": parameter_key, "value": parameter_value})
+                package_param.append({"key": parameter_key, "value": parameter_value})
 
-            package_spec.update({"parameters": [package_param]})
+            package_spec.update({"parameters": package_param})
 
         if group_name:
             group_as_obj = None
