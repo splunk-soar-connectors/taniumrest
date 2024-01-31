@@ -2,11 +2,11 @@
 # Tanium REST
 
 Publisher: Splunk  
-Connector Version: 2.2.1  
+Connector Version: 2.3.0  
 Product Vendor: Tanium  
 Product Name: Tanium REST  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 5.3.3  
+Minimum Product Version: 6.1.1  
 
 This app supports investigative and generic actions on Tanium
 
