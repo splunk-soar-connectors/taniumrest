@@ -678,7 +678,7 @@ action_result.data.\*.selects.\*.sensor.parameter_definition | string |  |
 action_result.data.\*.selects.\*.sensor.value_type | string |  |   String 
 action_result.data.\*.sensor_references.\*.name | string |  |   Child Processes 
 action_result.data.\*.sensor_references.\*.real_ms_avg | numeric |  |   0 
-action_result.data.\*.sensor_references.\*.start_char | string |  |   4 
+action_result.data.\*.sensor_references.\*.start_char | numeric |  |   4 
 action_result.data.\*.skip_lock_flag | numeric |  |  
 action_result.summary.number_of_parsed_questions | numeric |  |   7 
 action_result.message | string |  |   Num parsed questions: 7 
@@ -930,6 +930,7 @@ action_result.data.\*.package_spec.mod_user.id | numeric |  |   0
 action_result.data.\*.package_spec.mod_user.name | string |  |  
 action_result.data.\*.package_spec.modification_time | string |  |   2001-01-01T00:00:00Z 
 action_result.data.\*.package_spec.name | string |  |   make directory 
+action_result.data.\*.package_spec.parameter_definition | string |  |  
 action_result.data.\*.package_spec.parameters.\*.key | string |  |   $1 
 action_result.data.\*.package_spec.parameters.\*.type | numeric |  |   0 
 action_result.data.\*.package_spec.parameters.\*.value | string |  |   TestDirectory 
