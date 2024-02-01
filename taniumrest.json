@@ -618,9 +618,9 @@
                 },
                 {
                     "data_path": "action_result.data.*.sensor_references.*.start_char",
-                    "data_type": "string",
+                    "data_type": "numeric",
                     "example_values": [
-                        "4"
+                        4
                     ]
                 },
                 {
@@ -2100,6 +2100,10 @@
                     ],
                     "column_name": "Package Name",
                     "column_order": 9
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.parameter_definition",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.package_spec.parameters.*.key",
