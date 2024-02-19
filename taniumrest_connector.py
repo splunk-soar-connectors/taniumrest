@@ -535,7 +535,12 @@ class TaniumRestConnector(BaseConnector):
                     "Error while parsing the 'package_parameter' field. Error: {}"
                     .format(error_message))
 
-            if len(package_parameter) != len(parameter_definition.get("parameters")):
+            count_of_params = 0
+            for params in parameter_definition.get('parameters', []):
+                if params.get('parameterType') not in TANIUMREST_PARAMETERS_WITHOUT_INPUT:
+                    count_of_params += 1
+
+            if len(package_parameter) != count_of_params:
                 return action_result.set_status(
                     phantom.APP_ERROR,
                     "Please provide all the required package parameters in 'package_parameter' parameter")

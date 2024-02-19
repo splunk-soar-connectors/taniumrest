@@ -31,6 +31,7 @@ TANIUMREST_RESULTS_UNAVAILABLE = [
     "[current result unavailable]",
     "[results currently unavailable]"
 ]
+TANIUMREST_PARAMETERS_WITHOUT_INPUT = ("com.tanium.components.parameters::SeparatorParameter")
 
 # Constants relating to 'get_error_message_from_exception'
 TANIUMREST_ERR_CODE_MSG = "Error code unavailable"
