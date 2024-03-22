@@ -535,7 +535,12 @@ class TaniumRestConnector(BaseConnector):
                     "Error while parsing the 'package_parameter' field. Error: {}"
                     .format(error_message))
 
-            if len(package_parameter) != len(parameter_definition.get("parameters")):
+            count_of_params = 0
+            for params in parameter_definition.get('parameters', []):
+                if params.get('parameterType') not in TANIUMREST_PARAMETERS_WITHOUT_INPUT:
+                    count_of_params += 1
+
+            if len(package_parameter) != count_of_params:
                 return action_result.set_status(
                     phantom.APP_ERROR,
                     "Please provide all the required package parameters in 'package_parameter' parameter")
@@ -555,15 +560,15 @@ class TaniumRestConnector(BaseConnector):
                     "The following key(s) are incorrect: {}. Please provide correct key(s)".format(', '.join(invalid_keys)))
 
         data = dict()
-        package_param = dict()
+        package_param = list()
         package_spec = {
             "source_id": package_id
         }
         if package_parameter and parameter_definition and len(parameter_definition.get("parameters")) != 0:
             for parameter_key, parameter_value in list(package_parameter.items()):
-                package_param.update({"key": parameter_key, "value": parameter_value})
+                package_param.append({"key": parameter_key, "value": parameter_value})
 
-            package_spec.update({"parameters": [package_param]})
+            package_spec.update({"parameters": package_param})
 
         if group_name:
             group_as_obj = None
