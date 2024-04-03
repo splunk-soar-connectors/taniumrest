@@ -16,7 +16,7 @@
         "Build (Windows): 7.5.4.1158 | Console: 3.2.24"
     ],
     "app_version": "2.3.0",
-    "utctime_updated": "2022-01-07T20:22:22.000000Z",
+    "utctime_updated": "2022-01-07T20:22:22.000001Z",
     "package_name": "phantom_taniumrest",
     "main_module": "taniumrest_connector.py",
     "min_phantom_version": "6.1.1",
