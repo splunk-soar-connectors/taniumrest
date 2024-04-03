@@ -13,13 +13,13 @@
     "fips_compliant": true,
     "license": "Copyright (c) 2019-2024 Splunk Inc.",
     "latest_tested_versions": [
-        "Build (Windows): 7.5.2.3503 | Console: 3.0.64"
+        "Build (Windows): 7.5.4.1158 | Console: 3.2.24"
     ],
-    "app_version": "2.2.1",
-    "utctime_updated": "2022-01-07T20:22:22.000000Z",
+    "app_version": "2.3.0",
+    "utctime_updated": "2022-01-07T20:22:22.000001Z",
     "package_name": "phantom_taniumrest",
     "main_module": "taniumrest_connector.py",
-    "min_phantom_version": "5.3.3",
+    "min_phantom_version": "6.1.1",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "base_url": {
@@ -618,9 +618,9 @@
                 },
                 {
                     "data_path": "action_result.data.*.sensor_references.*.start_char",
-                    "data_type": "string",
+                    "data_type": "numeric",
                     "example_values": [
-                        "4"
+                        4
                     ]
                 },
                 {
@@ -2100,6 +2100,10 @@
                     ],
                     "column_name": "Package Name",
                     "column_order": 9
+                },
+                {
+                    "data_path": "action_result.data.*.package_spec.parameter_definition",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.package_spec.parameters.*.key",
