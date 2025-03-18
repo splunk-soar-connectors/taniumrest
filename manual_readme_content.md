@@ -95,7 +95,7 @@ ports used by Splunk SOAR.
         # {
         #   "username": "jane.doe",
         #   "domain": "dev",
-        #   "password": "TESTPASS" 
+        #   "password": "TESTPASS" #pragma: allowlist secret
         # }
   ```
 
