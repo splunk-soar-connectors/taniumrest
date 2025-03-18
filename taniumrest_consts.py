@@ -1,6 +1,6 @@
 # File: taniumrest_consts.py
 #
-# Copyright (c) 2019-2024 Splunk Inc.
+# Copyright (c) 2019-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,23 +26,20 @@ TANIUMREST_GET_SENSOR_BY_NAME = "/api/v2/sensors/by-name/{sensor_name}"
 TANIUMREST_GET_SAVED_QUESTION_RESULT = "/api/v2/result_data/saved_question/{saved_question_id}"
 TANIUMREST_WAIT_SECONDS = 5
 TANIUMREST_DEFAULT_TIMEOUT = 30  # in seconds
-TANIUMREST_RESULTS_UNAVAILABLE = [
-    "[current results unavailable]",
-    "[current result unavailable]",
-    "[results currently unavailable]"
-]
+TANIUMREST_RESULTS_UNAVAILABLE = ["[current results unavailable]", "[current result unavailable]", "[results currently unavailable]"]
 TANIUMREST_PARAMETERS_WITHOUT_INPUT = ("com.tanium.components.parameters::SeparatorParameter",)
 
 # Constants relating to 'get_error_message_from_exception'
 TANIUMREST_ERR_CODE_MSG = "Error code unavailable"
 TANIUMREST_ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
-TANIUMREST_TYPE_ERR_MSG = "Error occurred while connecting to the Tanium Server. " \
-    "Please check the asset configuration and|or action parameters"
+TANIUMREST_TYPE_ERR_MSG = "Error occurred while connecting to the Tanium Server. Please check the asset configuration and|or action parameters"
 
-TANIUMREST_NOT_ENOUGH_PARAMS = 'For parameters which you do not want to add value, please use double quotes("").' \
-    'For more details refer to the documentation'
-TANIUMREST_RESOURCE_NOT_EXIST = "No {1} exists with name {0}. " \
-    "Also, please verify that your account has sufficient permissions to access the {1}s"
+TANIUMREST_NOT_ENOUGH_PARAMS = (
+    'For parameters which you do not want to add value, please use double quotes("").For more details refer to the documentation'
+)
+TANIUMREST_RESOURCE_NOT_EXIST = (
+    "No {1} exists with name {0}. Also, please verify that your account has sufficient permissions to access the {1}s"
+)
 
 # Constants relating to 'validate_integer'
 TANIUMREST_INVALID_INT_ERR_MSG = "Please provide a valid integer value in the {}"
