@@ -11,7 +11,7 @@
     "publisher": "Splunk",
     "python_version": "3",
     "fips_compliant": true,
-    "license": "Copyright (c) 2019-2024 Splunk Inc.",
+    "license": "Copyright (c) 2019-2025 Splunk Inc.",
     "latest_tested_versions": [
         "Build (Windows): 7.5.4.1158 | Console: 3.2.24"
     ],
