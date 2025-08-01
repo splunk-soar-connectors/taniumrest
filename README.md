@@ -1,7 +1,7 @@
 # Tanium REST
 
 Publisher: Splunk \
-Connector Version: 2.3.2 \
+Connector Version: 2.3.3 \
 Product Vendor: Tanium \
 Product Name: Tanium REST \
 Minimum Product Version: 6.1.1
