@@ -169,10 +169,10 @@ ports used by Splunk SOAR.
 
   - The following Tanium Roles shown below can be configured within Tanium and applied to the
     account used to connect to SOAR. Note that these roles represent guidance by the Splunk SOAR
-    team based on testing against Tanium 7.3.314. **The permissions required in your environment
+    team based on testing against Tanium 7.5.4.1158. **The permissions required in your environment
     may vary.**
 
-  - On Tanium 7.3.314, roles can be configured by selecting Permissions > Roles in the Tanium
+  - On Tanium 7.5.4.1158, roles can be configured by selecting Permissions > Roles in the Tanium
     UI. Roles can be applied to a user account by selecting Administration > Users > (View
     User) > Edit Roles in the Tanium UI.
 
