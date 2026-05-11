@@ -1,9 +1,9 @@
 # Tanium REST
 
-Publisher: Splunk \
-Connector Version: 2.3.3 \
-Product Vendor: Tanium \
-Product Name: Tanium REST \
+Publisher: Splunk <br>
+Connector Version: 2.3.3 <br>
+Product Vendor: Tanium <br>
+Product Name: Tanium REST <br>
 Minimum Product Version: 6.1.1
 
 This app supports investigative and generic actions on Tanium
@@ -455,20 +455,20 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[list processes](#action-list-processes) - List the running processes of the devices registered on the Tanium server \
-[parse question](#action-parse-question) - Parses the supplied text into a valid Tanium query string \
-[list questions](#action-list-questions) - Retrieves either a history of the most recent questions or a list of saved questions \
-[terminate process](#action-terminate-process) - Kill a running process of the devices registered on the Tanium server \
-[execute action](#action-execute-action) - Execute an action on the Tanium server \
-[run query](#action-run-query) - Run a search query on the devices registered on the Tanium server \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[list processes](#action-list-processes) - List the running processes of the devices registered on the Tanium server <br>
+[parse question](#action-parse-question) - Parses the supplied text into a valid Tanium query string <br>
+[list questions](#action-list-questions) - Retrieves either a history of the most recent questions or a list of saved questions <br>
+[terminate process](#action-terminate-process) - Kill a running process of the devices registered on the Tanium server <br>
+[execute action](#action-execute-action) - Execute an action on the Tanium server <br>
+[run query](#action-run-query) - Run a search query on the devices registered on the Tanium server <br>
 [get question results](#action-get-question-results) - Return the results for an already asked question
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -483,7 +483,7 @@ No Output
 
 List the running processes of the devices registered on the Tanium server
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 This action requires specifying a sensor to be used to list processes. A standard Tanium sensor, 'Process Details' is used by default but a different sensor can be specified instead. Note that the 'Process Details' sensor may not be available on all Tanium deployments. Note that at this time this action only supports limiting the query to specified computer groups, but a generic Run Query action can be constructed to query an in individual computer's processes. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.
@@ -546,7 +546,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Parses the supplied text into a valid Tanium query string
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 <p>When asked a non-saved question in the <b>query_text</b> parameter, it will parse the given query and give a list of suggestions that are related to it.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.</p>
@@ -601,7 +601,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Retrieves either a history of the most recent questions or a list of saved questions
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 If the <b>list_saved_questions</b> parameter is true, this action will return a list of saved questions. If the flag is not set, this action will return the history of recently asked questions. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.
@@ -667,7 +667,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Kill a running process of the devices registered on the Tanium server
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -771,7 +771,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Execute an action on the Tanium server
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 <li>See top-level app documentation for example parameters.</li><li>If a parameterized package is used for executing an action all the parameters must be provided with correct and unique keys. If any key is repeated then the value of that key will be overwritten.</li><li>If the <b>issue_seconds</b> parameter is provided, then the action will respawn after a time interval provided in the <b>issue_seconds</b> parameter.</li>
@@ -881,7 +881,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Run a search query on the devices registered on the Tanium server
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 See top-level app documentation for example parameters. For manual questions only, the action waits for <b>timeout_seconds</b> provided by the user in intervals of 5 seconds to fetch the results. The action is a success as soon as the results are retrieved or else it will timeout and fail. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call. If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer[current results unavailable] to the answer message that it passes along the linear chain and ultimately to the Tanium Server. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer. Reference Link: ~https://docs.tanium.com/interact/interact/results.html.
@@ -952,7 +952,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Return the results for an already asked question
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1009,7 +1009,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
