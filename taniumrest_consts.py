@@ -1,6 +1,6 @@
 # File: taniumrest_consts.py
 #
-# Copyright (c) 2019-2025 Splunk Inc.
+# Copyright (c) 2019-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,10 +20,14 @@ TANIUMREST_PARSE_QUESTION = "/api/v2/parse_question"
 TANIUMREST_EXECUTE_ACTION = "/api/v2/saved_actions"
 TANIUMREST_GET_ACTION_GROUP = "/api/v2/action_groups/by-name/{action_group}"
 TANIUMREST_GET_GROUP = "/api/v2/groups/by-name/{group_name}"
+TANIUMREST_CREATE_MANUAL_GROUP = "/api/v2/computer_groups"
+TANIUMREST_DELETE_GROUP = "/api/v2/groups/{group_id}"
 TANIUMREST_GET_PACKAGE = "/api/v2/packages/by-name/{package}"
 TANIUMREST_GET_SAVED_QUESTION = "/api/v2/saved_questions/by-name/{saved_question}"
 TANIUMREST_GET_SENSOR_BY_NAME = "/api/v2/sensors/by-name/{sensor_name}"
 TANIUMREST_GET_SAVED_QUESTION_RESULT = "/api/v2/result_data/saved_question/{saved_question_id}"
+TANIUMREST_INTEGRATION_HEADER = "x-tanium-integration"
+TANIUMREST_DEFAULT_INTEGRATION_HEADER = "splunk-taniumrest-2.3.3"
 TANIUMREST_WAIT_SECONDS = 5
 TANIUMREST_DEFAULT_TIMEOUT = 30  # in seconds
 TANIUMREST_RESULTS_UNAVAILABLE = ["[current results unavailable]", "[current result unavailable]", "[results currently unavailable]"]
@@ -53,3 +57,4 @@ TANIUMREST_RETURN_WHEN_N_RESULTS_AVAILABLE_KEY = "'return_when_n_results_availab
 TANIUMREST_WAIT_FOR_N_RESULTS_AVAILABLE_KEY = "'wait_for_n_results_available' action parameter"
 TANIUMREST_RESULTS_PERCENTAGE_KEY = "'Consider question results complete at' configuration parameter"
 TANIUMREST_QUESTION_ID_KEY = "'question_id' action parameter"
+TANIUMREST_GROUP_ID_KEY = "'group_id' action parameter"

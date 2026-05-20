@@ -1,3 +1,7 @@
+## Product Compatibility
+
+The latest tested Tanium version is 7.8.2.1170.
+
 ## Playbook Backward Compatibility
 
 - The existing action parameters have been modified for the action given below. Hence, it is
@@ -43,6 +47,12 @@ ports used by Splunk SOAR.
     credentials, the token will be used as the preferred method. However for security purposes,
     once the token has expired or if it is invalid, the app will **NOT** revert to basic auth
     credentials - the token must either be removed from or replaced in the asset config.
+
+- **Integration Header Value**
+
+  - Tanium requires partner integrations to include the **x-tanium-integration** header on API
+    requests. The app sends this header on login and all REST API calls. The default value is
+    **splunk-taniumrest-2.3.3**.
 
 ## API Token Generation
 
@@ -384,6 +394,17 @@ ports used by Splunk SOAR.
       - `                               timeout seconds                              : 600              `
 
         `                               `
+
+## How to use Create Group and Delete Group Actions
+
+- The **create group** action creates a Tanium manual Computer Group from explicitly supplied
+  hostnames and/or IP addresses. Provide a **group_name** and at least one value in
+  **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
+  comma-separated values.
+
+- The **delete group** action deletes a Tanium Computer Group. Provide either **group_id** or
+  **group_name**. If both are provided, **group_id** is used. If only **group_name** is provided,
+  the app first resolves it to a Tanium group ID and then deletes the group.
 
 ## How to use Terminate Process Action
 
