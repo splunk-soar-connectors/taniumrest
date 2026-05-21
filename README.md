@@ -58,12 +58,6 @@ ports used by Splunk SOAR.
     once the token has expired or if it is invalid, the app will **NOT** revert to basic auth
     credentials - the token must either be removed from or replaced in the asset config.
 
-- **Integration Header Value**
-
-  - Tanium requires partner integrations to include the **x-tanium-integration** header on API
-    requests. The app sends this header on login and all REST API calls. The default value is
-    **splunk-taniumrest-2.3.3**.
-
 ## API Token Generation
 
 - There are different methods of creating an API token depending on which version of Tanium is
@@ -412,9 +406,11 @@ ports used by Splunk SOAR.
   **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
   comma-separated values.
 
-- The **delete group** action deletes a Tanium Computer Group. Provide either **group_id** or
-  **group_name**. If both are provided, **group_id** is used. If only **group_name** is provided,
-  the app first resolves it to a Tanium group ID and then deletes the group.
+- The **delete group** action deletes a Tanium Computer Group. Provide **group_id**,
+  **group_name**, or **computer_names** and/or **ip_addresses** membership for the
+  group. If multiple identifiers are provided, **group_id** is used first, then **group_name**.
+  If deleting by hostname or IP address, the app lists manual computer groups, finds a unique
+  group containing the supplied membership, and then deletes that group.
 
 ## How to use Terminate Process Action
 
@@ -473,7 +469,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **password** | optional | password | Password |
 **verify_server_cert** | optional | boolean | Verify Server Certificate |
 **results_percentage** | optional | numeric | Consider question results complete at (% out of 100) |
-**integration_header_value** | optional | string | Value for the x-tanium-integration API header |
+**integration_header_value** | optional | string | Optional value for the x-tanium-integration API header. Configure only when required by Tanium partner or test accounts. |
 
 ### Supported Actions
 
@@ -485,7 +481,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 [execute action](#action-execute-action) - Execute an action on the Tanium server <br>
 [run query](#action-run-query) - Run a search query on the devices registered on the Tanium server <br>
 [create group](#action-create-group) - Create a Tanium manual computer group from hostnames and IP addresses <br>
-[delete group](#action-delete-group) - Delete a Tanium computer group by ID or name <br>
+[delete group](#action-delete-group) - Delete a Tanium manual computer group by ID, name, or hostname/IP membership <br>
 [get question results](#action-get-question-results) - Return the results for an already asked question
 
 ## action: 'test connectivity'
@@ -1008,7 +1004,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 ## action: 'delete group'
 
-Delete a Tanium computer group by ID or name
+Delete a Tanium manual computer group by ID, name, or hostname/IP membership
 
 Type: **generic** <br>
 Read only: **False**
@@ -1019,6 +1015,8 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **group_id** | optional | ID of the Tanium Computer Group to delete. This value is preferred when both ID and name are provided | numeric | |
 **group_name** | optional | Name of the Tanium Computer Group to delete when group_id is not provided | string | |
+**computer_names** | optional | Comma-separated hostnames or computer names used to find the group when group_id and group_name are not provided | string | |
+**ip_addresses** | optional | Comma-separated IP addresses used to find the group when group_id and group_name are not provided | string | |
 
 #### Action Output
 
@@ -1027,11 +1025,15 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 action_result.status | string | | success failed |
 action_result.parameter.group_id | numeric | | 1234 |
 action_result.parameter.group_name | string | | huntington-risk-hosts |
+action_result.parameter.computer_names | string | | host1,host2 |
+action_result.parameter.ip_addresses | string | | 10.20.30.40,10.20.30.41 |
 action_result.data.\*.id | numeric | | 1234 |
 action_result.data.\*.name | string | | huntington-risk-hosts |
 action_result.data.\*.deleted | boolean | | True |
 action_result.summary.group_id | numeric | | 1234 |
 action_result.summary.group_name | string | | huntington-risk-hosts |
+action_result.summary.computer_name_count | numeric | | 2 |
+action_result.summary.ip_address_count | numeric | | 2 |
 action_result.message | string | | Successfully deleted the group |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |

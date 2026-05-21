@@ -144,12 +144,9 @@ class TaniumRestConnector(BaseConnector):
 
     def _get_tanium_headers(self, headers=None, include_session=False):
         headers = dict(headers or {})
-        headers.update(
-            {
-                "Content-Type": "application/json",
-                TANIUMREST_INTEGRATION_HEADER: self._integration_header_value,
-            }
-        )
+        headers.update({"Content-Type": "application/json"})
+        if self._integration_header_value:
+            headers[TANIUMREST_INTEGRATION_HEADER] = self._integration_header_value
         if include_session:
             headers["session"] = str(self._session_id)
 
@@ -160,6 +157,72 @@ class TaniumRestConnector(BaseConnector):
             return []
 
         return [value.strip() for value in str(values).split(",") if value.strip()]
+
+    def _computer_group_matches_specs(self, group, computer_names, ip_addresses, exact_match=False):
+        group_computer_names = set()
+        group_ip_addresses = set()
+
+        for spec in group.get("computer_specs") or []:
+            computer_name = spec.get("computer_name")
+            if computer_name:
+                group_computer_names.add(str(computer_name).strip().lower())
+
+            ip_address = spec.get("ip_address")
+            if ip_address:
+                group_ip_addresses.add(str(ip_address).strip())
+
+        requested_computer_names = {computer_name.lower() for computer_name in computer_names}
+        requested_ip_addresses = set(ip_addresses)
+
+        if exact_match:
+            return group_computer_names == requested_computer_names and group_ip_addresses == requested_ip_addresses
+
+        return requested_computer_names.issubset(group_computer_names) and requested_ip_addresses.issubset(group_ip_addresses)
+
+    def _get_group_by_computer_specs(self, action_result, computer_names, ip_addresses):
+        ret_val, response = self._make_rest_call_helper(
+            action_result, TANIUMREST_COMPUTER_GROUPS, verify=self._verify, params=None, headers=None
+        )
+
+        if phantom.is_fail(ret_val):
+            return ret_val, None
+
+        response_data = response.get("data")
+        if isinstance(response_data, dict):
+            groups = [response_data]
+        elif isinstance(response_data, list):
+            groups = response_data
+        else:
+            return action_result.set_status(phantom.APP_ERROR, "Unexpected API response while fetching computer groups"), None
+
+        exact_matches = [
+            group
+            for group in groups
+            if isinstance(group, dict)
+            and not group.get("deleted_flag")
+            and self._computer_group_matches_specs(group, computer_names, ip_addresses, exact_match=True)
+        ]
+        matches = exact_matches or [
+            group
+            for group in groups
+            if isinstance(group, dict)
+            and not group.get("deleted_flag")
+            and self._computer_group_matches_specs(group, computer_names, ip_addresses)
+        ]
+
+        if not matches:
+            return action_result.set_status(phantom.APP_ERROR, "No group exists with the provided computer_names and ip_addresses"), None
+
+        if len(matches) > 1:
+            return (
+                action_result.set_status(
+                    phantom.APP_ERROR,
+                    "Multiple groups match the provided computer_names and ip_addresses. Please provide group_id or group_name",
+                ),
+                None,
+            )
+
+        return phantom.APP_SUCCESS, matches[0]
 
     def _process_empty_response(self, response, action_result):
         if response.status_code in [200, 201, 204]:
@@ -1076,6 +1139,8 @@ class TaniumRestConnector(BaseConnector):
         group_id = param.get("group_id")
         group_name = param.get("group_name")
         group_name = str(group_name).strip() if group_name is not None else None
+        computer_names = self._parse_comma_separated_values(param.get("computer_names"))
+        ip_addresses = self._parse_comma_separated_values(param.get("ip_addresses"))
 
         if group_id is not None and str(group_id).strip():
             ret_val, group_id = self._validate_integer(action_result, group_id, TANIUMREST_GROUP_ID_KEY)
@@ -1084,12 +1149,12 @@ class TaniumRestConnector(BaseConnector):
         else:
             group_id = None
 
-        if not group_id and not group_name:
-            return action_result.set_status(phantom.APP_ERROR, "Please provide either 'group_id' or 'group_name'")
+        if not group_id and not group_name and not computer_names and not ip_addresses:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide 'group_id', 'group_name', 'computer_names', or 'ip_addresses'")
 
         resolved_group_name = group_name
-        if not group_id:
-            endpoint = TANIUMREST_GET_GROUP.format(group_name=group_name)
+        if not group_id and group_name:
+            endpoint = TANIUMREST_GET_COMPUTER_GROUP.format(group_name=group_name)
             ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
 
             if phantom.is_fail(ret_val):
@@ -1110,6 +1175,17 @@ class TaniumRestConnector(BaseConnector):
 
             if not group_id:
                 return action_result.set_status(phantom.APP_ERROR, "Unexpected API response: group ID not found")
+        elif not group_id:
+            ret_val, resp_data = self._get_group_by_computer_specs(action_result, computer_names, ip_addresses)
+
+            if phantom.is_fail(ret_val):
+                return action_result.get_status()
+
+            group_id = resp_data.get("id")
+            resolved_group_name = resp_data.get("name")
+
+            if not group_id:
+                return action_result.set_status(phantom.APP_ERROR, "Unexpected API response: group ID not found")
 
         endpoint = TANIUMREST_DELETE_GROUP.format(group_id=group_id)
         ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None, method="delete")
@@ -1120,6 +1196,10 @@ class TaniumRestConnector(BaseConnector):
         data = {"id": group_id, "deleted": True}
         if resolved_group_name:
             data["name"] = resolved_group_name
+        if computer_names:
+            data["computer_names"] = computer_names
+        if ip_addresses:
+            data["ip_addresses"] = ip_addresses
         if response:
             data["response"] = response.get("data", response) if isinstance(response, dict) else response
         action_result.add_data(data)
@@ -1128,6 +1208,10 @@ class TaniumRestConnector(BaseConnector):
         summary["group_id"] = group_id
         if resolved_group_name:
             summary["group_name"] = resolved_group_name
+        if computer_names:
+            summary["computer_name_count"] = len(computer_names)
+        if ip_addresses:
+            summary["ip_address_count"] = len(ip_addresses)
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully deleted the group")
 
@@ -1405,7 +1489,7 @@ class TaniumRestConnector(BaseConnector):
 
         self._verify = config.get("verify_server_cert", False)
         self._percentage = config.get("results_percentage", 99)
-        self._integration_header_value = config.get("integration_header_value") or TANIUMREST_DEFAULT_INTEGRATION_HEADER
+        self._integration_header_value = str(config.get("integration_header_value", "")).strip()
 
         # Integer validation for 'results_percentage' configuration parameter
         ret_val, self._percentage = self._validate_integer(self, self._percentage, TANIUMREST_RESULTS_PERCENTAGE_KEY, True)

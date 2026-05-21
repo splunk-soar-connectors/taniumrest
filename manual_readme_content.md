@@ -48,12 +48,6 @@ ports used by Splunk SOAR.
     once the token has expired or if it is invalid, the app will **NOT** revert to basic auth
     credentials - the token must either be removed from or replaced in the asset config.
 
-- **Integration Header Value**
-
-  - Tanium requires partner integrations to include the **x-tanium-integration** header on API
-    requests. The app sends this header on login and all REST API calls. The default value is
-    **splunk-taniumrest-2.3.3**.
-
 ## API Token Generation
 
 - There are different methods of creating an API token depending on which version of Tanium is
@@ -402,9 +396,11 @@ ports used by Splunk SOAR.
   **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
   comma-separated values.
 
-- The **delete group** action deletes a Tanium Computer Group. Provide either **group_id** or
-  **group_name**. If both are provided, **group_id** is used. If only **group_name** is provided,
-  the app first resolves it to a Tanium group ID and then deletes the group.
+- The **delete group** action deletes a Tanium Computer Group. Provide **group_id**,
+  **group_name**, or **computer_names** and/or **ip_addresses** membership for the
+  group. If multiple identifiers are provided, **group_id** is used first, then **group_name**.
+  If deleting by hostname or IP address, the app lists manual computer groups, finds a unique
+  group containing the supplied membership, and then deletes that group.
 
 ## How to use Terminate Process Action
 

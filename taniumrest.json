@@ -62,9 +62,8 @@
             "order": 5
         },
         "integration_header_value": {
-            "description": "Value for the x-tanium-integration API header",
+            "description": "Optional value for the x-tanium-integration API header. Configure only when required by Tanium partner or test accounts.",
             "data_type": "string",
-            "default": "splunk-taniumrest-2.3.3",
             "order": 6
         }
     },
@@ -2824,7 +2823,7 @@
         },
         {
             "action": "delete group",
-            "description": "Delete a Tanium computer group by ID or name",
+            "description": "Delete a Tanium manual computer group by ID, name, or hostname/IP membership",
             "type": "generic",
             "identifier": "delete_group",
             "read_only": false,
@@ -2842,6 +2841,16 @@
                     "data_type": "string",
                     "primary": true,
                     "order": 1
+                },
+                "computer_names": {
+                    "description": "Comma-separated hostnames or computer names used to find the group when group_id and group_name are not provided",
+                    "data_type": "string",
+                    "order": 2
+                },
+                "ip_addresses": {
+                    "description": "Comma-separated IP addresses used to find the group when group_id and group_name are not provided",
+                    "data_type": "string",
+                    "order": 3
                 }
             },
             "output": [
@@ -2865,6 +2874,20 @@
                     "data_type": "string",
                     "example_values": [
                         "huntington-risk-hosts"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.computer_names",
+                    "data_type": "string",
+                    "example_values": [
+                        "host1,host2"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ip_addresses",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.20.30.40,10.20.30.41"
                     ]
                 },
                 {
@@ -2900,6 +2923,20 @@
                     "data_type": "string",
                     "example_values": [
                         "huntington-risk-hosts"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.computer_name_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.ip_address_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
                     ]
                 },
                 {
