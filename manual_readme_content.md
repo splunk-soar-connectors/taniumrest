@@ -389,18 +389,20 @@ ports used by Splunk SOAR.
 
         `                               `
 
-## How to use Create Group and Delete Group Actions
+## How to use Create Group, Query Group, and Delete Group Actions
 
 - The **create group** action creates a Tanium manual Computer Group from explicitly supplied
   hostnames and/or IP addresses. Provide a **group_name** and at least one value in
   **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
   comma-separated values.
 
-- The **delete group** action deletes a Tanium Computer Group. Provide **group_id**,
-  **group_name**, or **computer_names** and/or **ip_addresses** membership for the
-  group. If multiple identifiers are provided, **group_id** is used first, then **group_name**.
-  If deleting by hostname or IP address, the app lists manual computer groups, finds a unique
-  group containing the supplied membership, and then deletes that group.
+- The **query group** action lists Tanium manual Computer Groups that contain the supplied
+  **computer_names** and/or **ip_addresses**. Use this action when a playbook needs to resolve
+  one or more group IDs before deleting a group.
+
+- The **delete group** action deletes a Tanium Computer Group by **group_id**. To delete based on
+  hostname or IP address, first run **query group** and then pass the selected group ID to
+  **delete group** in the next playbook step.
 
 ## How to use Terminate Process Action
 

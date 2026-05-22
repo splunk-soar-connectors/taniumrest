@@ -399,18 +399,20 @@ ports used by Splunk SOAR.
 
         `                               `
 
-## How to use Create Group and Delete Group Actions
+## How to use Create Group, Query Group, and Delete Group Actions
 
 - The **create group** action creates a Tanium manual Computer Group from explicitly supplied
   hostnames and/or IP addresses. Provide a **group_name** and at least one value in
   **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
   comma-separated values.
 
-- The **delete group** action deletes a Tanium Computer Group. Provide **group_id**,
-  **group_name**, or **computer_names** and/or **ip_addresses** membership for the
-  group. If multiple identifiers are provided, **group_id** is used first, then **group_name**.
-  If deleting by hostname or IP address, the app lists manual computer groups, finds a unique
-  group containing the supplied membership, and then deletes that group.
+- The **query group** action lists Tanium manual Computer Groups that contain the supplied
+  **computer_names** and/or **ip_addresses**. Use this action when a playbook needs to resolve
+  one or more group IDs before deleting a group.
+
+- The **delete group** action deletes a Tanium Computer Group by **group_id**. To delete based on
+  hostname or IP address, first run **query group** and then pass the selected group ID to
+  **delete group** in the next playbook step.
 
 ## How to use Terminate Process Action
 
@@ -481,7 +483,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 [execute action](#action-execute-action) - Execute an action on the Tanium server <br>
 [run query](#action-run-query) - Run a search query on the devices registered on the Tanium server <br>
 [create group](#action-create-group) - Create a Tanium manual computer group from hostnames and IP addresses <br>
-[delete group](#action-delete-group) - Delete a Tanium manual computer group by ID, name, or hostname/IP membership <br>
+[query group](#action-query-group) - Query Tanium manual computer groups by hostname or IP address <br>
+[delete group](#action-delete-group) - Delete a Tanium manual computer group by ID <br>
 [get question results](#action-get-question-results) - Return the results for an already asked question
 
 ## action: 'test connectivity'
@@ -1002,9 +1005,41 @@ action_result.message | string | | Successfully created the group |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
+## action: 'query group'
+
+Query Tanium manual computer groups by hostname or IP address
+
+Type: **investigate** <br>
+Read only: **True**
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**computer_names** | optional | Comma-separated hostnames or computer names used to find matching groups | string | |
+**ip_addresses** | optional | Comma-separated IP addresses used to find matching groups | string | |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failed |
+action_result.parameter.computer_names | string | | host1,host2 |
+action_result.parameter.ip_addresses | string | | 10.20.30.40,10.20.30.41 |
+action_result.data.\*.id | numeric | | 1234 |
+action_result.data.\*.name | string | | huntington-risk-hosts |
+action_result.data.\*.computer_specs.\*.computer_name | string | | host1 |
+action_result.data.\*.computer_specs.\*.ip_address | string | | 10.20.30.40 |
+action_result.summary.total_groups | numeric | | 1 |
+action_result.summary.computer_name_count | numeric | | 2 |
+action_result.summary.ip_address_count | numeric | | 2 |
+action_result.message | string | | Found 1 matching group(s) |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
 ## action: 'delete group'
 
-Delete a Tanium manual computer group by ID, name, or hostname/IP membership
+Delete a Tanium manual computer group by ID
 
 Type: **generic** <br>
 Read only: **False**
@@ -1013,10 +1048,7 @@ Read only: **False**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**group_id** | optional | ID of the Tanium Computer Group to delete. This value is preferred when both ID and name are provided | numeric | |
-**group_name** | optional | Name of the Tanium Computer Group to delete when group_id is not provided | string | |
-**computer_names** | optional | Comma-separated hostnames or computer names used to find the group when group_id and group_name are not provided | string | |
-**ip_addresses** | optional | Comma-separated IP addresses used to find the group when group_id and group_name are not provided | string | |
+**group_id** | required | ID of the Tanium Computer Group to delete | numeric | |
 
 #### Action Output
 
@@ -1024,16 +1056,9 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string | | success failed |
 action_result.parameter.group_id | numeric | | 1234 |
-action_result.parameter.group_name | string | | huntington-risk-hosts |
-action_result.parameter.computer_names | string | | host1,host2 |
-action_result.parameter.ip_addresses | string | | 10.20.30.40,10.20.30.41 |
 action_result.data.\*.id | numeric | | 1234 |
-action_result.data.\*.name | string | | huntington-risk-hosts |
 action_result.data.\*.deleted | boolean | | True |
 action_result.summary.group_id | numeric | | 1234 |
-action_result.summary.group_name | string | | huntington-risk-hosts |
-action_result.summary.computer_name_count | numeric | | 2 |
-action_result.summary.ip_address_count | numeric | | 2 |
 action_result.message | string | | Successfully deleted the group |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |

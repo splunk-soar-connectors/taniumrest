@@ -21,7 +21,6 @@ TANIUMREST_EXECUTE_ACTION = "/api/v2/saved_actions"
 TANIUMREST_GET_ACTION_GROUP = "/api/v2/action_groups/by-name/{action_group}"
 TANIUMREST_COMPUTER_GROUPS = "/api/v2/computer_groups"
 TANIUMREST_GET_GROUP = "/api/v2/groups/by-name/{group_name}"
-TANIUMREST_GET_COMPUTER_GROUP = f"{TANIUMREST_COMPUTER_GROUPS}/by-name/{{group_name}}"
 TANIUMREST_CREATE_MANUAL_GROUP = TANIUMREST_COMPUTER_GROUPS
 TANIUMREST_DELETE_GROUP = "/api/v2/groups/{group_id}"
 TANIUMREST_GET_PACKAGE = "/api/v2/packages/by-name/{package}"

@@ -2822,35 +2822,24 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "delete group",
-            "description": "Delete a Tanium manual computer group by ID, name, or hostname/IP membership",
-            "type": "generic",
-            "identifier": "delete_group",
-            "read_only": false,
+            "action": "query group",
+            "description": "Query Tanium manual computer groups by hostname or IP address",
+            "type": "investigate",
+            "identifier": "query_group",
+            "read_only": true,
             "lock": {
                 "enabled": false
             },
             "parameters": {
-                "group_id": {
-                    "description": "ID of the Tanium Computer Group to delete. This value is preferred when both ID and name are provided",
-                    "data_type": "numeric",
+                "computer_names": {
+                    "description": "Comma-separated hostnames or computer names used to find matching groups",
+                    "data_type": "string",
                     "order": 0
                 },
-                "group_name": {
-                    "description": "Name of the Tanium Computer Group to delete when group_id is not provided",
-                    "data_type": "string",
-                    "primary": true,
-                    "order": 1
-                },
-                "computer_names": {
-                    "description": "Comma-separated hostnames or computer names used to find the group when group_id and group_name are not provided",
-                    "data_type": "string",
-                    "order": 2
-                },
                 "ip_addresses": {
-                    "description": "Comma-separated IP addresses used to find the group when group_id and group_name are not provided",
+                    "description": "Comma-separated IP addresses used to find matching groups",
                     "data_type": "string",
-                    "order": 3
+                    "order": 1
                 }
             },
             "output": [
@@ -2860,20 +2849,6 @@
                     "example_values": [
                         "success",
                         "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.group_id",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1234
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.group_name",
-                    "data_type": "string",
-                    "example_values": [
-                        "huntington-risk-hosts"
                     ]
                 },
                 {
@@ -2905,24 +2880,24 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.deleted",
-                    "data_type": "boolean",
-                    "example_values": [
-                        true
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.group_id",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1234
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.group_name",
+                    "data_path": "action_result.data.*.computer_specs.*.computer_name",
                     "data_type": "string",
                     "example_values": [
-                        "huntington-risk-hosts"
+                        "host1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.ip_address",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.20.30.40"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_groups",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
                     ]
                 },
                 {
@@ -2937,6 +2912,88 @@
                     "data_type": "numeric",
                     "example_values": [
                         2
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Found 1 matching group(s)"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "delete group",
+            "description": "Delete a Tanium manual computer group by ID",
+            "type": "generic",
+            "identifier": "delete_group",
+            "read_only": false,
+            "lock": {
+                "enabled": false
+            },
+            "parameters": {
+                "group_id": {
+                    "description": "ID of the Tanium Computer Group to delete",
+                    "data_type": "numeric",
+                    "primary": true,
+                    "required": true,
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.group_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.deleted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.group_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
                     ]
                 },
                 {
