@@ -996,7 +996,12 @@ action_result.parameter.computer_names | string | | host1,host2 |
 action_result.parameter.ip_addresses | string | | 10.20.30.40,10.20.30.41 |
 action_result.data.\*.id | numeric | | 1234 |
 action_result.data.\*.name | string | | huntington-risk-hosts |
-action_result.data.\*.text | string | | |
+action_result.data.\*.deleted_flag | boolean | | False |
+action_result.data.\*.filter_flag | boolean | | False |
+action_result.data.\*.management_rights_flag | boolean | | False |
+action_result.data.\*.computer_specs.\*.id | numeric | | 1234 |
+action_result.data.\*.computer_specs.\*.computer_name | string | | host1 |
+action_result.data.\*.computer_specs.\*.ip_address | string | | 10.20.30.40 |
 action_result.summary.group_id | numeric | | 1234 |
 action_result.summary.group_name | string | | huntington-risk-hosts |
 action_result.summary.computer_name_count | numeric | | 2 |
@@ -1028,6 +1033,10 @@ action_result.parameter.computer_names | string | | host1,host2 |
 action_result.parameter.ip_addresses | string | | 10.20.30.40,10.20.30.41 |
 action_result.data.\*.id | numeric | | 1234 |
 action_result.data.\*.name | string | | huntington-risk-hosts |
+action_result.data.\*.deleted_flag | boolean | | False |
+action_result.data.\*.filter_flag | boolean | | False |
+action_result.data.\*.management_rights_flag | boolean | | False |
+action_result.data.\*.computer_specs.\*.id | numeric | | 1234 |
 action_result.data.\*.computer_specs.\*.computer_name | string | | host1 |
 action_result.data.\*.computer_specs.\*.ip_address | string | | 10.20.30.40 |
 action_result.summary.total_groups | numeric | | 1 |
@@ -1058,6 +1067,8 @@ action_result.status | string | | success failed |
 action_result.parameter.group_id | numeric | | 1234 |
 action_result.data.\*.id | numeric | | 1234 |
 action_result.data.\*.deleted | boolean | | True |
+action_result.data.\*.deleted_flag | boolean | | True |
+action_result.data.\*.name | string | | huntington-risk-hosts |
 action_result.summary.group_id | numeric | | 1234 |
 action_result.message | string | | Successfully deleted the group |
 summary.total_objects | numeric | | 1 |

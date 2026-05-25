@@ -2763,8 +2763,46 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.text",
-                    "data_type": "string"
+                    "data_path": "action_result.data.*.deleted_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.filter_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.management_rights_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.computer_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "host1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.ip_address",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.20.30.40"
+                    ]
                 },
                 {
                     "data_path": "action_result.summary.group_id",
@@ -2880,6 +2918,34 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.deleted_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.filter_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.management_rights_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.computer_specs.*.computer_name",
                     "data_type": "string",
                     "example_values": [
@@ -2987,6 +3053,20 @@
                     "data_type": "boolean",
                     "example_values": [
                         true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.deleted_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "huntington-risk-hosts"
                     ]
                 },
                 {

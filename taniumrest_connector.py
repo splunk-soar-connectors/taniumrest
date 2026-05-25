@@ -1154,9 +1154,13 @@ class TaniumRestConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        data = {"id": group_id, "deleted": True}
-        if response:
-            data["response"] = response.get("data", response) if isinstance(response, dict) else response
+        response_data = response.get("data", response) if isinstance(response, dict) else response
+        data = {"id": group_id, "deleted": True, "deleted_flag": True}
+        if isinstance(response_data, dict):
+            data["id"] = response_data.get("id", group_id)
+            data["deleted_flag"] = response_data.get("deleted_flag", True)
+            if response_data.get("name"):
+                data["name"] = response_data["name"]
         action_result.add_data(data)
 
         summary = action_result.update_summary({})
