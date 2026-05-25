@@ -1109,7 +1109,7 @@ class TaniumRestConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully created the group")
 
-    def _handle_query_group(self, param):
+    def _handle_find_groups(self, param):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1413,8 +1413,8 @@ class TaniumRestConnector(BaseConnector):
         elif action_id == "create_group":
             ret_val = self._handle_create_group(param)
 
-        elif action_id == "query_group":
-            ret_val = self._handle_query_group(param)
+        elif action_id == "find_groups":
+            ret_val = self._handle_find_groups(param)
 
         elif action_id == "delete_group":
             ret_val = self._handle_delete_group(param)

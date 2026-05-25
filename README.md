@@ -399,19 +399,19 @@ ports used by Splunk SOAR.
 
         `                               `
 
-## How to use Create Group, Query Group, and Delete Group Actions
+## How to use Create Group, Find Groups, and Delete Group Actions
 
 - The **create group** action creates a Tanium manual Computer Group from explicitly supplied
   hostnames and/or IP addresses. Provide a **group_name** and at least one value in
   **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
   comma-separated values.
 
-- The **query group** action lists Tanium manual Computer Groups that contain the supplied
+- The **find groups** action lists Tanium manual Computer Groups that contain the supplied
   **computer_names** and/or **ip_addresses**. Use this action when a playbook needs to resolve
   one or more group IDs before deleting a group.
 
-- The **delete group** action deletes a Tanium Computer Group by **group_id**. To delete based on
-  hostname or IP address, first run **query group** and then pass the selected group ID to
+- The **delete group** action deletes a Tanium manual Computer Group by **group_id**. To delete based on
+  hostname or IP address, first run **find groups** and then pass the selected group ID to
   **delete group** in the next playbook step.
 
 ## How to use Terminate Process Action
@@ -483,7 +483,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 [execute action](#action-execute-action) - Execute an action on the Tanium server <br>
 [run query](#action-run-query) - Run a search query on the devices registered on the Tanium server <br>
 [create group](#action-create-group) - Create a Tanium manual computer group from hostnames and IP addresses <br>
-[query group](#action-query-group) - Query Tanium manual computer groups by hostname or IP address <br>
+[find groups](#action-find-groups) - Find Tanium manual computer groups matching hostnames or IP addresses <br>
 [delete group](#action-delete-group) - Delete a Tanium manual computer group by ID <br>
 [get question results](#action-get-question-results) - Return the results for an already asked question
 
@@ -1005,9 +1005,9 @@ action_result.message | string | | Successfully created the group |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
-## action: 'query group'
+## action: 'find groups'
 
-Query Tanium manual computer groups by hostname or IP address
+Find Tanium manual computer groups matching hostnames or IP addresses
 
 Type: **investigate** <br>
 Read only: **True**
@@ -1048,7 +1048,7 @@ Read only: **False**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**group_id** | required | ID of the Tanium Computer Group to delete | numeric | |
+**group_id** | required | ID of the Tanium manual computer group to delete | numeric | |
 
 #### Action Output
 

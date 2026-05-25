@@ -2822,10 +2822,10 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "query group",
-            "description": "Query Tanium manual computer groups by hostname or IP address",
+            "action": "find groups",
+            "description": "Find Tanium manual computer groups matching hostnames or IP addresses",
             "type": "investigate",
-            "identifier": "query_group",
+            "identifier": "find_groups",
             "read_only": true,
             "lock": {
                 "enabled": false
@@ -2952,7 +2952,7 @@
             },
             "parameters": {
                 "group_id": {
-                    "description": "ID of the Tanium Computer Group to delete",
+                    "description": "ID of the Tanium manual computer group to delete",
                     "data_type": "numeric",
                     "primary": true,
                     "required": true,
