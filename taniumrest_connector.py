@@ -1148,7 +1148,7 @@ class TaniumRestConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        endpoint = TANIUMREST_DELETE_GROUP.format(group_id=group_id)
+        endpoint = TANIUMREST_DELETE_MANUAL_GROUP.format(group_id=group_id)
         ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None, method="delete")
 
         if phantom.is_fail(ret_val):
