@@ -982,28 +982,28 @@ Read only: **False**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**group_name** | required | Name of the Tanium Computer Group to create | string | |
-**computer_names** | optional | Comma-separated hostnames or computer names to include in the group | string | |
-**ip_addresses** | optional | Comma-separated IP addresses to include in the group | string | |
+**group_name** | required | Name of the Tanium Computer Group to create | string | `taniumrest group name` |
+**computer_names** | optional | Comma-separated hostnames or computer names to include in the group | string | `host name` |
+**ip_addresses** | optional | Comma-separated IP addresses to include in the group | string | `ip` |
 
 #### Action Output
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string | | success failed |
-action_result.parameter.group_name | string | | huntington-risk-hosts |
-action_result.parameter.computer_names | string | | host1,host2 |
-action_result.parameter.ip_addresses | string | | 10.20.30.40,10.20.30.41 |
-action_result.data.\*.id | numeric | | 1234 |
-action_result.data.\*.name | string | | huntington-risk-hosts |
+action_result.parameter.group_name | string | `taniumrest group name` | manual-group-1 |
+action_result.parameter.computer_names | string | `host name` | host1,host2 |
+action_result.parameter.ip_addresses | string | `ip` | 10.20.30.40,10.20.30.41 |
+action_result.data.\*.id | numeric | `taniumrest group id` | 1234 |
+action_result.data.\*.name | string | `taniumrest group name` | manual-group-1 |
 action_result.data.\*.deleted_flag | boolean | | False |
 action_result.data.\*.filter_flag | boolean | | False |
 action_result.data.\*.management_rights_flag | boolean | | False |
 action_result.data.\*.computer_specs.\*.id | numeric | | 1234 |
-action_result.data.\*.computer_specs.\*.computer_name | string | | host1 |
-action_result.data.\*.computer_specs.\*.ip_address | string | | 10.20.30.40 |
-action_result.summary.group_id | numeric | | 1234 |
-action_result.summary.group_name | string | | huntington-risk-hosts |
+action_result.data.\*.computer_specs.\*.computer_name | string | `host name` | host1 |
+action_result.data.\*.computer_specs.\*.ip_address | string | `ip` | 10.20.30.40 |
+action_result.summary.group_id | numeric | `taniumrest group id` | 1234 |
+action_result.summary.group_name | string | `taniumrest group name` | manual-group-1 |
 action_result.summary.computer_name_count | numeric | | 2 |
 action_result.summary.ip_address_count | numeric | | 2 |
 action_result.message | string | | Successfully created the group |
@@ -1021,24 +1021,24 @@ Read only: **True**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**computer_names** | optional | Comma-separated hostnames or computer names used to find matching groups | string | |
-**ip_addresses** | optional | Comma-separated IP addresses used to find matching groups | string | |
+**computer_names** | optional | Comma-separated hostnames or computer names used to find matching groups | string | `host name` |
+**ip_addresses** | optional | Comma-separated IP addresses used to find matching groups | string | `ip` |
 
 #### Action Output
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string | | success failed |
-action_result.parameter.computer_names | string | | host1,host2 |
-action_result.parameter.ip_addresses | string | | 10.20.30.40,10.20.30.41 |
-action_result.data.\*.id | numeric | | 1234 |
-action_result.data.\*.name | string | | huntington-risk-hosts |
+action_result.parameter.computer_names | string | `host name` | host1,host2 |
+action_result.parameter.ip_addresses | string | `ip` | 10.20.30.40,10.20.30.41 |
+action_result.data.\*.id | numeric | `taniumrest group id` | 1234 |
+action_result.data.\*.name | string | `taniumrest group name` | manual-group-1 |
 action_result.data.\*.deleted_flag | boolean | | False |
 action_result.data.\*.filter_flag | boolean | | False |
 action_result.data.\*.management_rights_flag | boolean | | False |
 action_result.data.\*.computer_specs.\*.id | numeric | | 1234 |
-action_result.data.\*.computer_specs.\*.computer_name | string | | host1 |
-action_result.data.\*.computer_specs.\*.ip_address | string | | 10.20.30.40 |
+action_result.data.\*.computer_specs.\*.computer_name | string | `host name` | host1 |
+action_result.data.\*.computer_specs.\*.ip_address | string | `ip` | 10.20.30.40 |
 action_result.summary.total_groups | numeric | | 1 |
 action_result.summary.computer_name_count | numeric | | 2 |
 action_result.summary.ip_address_count | numeric | | 2 |
@@ -1057,19 +1057,19 @@ Read only: **False**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**group_id** | required | ID of the Tanium manual computer group to delete | numeric | |
+**group_id** | required | ID of the Tanium manual computer group to delete | numeric | `taniumrest group id` |
 
 #### Action Output
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string | | success failed |
-action_result.parameter.group_id | numeric | | 1234 |
-action_result.data.\*.id | numeric | | 1234 |
+action_result.parameter.group_id | numeric | `taniumrest group id` | 1234 |
+action_result.data.\*.id | numeric | `taniumrest group id` | 1234 |
 action_result.data.\*.deleted | boolean | | True |
 action_result.data.\*.deleted_flag | boolean | | True |
-action_result.data.\*.name | string | | huntington-risk-hosts |
-action_result.summary.group_id | numeric | | 1234 |
+action_result.data.\*.name | string | `taniumrest group name` | manual-group-1 |
+action_result.summary.group_id | numeric | `taniumrest group id` | 1234 |
 action_result.message | string | | Successfully deleted the group |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |

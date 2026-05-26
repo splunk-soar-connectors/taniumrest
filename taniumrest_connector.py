@@ -1091,14 +1091,13 @@ class TaniumRestConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        response_data = response.get("data") if isinstance(response, dict) else response
-        if isinstance(response_data, dict):
-            action_result.add_data(response_data)
-            group_id = response_data.get("id")
-            group_name = response_data.get("name", group_name)
-        else:
-            action_result.add_data({"data": response_data})
-            group_id = None
+        response_data = response.get("data")
+        if not isinstance(response_data, dict):
+            return action_result.set_status(phantom.APP_ERROR, "Unexpected response format while creating the group")
+
+        action_result.add_data(response_data)
+        group_id = response_data.get("id")
+        group_name = response_data.get("name", group_name)
 
         summary = action_result.update_summary({})
         if group_id:

@@ -2703,6 +2703,9 @@
                 "group_name": {
                     "description": "Name of the Tanium Computer Group to create",
                     "data_type": "string",
+                    "contains": [
+                        "taniumrest group name"
+                    ],
                     "primary": true,
                     "required": true,
                     "order": 0
@@ -2710,11 +2713,17 @@
                 "computer_names": {
                     "description": "Comma-separated hostnames or computer names to include in the group",
                     "data_type": "string",
+                    "contains": [
+                        "host name"
+                    ],
                     "order": 1
                 },
                 "ip_addresses": {
                     "description": "Comma-separated IP addresses to include in the group",
                     "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
                     "order": 2
                 }
             },
@@ -2731,7 +2740,10 @@
                     "data_path": "action_result.parameter.group_name",
                     "data_type": "string",
                     "example_values": [
-                        "huntington-risk-hosts"
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
                     ]
                 },
                 {
@@ -2739,6 +2751,9 @@
                     "data_type": "string",
                     "example_values": [
                         "host1,host2"
+                    ],
+                    "contains": [
+                        "host name"
                     ]
                 },
                 {
@@ -2746,6 +2761,9 @@
                     "data_type": "string",
                     "example_values": [
                         "10.20.30.40,10.20.30.41"
+                    ],
+                    "contains": [
+                        "ip"
                     ]
                 },
                 {
@@ -2753,13 +2771,19 @@
                     "data_type": "numeric",
                     "example_values": [
                         1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "huntington-risk-hosts"
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
                     ]
                 },
                 {
@@ -2795,6 +2819,9 @@
                     "data_type": "string",
                     "example_values": [
                         "host1"
+                    ],
+                    "contains": [
+                        "host name"
                     ]
                 },
                 {
@@ -2802,6 +2829,9 @@
                     "data_type": "string",
                     "example_values": [
                         "10.20.30.40"
+                    ],
+                    "contains": [
+                        "ip"
                     ]
                 },
                 {
@@ -2809,13 +2839,19 @@
                     "data_type": "numeric",
                     "example_values": [
                         1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
                     ]
                 },
                 {
                     "data_path": "action_result.summary.group_name",
                     "data_type": "string",
                     "example_values": [
-                        "huntington-risk-hosts"
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
                     ]
                 },
                 {
@@ -2872,11 +2908,17 @@
                 "computer_names": {
                     "description": "Comma-separated hostnames or computer names used to find matching groups",
                     "data_type": "string",
+                    "contains": [
+                        "host name"
+                    ],
                     "order": 0
                 },
                 "ip_addresses": {
                     "description": "Comma-separated IP addresses used to find matching groups",
                     "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
                     "order": 1
                 }
             },
@@ -2894,6 +2936,9 @@
                     "data_type": "string",
                     "example_values": [
                         "host1,host2"
+                    ],
+                    "contains": [
+                        "host name"
                     ]
                 },
                 {
@@ -2901,6 +2946,9 @@
                     "data_type": "string",
                     "example_values": [
                         "10.20.30.40,10.20.30.41"
+                    ],
+                    "contains": [
+                        "ip"
                     ]
                 },
                 {
@@ -2908,13 +2956,19 @@
                     "data_type": "numeric",
                     "example_values": [
                         1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "huntington-risk-hosts"
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
                     ]
                 },
                 {
@@ -2950,6 +3004,9 @@
                     "data_type": "string",
                     "example_values": [
                         "host1"
+                    ],
+                    "contains": [
+                        "host name"
                     ]
                 },
                 {
@@ -2957,6 +3014,9 @@
                     "data_type": "string",
                     "example_values": [
                         "10.20.30.40"
+                    ],
+                    "contains": [
+                        "ip"
                     ]
                 },
                 {
@@ -3020,6 +3080,9 @@
                 "group_id": {
                     "description": "ID of the Tanium manual computer group to delete",
                     "data_type": "numeric",
+                    "contains": [
+                        "taniumrest group id"
+                    ],
                     "primary": true,
                     "required": true,
                     "order": 0
@@ -3039,6 +3102,9 @@
                     "data_type": "numeric",
                     "example_values": [
                         1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
                     ]
                 },
                 {
@@ -3046,6 +3112,9 @@
                     "data_type": "numeric",
                     "example_values": [
                         1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
                     ]
                 },
                 {
@@ -3066,7 +3135,10 @@
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "huntington-risk-hosts"
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
                     ]
                 },
                 {
@@ -3074,6 +3146,9 @@
                     "data_type": "numeric",
                     "example_values": [
                         1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
                     ]
                 },
                 {
