@@ -1153,17 +1153,14 @@ class TaniumRestConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        response_data = response.get("data", response) if isinstance(response, dict) else response
-        data = {"id": group_id, "deleted": True, "deleted_flag": True}
-        if isinstance(response_data, dict):
-            data["id"] = response_data.get("id", group_id)
-            data["deleted_flag"] = response_data.get("deleted_flag", True)
-            if response_data.get("name"):
-                data["name"] = response_data["name"]
-        action_result.add_data(data)
+        response_data = response.get("data")
+        if not isinstance(response_data, dict):
+            return action_result.set_status(phantom.APP_ERROR, "Unexpected response format while deleting the group")
+
+        action_result.add_data(response_data)
 
         summary = action_result.update_summary({})
-        summary["group_id"] = group_id
+        summary["group_id"] = response_data.get("id", group_id)
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully deleted the group")
 

@@ -3118,13 +3118,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.deleted",
-                    "data_type": "boolean",
-                    "example_values": [
-                        true
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.deleted_flag",
                     "data_type": "boolean",
                     "example_values": [
