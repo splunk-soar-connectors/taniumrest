@@ -1,12 +1,16 @@
 # Tanium REST
 
-Publisher: Splunk \
-Connector Version: 2.3.3 \
-Product Vendor: Tanium \
-Product Name: Tanium REST \
-Minimum Product Version: 6.1.1
+Publisher: Splunk <br>
+Connector Version: 2.3.3 <br>
+Product Vendor: Tanium <br>
+Product Name: Tanium REST <br>
+Minimum Product Version: 6.3.0
 
 This app supports investigative and generic actions on Tanium
+
+## Product Compatibility
+
+The latest tested Tanium version is 7.8.2.1170.
 
 ## Playbook Backward Compatibility
 
@@ -395,6 +399,20 @@ ports used by Splunk SOAR.
 
         `                               `
 
+## How to use Create Group, Find Groups, and Delete Group Actions
+
+- The **create group** action creates a Tanium manual Computer Group from explicitly supplied
+  hostnames and/or IP addresses. Provide a **group_name** and at least one value in
+  **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
+  comma-separated values.
+
+- The **find groups** action lists Tanium manual Computer Groups that contain the supplied
+  **computer_names** and/or **ip_addresses**.
+
+- The **delete group** action deletes a Tanium manual Computer Group by **group_id**. To delete based on
+  hostname or IP address, first run **find groups** and then pass the selected group ID to
+  **delete group** in the next playbook step.
+
 ## How to use Terminate Process Action
 
 - Please follow the steps below to execute this action successfully:
@@ -452,23 +470,27 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **password** | optional | password | Password |
 **verify_server_cert** | optional | boolean | Verify Server Certificate |
 **results_percentage** | optional | numeric | Consider question results complete at (% out of 100) |
+**integration_header_value** | optional | string | Optional value for the x-tanium-integration API header. Configure only when required by Tanium partner or test accounts. |
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[list processes](#action-list-processes) - List the running processes of the devices registered on the Tanium server \
-[parse question](#action-parse-question) - Parses the supplied text into a valid Tanium query string \
-[list questions](#action-list-questions) - Retrieves either a history of the most recent questions or a list of saved questions \
-[terminate process](#action-terminate-process) - Kill a running process of the devices registered on the Tanium server \
-[execute action](#action-execute-action) - Execute an action on the Tanium server \
-[run query](#action-run-query) - Run a search query on the devices registered on the Tanium server \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[list processes](#action-list-processes) - List the running processes of the devices registered on the Tanium server <br>
+[parse question](#action-parse-question) - Parses the supplied text into a valid Tanium query string <br>
+[list questions](#action-list-questions) - Retrieves either a history of the most recent questions or a list of saved questions <br>
+[terminate process](#action-terminate-process) - Kill a running process of the devices registered on the Tanium server <br>
+[execute action](#action-execute-action) - Execute an action on the Tanium server <br>
+[run query](#action-run-query) - Run a search query on the devices registered on the Tanium server <br>
+[create group](#action-create-group) - Create a Tanium manual computer group from hostnames and IP addresses <br>
+[find groups](#action-find-groups) - Find Tanium manual computer groups matching hostnames or IP addresses <br>
+[delete group](#action-delete-group) - Delete a Tanium manual computer group by ID <br>
 [get question results](#action-get-question-results) - Return the results for an already asked question
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -483,7 +505,7 @@ No Output
 
 List the running processes of the devices registered on the Tanium server
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 This action requires specifying a sensor to be used to list processes. A standard Tanium sensor, 'Process Details' is used by default but a different sensor can be specified instead. Note that the 'Process Details' sensor may not be available on all Tanium deployments. Note that at this time this action only supports limiting the query to specified computer groups, but a generic Run Query action can be constructed to query an in individual computer's processes. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.
@@ -546,7 +568,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Parses the supplied text into a valid Tanium query string
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 <p>When asked a non-saved question in the <b>query_text</b> parameter, it will parse the given query and give a list of suggestions that are related to it.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.</p>
@@ -601,7 +623,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Retrieves either a history of the most recent questions or a list of saved questions
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 If the <b>list_saved_questions</b> parameter is true, this action will return a list of saved questions. If the flag is not set, this action will return the history of recently asked questions. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.
@@ -667,7 +689,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Kill a running process of the devices registered on the Tanium server
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -771,7 +793,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Execute an action on the Tanium server
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 <li>See top-level app documentation for example parameters.</li><li>If a parameterized package is used for executing an action all the parameters must be provided with correct and unique keys. If any key is repeated then the value of that key will be overwritten.</li><li>If the <b>issue_seconds</b> parameter is provided, then the action will respawn after a time interval provided in the <b>issue_seconds</b> parameter.</li>
@@ -881,7 +903,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Run a search query on the devices registered on the Tanium server
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 See top-level app documentation for example parameters. For manual questions only, the action waits for <b>timeout_seconds</b> provided by the user in intervals of 5 seconds to fetch the results. The action is a success as soon as the results are retrieved or else it will timeout and fail. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call. If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer[current results unavailable] to the answer message that it passes along the linear chain and ultimately to the Tanium Server. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer. Reference Link: ~https://docs.tanium.com/interact/interact/results.html.
@@ -948,11 +970,113 @@ action_result.message | string | | Number of rows: 3 |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
+## action: 'create group'
+
+Create a Tanium manual computer group from hostnames and IP addresses
+
+Type: **generic** <br>
+Read only: **False**
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**group_name** | required | Name of the Tanium Computer Group to create | string | `taniumrest group name` |
+**computer_names** | optional | Comma-separated hostnames or computer names to include in the group | string | `host name` |
+**ip_addresses** | optional | Comma-separated IP addresses to include in the group | string | `ip` |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failed |
+action_result.parameter.group_name | string | `taniumrest group name` | manual-group-1 |
+action_result.parameter.computer_names | string | `host name` | host1,host2 |
+action_result.parameter.ip_addresses | string | `ip` | 10.20.30.40,10.20.30.41 |
+action_result.data.\*.id | numeric | `taniumrest group id` | 1234 |
+action_result.data.\*.name | string | `taniumrest group name` | manual-group-1 |
+action_result.data.\*.deleted_flag | boolean | | False |
+action_result.data.\*.filter_flag | boolean | | False |
+action_result.data.\*.management_rights_flag | boolean | | False |
+action_result.data.\*.computer_specs.\*.id | numeric | | 1234 |
+action_result.data.\*.computer_specs.\*.computer_name | string | `host name` | host1 |
+action_result.data.\*.computer_specs.\*.ip_address | string | `ip` | 10.20.30.40 |
+action_result.summary.group_id | numeric | `taniumrest group id` | 1234 |
+action_result.summary.group_name | string | `taniumrest group name` | manual-group-1 |
+action_result.summary.computer_name_count | numeric | | 2 |
+action_result.summary.ip_address_count | numeric | | 2 |
+action_result.message | string | | Successfully created the group |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'find groups'
+
+Find Tanium manual computer groups matching hostnames or IP addresses
+
+Type: **investigate** <br>
+Read only: **True**
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**computer_names** | optional | Comma-separated hostnames or computer names used to find matching groups | string | `host name` |
+**ip_addresses** | optional | Comma-separated IP addresses used to find matching groups | string | `ip` |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failed |
+action_result.parameter.computer_names | string | `host name` | host1,host2 |
+action_result.parameter.ip_addresses | string | `ip` | 10.20.30.40,10.20.30.41 |
+action_result.data.\*.id | numeric | `taniumrest group id` | 1234 |
+action_result.data.\*.name | string | `taniumrest group name` | manual-group-1 |
+action_result.data.\*.deleted_flag | boolean | | False |
+action_result.data.\*.filter_flag | boolean | | False |
+action_result.data.\*.management_rights_flag | boolean | | False |
+action_result.data.\*.computer_specs.\*.id | numeric | | 1234 |
+action_result.data.\*.computer_specs.\*.computer_name | string | `host name` | host1 |
+action_result.data.\*.computer_specs.\*.ip_address | string | `ip` | 10.20.30.40 |
+action_result.summary.total_groups | numeric | | 1 |
+action_result.summary.computer_name_count | numeric | | 2 |
+action_result.summary.ip_address_count | numeric | | 2 |
+action_result.message | string | | Found 1 matching group(s) |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'delete group'
+
+Delete a Tanium manual computer group by ID
+
+Type: **generic** <br>
+Read only: **False**
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**group_id** | required | ID of the Tanium manual computer group to delete | numeric | `taniumrest group id` |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failed |
+action_result.parameter.group_id | numeric | `taniumrest group id` | 1234 |
+action_result.data.\*.id | numeric | `taniumrest group id` | 1234 |
+action_result.data.\*.deleted_flag | boolean | | True |
+action_result.data.\*.name | string | `taniumrest group name` | manual-group-1 |
+action_result.summary.group_id | numeric | `taniumrest group id` | 1234 |
+action_result.message | string | | Successfully deleted the group |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
 ## action: 'get question results'
 
 Return the results for an already asked question
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1009,7 +1133,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

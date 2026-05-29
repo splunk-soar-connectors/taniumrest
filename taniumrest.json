@@ -11,15 +11,21 @@
     "publisher": "Splunk",
     "python_version": "3.9, 3.13",
     "fips_compliant": true,
-    "license": "Copyright (c) 2019-2025 Splunk Inc.",
+    "license": "Copyright (c) 2019-2026 Splunk Inc.",
     "latest_tested_versions": [
-        "Build (Windows): 7.5.4.1158 | Console: 3.2.24"
+        "Tanium: 7.8.2.1170"
     ],
     "app_version": "2.3.3",
     "utctime_updated": "2025-08-01T20:40:32.310081Z",
     "package_name": "phantom_taniumrest",
     "main_module": "taniumrest_connector.py",
-    "min_phantom_version": "6.1.1",
+    "min_phantom_version": "6.3.0",
+    "pip39_dependencies": {
+        "wheel": []
+    },
+    "pip313_dependencies": {
+        "wheel": []
+    },
     "app_wizard_version": "1.0.0",
     "configuration": {
         "base_url": {
@@ -54,6 +60,11 @@
             "data_type": "numeric",
             "default": 99,
             "order": 5
+        },
+        "integration_header_value": {
+            "description": "Optional value for the x-tanium-integration API header. Configure only when required by Tanium partner or test accounts.",
+            "data_type": "string",
+            "order": 6
         }
     },
     "actions": [
@@ -2676,6 +2687,487 @@
                 "width": 10,
                 "height": 10,
                 "view": "taniumrest_view.display_invoke"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "create group",
+            "description": "Create a Tanium manual computer group from hostnames and IP addresses",
+            "type": "generic",
+            "identifier": "create_group",
+            "read_only": false,
+            "lock": {
+                "enabled": false
+            },
+            "parameters": {
+                "group_name": {
+                    "description": "Name of the Tanium Computer Group to create",
+                    "data_type": "string",
+                    "contains": [
+                        "taniumrest group name"
+                    ],
+                    "primary": true,
+                    "required": true,
+                    "order": 0
+                },
+                "computer_names": {
+                    "description": "Comma-separated hostnames or computer names to include in the group",
+                    "data_type": "string",
+                    "contains": [
+                        "host name"
+                    ],
+                    "order": 1
+                },
+                "ip_addresses": {
+                    "description": "Comma-separated IP addresses to include in the group",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "order": 2
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.group_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.computer_names",
+                    "data_type": "string",
+                    "example_values": [
+                        "host1,host2"
+                    ],
+                    "contains": [
+                        "host name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ip_addresses",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.20.30.40,10.20.30.41"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.deleted_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.filter_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.management_rights_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.computer_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "host1"
+                    ],
+                    "contains": [
+                        "host name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.ip_address",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.20.30.40"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.group_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.group_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.computer_name_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.ip_address_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully created the group"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "find groups",
+            "description": "Find Tanium manual computer groups matching hostnames or IP addresses",
+            "type": "investigate",
+            "identifier": "find_groups",
+            "read_only": true,
+            "lock": {
+                "enabled": false
+            },
+            "parameters": {
+                "computer_names": {
+                    "description": "Comma-separated hostnames or computer names used to find matching groups",
+                    "data_type": "string",
+                    "contains": [
+                        "host name"
+                    ],
+                    "order": 0
+                },
+                "ip_addresses": {
+                    "description": "Comma-separated IP addresses used to find matching groups",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "order": 1
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.computer_names",
+                    "data_type": "string",
+                    "example_values": [
+                        "host1,host2"
+                    ],
+                    "contains": [
+                        "host name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ip_addresses",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.20.30.40,10.20.30.41"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.deleted_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.filter_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.management_rights_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.computer_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "host1"
+                    ],
+                    "contains": [
+                        "host name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.computer_specs.*.ip_address",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.20.30.40"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_groups",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.computer_name_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.ip_address_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Found 1 matching group(s)"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "delete group",
+            "description": "Delete a Tanium manual computer group by ID",
+            "type": "generic",
+            "identifier": "delete_group",
+            "read_only": false,
+            "lock": {
+                "enabled": false
+            },
+            "parameters": {
+                "group_id": {
+                    "description": "ID of the Tanium manual computer group to delete",
+                    "data_type": "numeric",
+                    "contains": [
+                        "taniumrest group id"
+                    ],
+                    "primary": true,
+                    "required": true,
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.group_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.deleted_flag",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "manual-group-1"
+                    ],
+                    "contains": [
+                        "taniumrest group name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.group_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1234
+                    ],
+                    "contains": [
+                        "taniumrest group id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully deleted the group"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
             },
             "versions": "EQ(*)"
         },

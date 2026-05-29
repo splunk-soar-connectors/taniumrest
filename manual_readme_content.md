@@ -1,3 +1,7 @@
+## Product Compatibility
+
+The latest tested Tanium version is 7.8.2.1170.
+
 ## Playbook Backward Compatibility
 
 - The existing action parameters have been modified for the action given below. Hence, it is
@@ -384,6 +388,21 @@ ports used by Splunk SOAR.
       - `                               timeout seconds                              : 600              `
 
         `                               `
+
+## How to use Create Group, Find Groups, and Delete Group Actions
+
+- The **create group** action creates a Tanium manual Computer Group from explicitly supplied
+  hostnames and/or IP addresses. Provide a **group_name** and at least one value in
+  **computer_names** or **ip_addresses**. The hostname and IP address parameters accept
+  comma-separated values.
+
+- The **find groups** action lists Tanium manual Computer Groups that contain the supplied
+  **computer_names** and/or **ip_addresses**. Use this action when a playbook needs to resolve
+  one or more group IDs before deleting a group.
+
+- The **delete group** action deletes a Tanium manual Computer Group by **group_id**. To delete based on
+  hostname or IP address, first run **find groups** and then pass the selected group ID to
+  **delete group** in the next playbook step.
 
 ## How to use Terminate Process Action
 
