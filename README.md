@@ -271,24 +271,14 @@ action_result.parameter.group_name | string | | |
 action_result.parameter.distribute_seconds | numeric | | |
 action_result.parameter.issue_seconds | numeric | | |
 action_result.parameter.expire_seconds | numeric | | |
-action_result.data.\*.action_group_id | numeric | | 151 |
-action_result.data.\*.approved_flag | boolean | | True False |
-action_result.data.\*.approver.id | numeric | | 1 |
-action_result.data.\*.approver.name | string | | administrator |
-action_result.data.\*.comment | string | | |
-action_result.data.\*.creation_time | string | | 2019-09-18T04:53:58Z |
+action_result.data.\*.status_display | string | | success |
+action_result.data.\*.id | numeric | | 523 |
+action_result.data.\*.name | string | | test terminate process |
+action_result.data.\*.expire_seconds | numeric | | 600 |
+action_result.data.\*.start_time | string | | 2019-09-18T04:53:58Z |
+action_result.data.\*.issue_seconds | numeric | | 0 |
 action_result.data.\*.distribute_seconds | numeric | | 0 |
 action_result.data.\*.end_time | string | | Never |
-action_result.data.\*.expire_seconds | numeric | | 600 |
-action_result.data.\*.id | numeric | | 523 |
-action_result.data.\*.issue_count | numeric | | 0 |
-action_result.data.\*.issue_seconds | numeric | | 0 |
-action_result.data.\*.last_action.id | numeric | | 272936 |
-action_result.data.\*.last_action.start_time | string | | Never |
-action_result.data.\*.last_action.target_group.id | numeric | | 3646 |
-action_result.data.\*.last_start_time | string | | Never |
-action_result.data.\*.name | string | | test terminate process |
-action_result.data.\*.next_start_time | string | | Never |
 action_result.data.\*.package_spec.available_time | string | | 2001-01-01T00:00:00Z |
 action_result.data.\*.package_spec.command | string | | cmd /c mkdir C:\\Users\\Administrator\\some_dir\\ |
 action_result.data.\*.package_spec.command_timeout | numeric | | 600 |
@@ -328,10 +318,21 @@ action_result.data.\*.package_spec.source_id | numeric | | 221 |
 action_result.data.\*.package_spec.verify_expire_seconds | numeric | | 3600 |
 action_result.data.\*.package_spec.verify_group.id | numeric | | 0 |
 action_result.data.\*.package_spec.verify_group_id | numeric | | 0 |
+action_result.data.\*.action_group_id | numeric | | 151 |
+action_result.data.\*.approved_flag | boolean | | True False |
+action_result.data.\*.approver.id | numeric | | 1 |
+action_result.data.\*.approver.name | string | | administrator |
+action_result.data.\*.comment | string | | |
+action_result.data.\*.creation_time | string | | 2019-09-18T04:53:58Z |
+action_result.data.\*.issue_count | numeric | | 0 |
+action_result.data.\*.last_action.id | numeric | | 272936 |
+action_result.data.\*.last_action.start_time | string | | Never |
+action_result.data.\*.last_action.target_group.id | numeric | | 3646 |
+action_result.data.\*.last_start_time | string | | Never |
+action_result.data.\*.next_start_time | string | | Never |
 action_result.data.\*.policy_flag | boolean | | True False |
 action_result.data.\*.public_flag | boolean | | True False |
 action_result.data.\*.start_now_flag | boolean | | True False |
-action_result.data.\*.start_time | string | | 2019-09-18T04:53:58Z |
 action_result.data.\*.status | numeric | | 0 |
 action_result.data.\*.target_group.id | numeric | | 3646 |
 action_result.data.\*.user.id | numeric | | 1 |
@@ -376,24 +377,14 @@ action_result.parameter.group_name | string | `taniumrest group definition` | |
 action_result.parameter.distribute_seconds | numeric | | |
 action_result.parameter.issue_seconds | numeric | | |
 action_result.parameter.expire_seconds | numeric | | |
-action_result.data.\*.action_group_id | numeric | | 151 |
-action_result.data.\*.approved_flag | boolean | | True False |
-action_result.data.\*.approver.id | numeric | | 1 |
-action_result.data.\*.approver.name | string | | administrator |
-action_result.data.\*.comment | string | | |
-action_result.data.\*.creation_time | string | | 2019-09-16T07:43:57Z |
+action_result.data.\*.status_display | string | | success |
+action_result.data.\*.id | numeric | `taniumrest question id` | 482 |
+action_result.data.\*.name | string | | test action start 7 |
+action_result.data.\*.expire_seconds | numeric | | 600 |
+action_result.data.\*.start_time | string | | 2019-09-16T07:43:57Z |
+action_result.data.\*.issue_seconds | numeric | | 0 |
 action_result.data.\*.distribute_seconds | numeric | | 0 |
 action_result.data.\*.end_time | string | | Never |
-action_result.data.\*.expire_seconds | numeric | | 600 |
-action_result.data.\*.id | numeric | `taniumrest question id` | 482 |
-action_result.data.\*.issue_count | numeric | | 0 |
-action_result.data.\*.issue_seconds | numeric | | 0 |
-action_result.data.\*.last_action.id | numeric | | 272568 |
-action_result.data.\*.last_action.start_time | string | | Never |
-action_result.data.\*.last_action.target_group.id | numeric | | 3614 |
-action_result.data.\*.last_start_time | string | | Never |
-action_result.data.\*.name | string | | test action start 7 |
-action_result.data.\*.next_start_time | string | | Never |
 action_result.data.\*.package_spec.available_time | string | | 2001-01-01T00:00:00Z |
 action_result.data.\*.package_spec.command | string | | cmd /c mkdir C:\\Users\\Administrator\\test123\\"TestDirectory" |
 action_result.data.\*.package_spec.command_timeout | numeric | | 600 |
@@ -437,10 +428,21 @@ action_result.data.\*.package_spec.source_id | numeric | | 500 |
 action_result.data.\*.package_spec.verify_expire_seconds | numeric | | 3600 |
 action_result.data.\*.package_spec.verify_group.id | numeric | | 0 |
 action_result.data.\*.package_spec.verify_group_id | numeric | | 0 |
+action_result.data.\*.action_group_id | numeric | | 151 |
+action_result.data.\*.approved_flag | boolean | | True False |
+action_result.data.\*.approver.id | numeric | | 1 |
+action_result.data.\*.approver.name | string | | administrator |
+action_result.data.\*.comment | string | | |
+action_result.data.\*.creation_time | string | | 2019-09-16T07:43:57Z |
+action_result.data.\*.issue_count | numeric | | 0 |
+action_result.data.\*.last_action.id | numeric | | 272568 |
+action_result.data.\*.last_action.start_time | string | | Never |
+action_result.data.\*.last_action.target_group.id | numeric | | 3614 |
+action_result.data.\*.last_start_time | string | | Never |
+action_result.data.\*.next_start_time | string | | Never |
 action_result.data.\*.policy_flag | boolean | | True False |
 action_result.data.\*.public_flag | boolean | | True False |
 action_result.data.\*.start_now_flag | boolean | | True False |
-action_result.data.\*.start_time | string | | 2019-09-16T07:43:57Z |
 action_result.data.\*.status | numeric | | 0 |
 action_result.data.\*.target_group.id | numeric | | 3614 |
 action_result.data.\*.user.id | numeric | | 1 |

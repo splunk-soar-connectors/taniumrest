@@ -272,7 +272,9 @@ def parse_question(
     results = [
         ParseQuestionOutput.model_validate(item) for item in response.get("data", [])
     ]
-    soar.set_summary(ParseQuestionSummaryOutput(number_of_parsed_questions=len(results)))
+    soar.set_summary(
+        ParseQuestionSummaryOutput(number_of_parsed_questions=len(results))
+    )
     return results
 
 
@@ -501,7 +503,9 @@ class TerminateProcessPackageSpecOutput(ActionOutput):
     last_update: str = OutputField(example_values=["2019-09-18T04:53:58Z"])
     mod_user: TerminateProcessModUserOutput | None = None
     modification_time: str = OutputField(example_values=["2001-01-01T00:00:00Z"])
-    name: str = OutputField(column_name="PACKAGE NAME", example_values=["terminate process"])
+    name: str = OutputField(
+        column_name="PACKAGE NAME", example_values=["terminate process"]
+    )
     process_group_flag: bool
     skip_lock_flag: bool
     source_hash: str = OutputField(
@@ -525,11 +529,19 @@ class TerminateProcessUserOutput(ActionOutput):
 class TerminateProcessOutput(ActionOutput):
     status_display: str = OutputField(column_name="STATUS", example_values=["success"])
     id: float = OutputField(column_name="ACTION ID", example_values=[523])
-    name: str = OutputField(column_name="NAME", example_values=["test terminate process"])
-    expire_seconds: float = OutputField(column_name="EXPIRE SECONDS", example_values=[600])
-    start_time: str = OutputField(column_name="START TIME", example_values=["2019-09-18T04:53:58Z"])
+    name: str = OutputField(
+        column_name="NAME", example_values=["test terminate process"]
+    )
+    expire_seconds: float = OutputField(
+        column_name="EXPIRE SECONDS", example_values=[600]
+    )
+    start_time: str = OutputField(
+        column_name="START TIME", example_values=["2019-09-18T04:53:58Z"]
+    )
     issue_seconds: float = OutputField(column_name="ISSUE SECONDS", example_values=[0])
-    distribute_seconds: float = OutputField(column_name="DISTRIBUTE SECONDS", example_values=[0])
+    distribute_seconds: float = OutputField(
+        column_name="DISTRIBUTE SECONDS", example_values=[0]
+    )
     end_time: str = OutputField(column_name="END TIME", example_values=["Never"])
     package_spec: TerminateProcessPackageSpecOutput
     action_group_id: float = OutputField(example_values=[151])
@@ -683,7 +695,9 @@ class ExecuteActionPackageSpecOutput(ActionOutput):
     last_update: str = OutputField(example_values=["2019-09-16T07:43:57Z"])
     mod_user: ExecuteActionModUserOutput | None = None
     modification_time: str = OutputField(example_values=["2001-01-01T00:00:00Z"])
-    name: str = OutputField(column_name="PACKAGE NAME", example_values=["make directory"])
+    name: str = OutputField(
+        column_name="PACKAGE NAME", example_values=["make directory"]
+    )
     parameter_definition: str
     parameters: list[ParametersOutput] | None = None
     process_group_flag: bool
@@ -708,12 +722,22 @@ class ExecuteActionUserOutput(ActionOutput):
 
 class ExecuteActionOutput(ActionOutput):
     status_display: str = OutputField(column_name="STATUS", example_values=["success"])
-    id: float = OutputField(column_name="ACTION ID", cef_types=["taniumrest question id"], example_values=[482])
+    id: float = OutputField(
+        column_name="ACTION ID",
+        cef_types=["taniumrest question id"],
+        example_values=[482],
+    )
     name: str = OutputField(column_name="NAME", example_values=["test action start 7"])
-    expire_seconds: float = OutputField(column_name="EXPIRE SECONDS", example_values=[600])
-    start_time: str = OutputField(column_name="START TIME", example_values=["2019-09-16T07:43:57Z"])
+    expire_seconds: float = OutputField(
+        column_name="EXPIRE SECONDS", example_values=[600]
+    )
+    start_time: str = OutputField(
+        column_name="START TIME", example_values=["2019-09-16T07:43:57Z"]
+    )
     issue_seconds: float = OutputField(column_name="ISSUE SECONDS", example_values=[0])
-    distribute_seconds: float = OutputField(column_name="DISTRIBUTE SECONDS", example_values=[0])
+    distribute_seconds: float = OutputField(
+        column_name="DISTRIBUTE SECONDS", example_values=[0]
+    )
     end_time: str = OutputField(column_name="END TIME", example_values=["Never"])
     package_spec: ExecuteActionPackageSpecOutput
     action_group_id: float = OutputField(example_values=[151])
@@ -1200,9 +1224,7 @@ def get_question_results(
     client.ensure_authenticated()
     response = client.get(f"/api/v2/result_data/question/{int(params.question_id)}")
     output = GetQuestionResultsOutput.model_validate(response)
-    row_count = sum(
-        rs.row_count for rs in output.data.result_sets
-    )
+    row_count = sum(rs.row_count for rs in output.data.result_sets)
     soar.set_message(f"Number of rows: {int(row_count)}")
     return output
 

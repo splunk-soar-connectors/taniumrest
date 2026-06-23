@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
+from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-_TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "templates")
+_TEMPLATES_DIR = Path(__file__).parent.parent / "templates"
 
 
 def _get_renderer():
@@ -32,7 +32,9 @@ def _extract_result_sets(all_app_runs):
     for _summary, action_results in all_app_runs:
         for ar in action_results:
             for record in ar.get_data():
-                result_sets = record.get("result_sets") or record.get("data", {}).get("result_sets")
+                result_sets = record.get("result_sets") or record.get("data", {}).get(
+                    "result_sets"
+                )
                 if result_sets:
                     return result_sets
     return []
@@ -50,39 +52,51 @@ def run_query_view(provides, all_app_runs, context) -> str:
     context["prerender"] = True
     env = _get_renderer()
     tmpl = env.get_template("taniumrest_run_query.html")
-    return tmpl.render(title="Run Query Results", result_sets=_extract_result_sets(all_app_runs))
+    return tmpl.render(
+        title="Run Query Results", result_sets=_extract_result_sets(all_app_runs)
+    )
 
 
 def list_processes_view(provides, all_app_runs, context) -> str:
     context["prerender"] = True
     env = _get_renderer()
     tmpl = env.get_template("taniumrest_run_query.html")
-    return tmpl.render(title="List Processes Results", result_sets=_extract_result_sets(all_app_runs))
+    return tmpl.render(
+        title="List Processes Results", result_sets=_extract_result_sets(all_app_runs)
+    )
 
 
 def get_question_results_view(provides, all_app_runs, context) -> str:
     context["prerender"] = True
     env = _get_renderer()
     tmpl = env.get_template("taniumrest_get_question_results.html")
-    return tmpl.render(title="Question Results", result_sets=_extract_result_sets(all_app_runs))
+    return tmpl.render(
+        title="Question Results", result_sets=_extract_result_sets(all_app_runs)
+    )
 
 
 def execute_action_view(provides, all_app_runs, context) -> str:
     context["prerender"] = True
     record = _extract_action_record(all_app_runs)
     pkg = record.get("package_spec") or {}
-    rows = [{
-        "STATUS": "success" if record else "unknown",
-        "ACTION ID": str(record.get("id", "")),
-        "NAME": str(record.get("name", "")),
-        "EXPIRE SECONDS": str(record.get("expire_seconds", "")),
-        "START TIME": str(record.get("start_time", "")),
-        "ISSUE SECONDS": str(record.get("issue_seconds", "")),
-        "DISTRIBUTE SECONDS": str(record.get("distribute_seconds", "")),
-        "END TIME": str(record.get("end_time", "")),
-        "PACKAGE ID": str(pkg.get("id", "")),
-        "PACKAGE NAME": str(pkg.get("name", "")),
-    }] if record else []
+    rows = (
+        [
+            {
+                "STATUS": "success" if record else "unknown",
+                "ACTION ID": str(record.get("id", "")),
+                "NAME": str(record.get("name", "")),
+                "EXPIRE SECONDS": str(record.get("expire_seconds", "")),
+                "START TIME": str(record.get("start_time", "")),
+                "ISSUE SECONDS": str(record.get("issue_seconds", "")),
+                "DISTRIBUTE SECONDS": str(record.get("distribute_seconds", "")),
+                "END TIME": str(record.get("end_time", "")),
+                "PACKAGE ID": str(pkg.get("id", "")),
+                "PACKAGE NAME": str(pkg.get("name", "")),
+            }
+        ]
+        if record
+        else []
+    )
     env = _get_renderer()
     tmpl = env.get_template("taniumrest_action.html")
     return tmpl.render(title="Execute Action", rows=rows)
@@ -106,18 +120,24 @@ def terminate_process_view(provides, all_app_runs, context) -> str:
     context["prerender"] = True
     record = _extract_action_record(all_app_runs)
     pkg = record.get("package_spec") or {}
-    rows = [{
-        "STATUS": "success" if record else "unknown",
-        "ACTION ID": str(record.get("id", "")),
-        "NAME": str(record.get("name", "")),
-        "EXPIRE SECONDS": str(record.get("expire_seconds", "")),
-        "START TIME": str(record.get("start_time", "")),
-        "ISSUE SECONDS": str(record.get("issue_seconds", "")),
-        "DISTRIBUTE SECONDS": str(record.get("distribute_seconds", "")),
-        "END TIME": str(record.get("end_time", "")),
-        "PACKAGE ID": str(pkg.get("id", "")),
-        "PACKAGE NAME": str(pkg.get("name", "")),
-    }] if record else []
+    rows = (
+        [
+            {
+                "STATUS": "success" if record else "unknown",
+                "ACTION ID": str(record.get("id", "")),
+                "NAME": str(record.get("name", "")),
+                "EXPIRE SECONDS": str(record.get("expire_seconds", "")),
+                "START TIME": str(record.get("start_time", "")),
+                "ISSUE SECONDS": str(record.get("issue_seconds", "")),
+                "DISTRIBUTE SECONDS": str(record.get("distribute_seconds", "")),
+                "END TIME": str(record.get("end_time", "")),
+                "PACKAGE ID": str(pkg.get("id", "")),
+                "PACKAGE NAME": str(pkg.get("name", "")),
+            }
+        ]
+        if record
+        else []
+    )
     env = _get_renderer()
     tmpl = env.get_template("taniumrest_action.html")
     return tmpl.render(title="Terminate Process", rows=rows)
