@@ -1,0 +1,98 @@
+<!--
+ Copyright (c) 2026 Splunk Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title | e }}</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        margin: 10px;
+      }
+      .result-block {
+        margin-bottom: 30px;
+      }
+      table.dataTable {
+        width: 100% !important;
+      }
+      table.dataTable td,
+      table.dataTable th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px;
+      }
+      .no-results {
+        color: #888;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    {% if not result_sets %}
+      <p class="no-results">No results available.</p>
+    {% else %}
+      {% for rs in result_sets %}
+        <div class="result-block">
+          {% if rs.columns %}
+            <table
+              id="result-table-{{ loop.index }}"
+              class="display"
+              style="width: 100%"
+            >
+              <thead>
+                <tr>
+                  {% for col in rs.columns %}
+                    <th>{{ col.name }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in rs.rows %}
+                  <tr>
+                    {% for cell in row.data %}
+                      <td>{{ cell.text }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <p class="no-results">No columns in this result set.</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endif %}
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        {% for rs in result_sets %}
+          {% if rs.columns %}
+            $('#result-table-{{ loop.index }}').DataTable({
+              scrollX: true,
+              pageLength: 25,
+            });
+          {% endif %}
+        {% endfor %}
+      });
+    </script>
+  </body>
+</html>
