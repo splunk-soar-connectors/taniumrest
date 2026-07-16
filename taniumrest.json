@@ -52,7 +52,7 @@
         "verify_server_cert": {
             "description": "Verify Server Certificate",
             "data_type": "boolean",
-            "default": false,
+            "default": true,
             "order": 4
         },
         "results_percentage": {

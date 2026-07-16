@@ -1436,7 +1436,7 @@ class TaniumRestConnector(BaseConnector):
         if not self._api_token and not (self._username and self._password):
             return self.set_status(phantom.APP_ERROR, "Please provide either an API token, or username and password credentials")
 
-        self._verify = config.get("verify_server_cert", False)
+        self._verify = config.get("verify_server_cert", True)
         self._percentage = config.get("results_percentage", 99)
         self._integration_header_value = str(config.get("integration_header_value", "")).strip()
 
