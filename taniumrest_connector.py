@@ -512,6 +512,43 @@ class TaniumRestConnector(BaseConnector):
             action_result.set_status(phantom.APP_ERROR, "Unexpected API response")
             return None
 
+    def _get_action_result_counts(self, response):
+        counts = {"completed": 0, "failed": 0, "running": 0, "unknown": 0, "expected": 0}
+        completed_statuses = {"Completed.", "Verified."}
+        failed_statuses = {"Expired.", "Stopped.", "NotSucceeded.", "Failed."}
+        running_statuses = {"PendingVerification.", "Copying.", "Waiting.", "Downloading.", "Running."}
+
+        for result_set in (response.get("data") or {}).get("result_sets") or []:
+            columns = result_set.get("columns") or []
+            status_index = next((index for index, column in enumerate(columns) if column.get("name") == "Action Statuses"), None)
+            if status_index is None:
+                continue
+
+            try:
+                counts["expected"] = max(counts["expected"], int(result_set.get("estimated_total") or 0))
+            except (TypeError, ValueError):
+                pass
+
+            for row in result_set.get("rows") or []:
+                row_data = row.get("data") or []
+                if status_index >= len(row_data):
+                    counts["unknown"] += 1
+                    continue
+                status_values = row_data[status_index]
+                if not isinstance(status_values, list):
+                    status_values = [status_values]
+                status = next((value.get("text") for value in status_values if isinstance(value, dict) and value.get("text")), None)
+                if status in completed_statuses:
+                    counts["completed"] += 1
+                elif status in failed_statuses:
+                    counts["failed"] += 1
+                elif status in running_statuses:
+                    counts["running"] += 1
+                else:
+                    counts["unknown"] += 1
+
+        return counts
+
     def _execute_action_support(self, param, action_result):  # noqa: 901
         action_name = param["action_name"]
         action_grp = param["action_group"]
@@ -687,9 +724,108 @@ class TaniumRestConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        # Add the response into the data section
-        action_result.add_data(response.get("data"))
-        return action_result.set_status(phantom.APP_SUCCESS, "Successfully executed the action")
+        saved_action = self._get_response_data(response.get("data"), action_result, "created saved action")
+        if saved_action is None:
+            return action_result.get_status()
+
+        action_result.add_data(saved_action)
+        summary = action_result.update_summary({})
+        saved_action_id = saved_action.get("id")
+        summary["saved_action_id"] = saved_action_id
+        if not saved_action_id:
+            return action_result.set_status(phantom.APP_ERROR, "Tanium did not return an ID for the created saved action")
+        if not saved_action.get("approved_flag"):
+            summary["pending_approval"] = True
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                f"Saved action {saved_action_id} is pending approval in Tanium and has not been issued to any endpoint",
+            )
+
+        action_id = (saved_action.get("last_action") or {}).get("id")
+        max_wait = min(expire_seconds, TANIUMREST_ACTION_POLL_MAX_SECONDS)
+        elapsed = 0
+        counts = {"completed": 0, "failed": 0, "running": 0, "unknown": 0, "expected": 0}
+        while elapsed <= max_wait:
+            if action_id is None:
+                ret_val, saved_action_response = self._make_rest_call_helper(
+                    action_result,
+                    TANIUMREST_GET_SAVED_ACTION.format(saved_action_id=saved_action_id),
+                    verify=self._verify,
+                    params=None,
+                    headers=None,
+                )
+                if phantom.is_fail(ret_val):
+                    return action_result.get_status()
+                current_saved_action = self._get_response_data(saved_action_response.get("data"), action_result, "saved action")
+                if current_saved_action is None:
+                    return action_result.get_status()
+                if not current_saved_action.get("approved_flag"):
+                    summary["pending_approval"] = True
+                    return action_result.set_status(
+                        phantom.APP_ERROR,
+                        f"Saved action {saved_action_id} is pending approval in Tanium and has not been issued to any endpoint",
+                    )
+                action_id = (current_saved_action.get("last_action") or {}).get("id")
+
+            if action_id is not None:
+                summary["action_id"] = action_id
+                ret_val, action_response = self._make_rest_call_helper(
+                    action_result,
+                    TANIUMREST_GET_ACTION.format(action_id=action_id),
+                    verify=self._verify,
+                    params=None,
+                    headers=None,
+                )
+                if phantom.is_fail(ret_val):
+                    return action_result.get_status()
+                action_data = self._get_response_data(action_response.get("data"), action_result, "action")
+                if action_data is None:
+                    return action_result.get_status()
+                action_status = str(action_data.get("status") or "").lower()
+                summary["action_status"] = action_status
+                if action_status in {"stopped", "expired"}:
+                    return action_result.set_status(phantom.APP_ERROR, f"Action {action_id} ended with status '{action_status}'")
+
+                ret_val, result_response = self._make_rest_call_helper(
+                    action_result,
+                    TANIUMREST_GET_ACTION_RESULTS.format(action_id=action_id),
+                    verify=self._verify,
+                    params=None,
+                    headers=None,
+                )
+                if phantom.is_fail(ret_val):
+                    return action_result.get_status()
+                counts = self._get_action_result_counts(result_response)
+                summary.update({f"{key}_endpoint_count": value for key, value in counts.items()})
+
+                if counts["failed"] or counts["unknown"]:
+                    return action_result.set_status(
+                        phantom.APP_ERROR,
+                        f"Action {action_id} returned {counts['failed']} failed and {counts['unknown']} unknown endpoint results",
+                    )
+                if counts["expected"] > 0 and counts["completed"] == counts["expected"] and counts["running"] == 0:
+                    return action_result.set_status(
+                        phantom.APP_SUCCESS,
+                        f"Successfully completed action {action_id} on {counts['completed']} endpoints",
+                    )
+                if action_status and action_status not in {"active", "open", "pending", "closed"}:
+                    return action_result.set_status(
+                        phantom.APP_ERROR, f"Action {action_id} entered unexpected status '{action_status}' before all endpoints completed"
+                    )
+
+            if elapsed >= max_wait:
+                break
+            sleep(TANIUMREST_WAIT_SECONDS)
+            elapsed += TANIUMREST_WAIT_SECONDS
+
+        if action_id is None:
+            return action_result.set_status(
+                phantom.APP_ERROR, f"Saved action {saved_action_id} did not issue a child action within {max_wait} seconds"
+            )
+        return action_result.set_status(
+            phantom.APP_ERROR,
+            f"Action {action_id} did not explicitly complete on all expected endpoints within {max_wait} seconds",
+        )
 
     def _handle_execute_action(self, param):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
