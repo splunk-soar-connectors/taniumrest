@@ -270,9 +270,9 @@ class TaniumRestConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _process_response(self, r, action_result):
+    def _process_response(self, r, action_result, record_debug_data=True):
         # store the r_text in debug data, it will get dumped in the logs if the action fails
-        if hasattr(action_result, "add_debug_data"):
+        if record_debug_data and hasattr(action_result, "add_debug_data"):
             action_result.add_debug_data({"r_status_code": r.status_code})
             action_result.add_debug_data({"r_text": r.text})
             action_result.add_debug_data({"r_headers": r.headers})
@@ -301,7 +301,9 @@ class TaniumRestConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _make_rest_call(self, endpoint, action_result, verify=True, headers=None, params=None, data=None, json=None, method="get"):
+    def _make_rest_call(
+        self, endpoint, action_result, verify=True, headers=None, params=None, data=None, json=None, method="get", record_debug_data=True
+    ):
         """Function that makes the REST call to the app.
 
         :param endpoint: REST endpoint that needs to appended to the service address
@@ -342,7 +344,7 @@ class TaniumRestConnector(BaseConnector):
                 None,
             )
 
-        return self._process_response(r, action_result)
+        return self._process_response(r, action_result, record_debug_data=record_debug_data)
 
     def _make_rest_call_helper(self, action_result, endpoint, verify=True, headers=None, params=None, data=None, json=None, method="get"):
         """Function that helps setting REST call to the app.
@@ -416,7 +418,13 @@ class TaniumRestConnector(BaseConnector):
         headers = self._get_tanium_headers()
 
         ret_val, resp_json = self._make_rest_call(
-            f"{self._base_url}{TANIUMREST_SESSION_URL}", action_result, verify=self._verify, headers=headers, json=data, method="post"
+            f"{self._base_url}{TANIUMREST_SESSION_URL}",
+            action_result,
+            verify=self._verify,
+            headers=headers,
+            json=data,
+            method="post",
+            record_debug_data=False,
         )
 
         if phantom.is_fail(ret_val):

@@ -4,3 +4,4 @@
 * Escapes run-query widget values before embedding them in JavaScript context-menu handlers.
 * Escapes get-question-results widget values before embedding them in JavaScript context-menu handlers.
 * URL-encodes caller-controlled names before using them in Tanium API path segments.
+* Prevents Tanium session-login response bodies and headers from being recorded in connector debug data.
