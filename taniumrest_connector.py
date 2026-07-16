@@ -19,6 +19,7 @@ import ast
 import json
 import os
 from time import sleep
+from urllib.parse import quote
 
 import encryption_helper
 import phantom.app as phantom
@@ -528,7 +529,7 @@ class TaniumRestConnector(BaseConnector):
             return action_result.get_status()
 
         # Get the package details
-        endpoint = TANIUMREST_GET_PACKAGE.format(package=package_name)
+        endpoint = TANIUMREST_GET_PACKAGE.format(package=quote(str(package_name), safe=""))
         ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
 
         if phantom.is_fail(ret_val):
@@ -619,7 +620,7 @@ class TaniumRestConnector(BaseConnector):
             if group_as_obj:
                 data["target_group"] = group_as_obj
             else:
-                endpoint = TANIUMREST_GET_GROUP.format(group_name=group_name)
+                endpoint = TANIUMREST_GET_GROUP.format(group_name=quote(str(group_name), safe=""))
                 ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
 
                 if phantom.is_fail(ret_val):
@@ -640,7 +641,7 @@ class TaniumRestConnector(BaseConnector):
                 data["target_group"] = {"source_id": group_id, "name": str(group_name)}
 
         # Get the action group details
-        endpoint = TANIUMREST_GET_ACTION_GROUP.format(action_group=action_grp)
+        endpoint = TANIUMREST_GET_ACTION_GROUP.format(action_group=quote(str(action_grp), safe=""))
 
         ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
 
@@ -836,7 +837,7 @@ class TaniumRestConnector(BaseConnector):
         data["expire_seconds"] = timeout_seconds
 
         if group_name:
-            endpoint = TANIUMREST_GET_GROUP.format(group_name=group_name)
+            endpoint = TANIUMREST_GET_GROUP.format(group_name=quote(str(group_name), safe=""))
             ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
 
             if phantom.is_fail(ret_val):
@@ -966,7 +967,7 @@ class TaniumRestConnector(BaseConnector):
             )
 
         if is_saved_question:
-            endpoint = TANIUMREST_GET_SAVED_QUESTION.format(saved_question=query_text)
+            endpoint = TANIUMREST_GET_SAVED_QUESTION.format(saved_question=quote(str(query_text), safe=""))
 
             ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
 
@@ -1219,7 +1220,7 @@ class TaniumRestConnector(BaseConnector):
         """
 
         sensor_name = sensor["name"]
-        endpoint = TANIUMREST_GET_SENSOR_BY_NAME.format(sensor_name=sensor_name)
+        endpoint = TANIUMREST_GET_SENSOR_BY_NAME.format(sensor_name=quote(str(sensor_name), safe=""))
         ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify)
         if phantom.is_fail(ret_val):
             action_result.set_status(phantom.APP_ERROR, "Failed to get sensor definition from Tanium")
@@ -1275,7 +1276,7 @@ class TaniumRestConnector(BaseConnector):
 
         # If a group_name was supplied, validate the group name is valid
         if group_name:
-            endpoint = TANIUMREST_GET_GROUP.format(group_name=group_name)
+            endpoint = TANIUMREST_GET_GROUP.format(group_name=quote(str(group_name), safe=""))
             ret_val, response = self._make_rest_call_helper(action_result, endpoint, verify=self._verify, params=None, headers=None)
 
             if phantom.is_fail(ret_val):
