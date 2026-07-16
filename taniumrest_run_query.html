@@ -129,7 +129,7 @@
                                     <li>
                                       <a class="no-word-wrap"
                                          href="javascript:;"
-                                         onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ item.text }}' }], 0, {{ container.id }}, null, false);">
+                                         onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ item.text|escapejs }}' }], 0, {{ container.id }}, null, false);">
                                         {{ item.text }}
                                         &nbsp;
                                         <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -139,7 +139,7 @@
                                     <li>
                                       <a class="no-word-wrap"
                                          href="javascript:;"
-                                         onclick="context_menu(this, [{'contains': ['hash', 'sha256'], 'value':'{{ item.text }}' }], 0, {{ container.id }}, null, false);">
+                                         onclick="context_menu(this, [{'contains': ['hash', 'sha256'], 'value':'{{ item.text|escapejs }}' }], 0, {{ container.id }}, null, false);">
                                         {{ item.text }}
                                         &nbsp;
                                         <span class="fa fa-caret-down" style="font-size: smaller;"></span>
