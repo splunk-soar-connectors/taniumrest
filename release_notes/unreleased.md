@@ -1,8 +1,1 @@
 **Unreleased**
-
-* Makes TLS certificate verification the default for new and existing Tanium REST assets without an explicit setting.
-* Escapes run-query widget values before embedding them in JavaScript context-menu handlers.
-* Escapes get-question-results widget values before embedding them in JavaScript context-menu handlers.
-* URL-encodes caller-controlled names before using them in Tanium API path segments.
-* Prevents Tanium session-login response bodies and headers from being recorded in connector debug data.
-* Reports execute-action and terminate-process success only after every expected Tanium endpoint returns an explicit successful completion status.
