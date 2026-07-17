@@ -407,7 +407,8 @@ ports used by Splunk SOAR.
   comma-separated values.
 
 - The **find groups** action lists Tanium manual Computer Groups that contain the supplied
-  **computer_names** and/or **ip_addresses**.
+  **computer_names** and/or **ip_addresses**. Use this action when a playbook needs to resolve
+  one or more group IDs before deleting a group.
 
 - The **delete group** action deletes a Tanium manual Computer Group by **group_id**. To delete based on
   hostname or IP address, first run **find groups** and then pass the selected group ID to
