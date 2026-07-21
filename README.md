@@ -554,6 +554,7 @@ action_result.data.\*.data.result_sets.\*.row_count | numeric | | 35 |
 action_result.data.\*.data.result_sets.\*.row_count_machines | numeric | | 53 |
 action_result.data.\*.data.result_sets.\*.rows.\*.cid | numeric | | 0 |
 action_result.data.\*.data.result_sets.\*.rows.\*.data.\*.text | string | | TaniumModuleServer.exe |
+action_result.data.\*.data.result_sets.\*.rows.\*.data.\*.entries.\*.text | string | | TaniumModuleServer.exe |
 action_result.data.\*.data.result_sets.\*.rows.\*.id | numeric | | 58783672 |
 action_result.data.\*.data.result_sets.\*.saved_question_id | numeric | | 0 |
 action_result.data.\*.data.result_sets.\*.seconds_since_issued | numeric | | 0 |
@@ -960,6 +961,7 @@ action_result.data.\*.data.result_sets.\*.row_count | numeric | | 1 |
 action_result.data.\*.data.result_sets.\*.row_count_machines | numeric | | 1 |
 action_result.data.\*.data.result_sets.\*.rows.\*.cid | numeric | | 0 |
 action_result.data.\*.data.result_sets.\*.rows.\*.data.\*.text | string | | 10.1.16.5 |
+action_result.data.\*.data.result_sets.\*.rows.\*.data.\*.entries.\*.text | string | | 10.1.16.5 |
 action_result.data.\*.data.result_sets.\*.rows.\*.id | numeric | | 1306085003 |
 action_result.data.\*.data.result_sets.\*.saved_question_id | numeric | | 0 |
 action_result.data.\*.data.result_sets.\*.seconds_since_issued | numeric | | 0 |

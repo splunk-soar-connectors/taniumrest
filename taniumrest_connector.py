@@ -842,39 +842,29 @@ class TaniumRestConnector(BaseConnector):
         :return: tuple of num_complete, num_incomplete
         """
         self.debug_print(f"Data: {data}")
-        mr_tested = data.get("result_sets", [])[0].get("mr_tested")
-        estimated_total = data.get("result_sets", [])[0].get("estimated_total")
-
         results = data.get("result_sets", [])
-        num_complete = 0
+        rows = results[0].get("rows", []) if results else []
+        num_complete = len(rows)
         num_incomplete = 0
-
-        if len(results) > 0:
-            rows = results[0].get("rows", [])
-            if len(rows) > 0:
-                self.debug_print(f"MR Tested/Estimated Total: {mr_tested}/{estimated_total}")
-                self.debug_print(f"Rows in 'determine_num_results': {json.dumps(rows, indent=2)}")
-
-            for row in rows:
-                row_data_elements = row.get("data", [])
-                incomplete_entry_found = False
-                # data section is a list of lists
-                for row_data_element in row_data_elements:
-                    for results_entry in row_data_element:
-                        results_text = results_entry.get("text", "")
-
-                        if results_text in TANIUMREST_RESULTS_UNAVAILABLE:
-                            incomplete_entry_found = True
-                            num_incomplete += 1
-                            break
-
-                    if incomplete_entry_found:
-                        break
-                else:
-                    num_complete += 1
 
         self.debug_print(f"Returning 'num_complete': {num_complete}, 'num_incomplete': {num_incomplete}")
         return num_complete, num_incomplete
+
+    def _format_question_result(self, response):
+        """Preserve every sensor value while retaining the existing first-value datapath."""
+        data = response.get("data", {})
+        result_sets = data.get("result_sets", [])
+        if not result_sets or not result_sets[0].get("columns"):
+            return response
+
+        for row in result_sets[0].get("rows", []):
+            formatted = []
+            for values in row.get("data", []):
+                first_value = dict(values[0]) if values else {}
+                first_value["entries"] = values
+                formatted.append(first_value)
+            row["data"] = formatted
+        return response
 
     def _question_result(
         self,
@@ -915,24 +905,15 @@ class TaniumRestConnector(BaseConnector):
                     f"mr_tested: {mr_tested} | est_total: {estimated_total} | perc_returned: {percentage_returned} | results_perc: {results_percentage}"
                 )
 
-                # incomplete is when a sensor returns the value 'current results unavailable'
                 num_results_complete, num_results_incomplete = self._determine_num_results_complete(data)
-                if wait_for_results_processing:
-                    num_results = num_results_complete
-                else:
-                    num_results = num_results_complete + num_results_incomplete
+                num_results = num_results_complete + num_results_incomplete
 
-                if wait_for_results_processing and num_results_incomplete > 0:
-                    # doesn't matter what percentage of results are complete, keep going until
-                    # all results are complete or timeout
-                    self.debug_print(f"Number of results incomplete: {num_results_incomplete}")
-                    continue
-                elif return_when_n_results_available and num_results >= return_when_n_results_available:
+                if return_when_n_results_available and num_results >= return_when_n_results_available:
                     self.debug_print(f"'wait_for_results_processing' is {wait_for_results_processing}")
                     self.debug_print(
                         f"Returning results because 'num_results_complete' ({num_results_complete}) >= 'return_when_n_results_available' ({return_when_n_results_available})"
                     )
-                    return response
+                    return self._format_question_result(response)
                 elif wait_for_n_results_available and num_results_complete < wait_for_n_results_available:
                     self.debug_print(f"Waiting for {wait_for_n_results_available} results to finish before completing")
                     continue
@@ -945,15 +926,8 @@ class TaniumRestConnector(BaseConnector):
             else:
                 continue
 
-            # reformat response data to simplify data path
             if data.get("result_sets", [])[0].get("columns"):
-                rows = data.get("result_sets")[0].get("rows")
-                for j in range(len(rows)):
-                    formatted = []
-                    for item in rows[j].get("data"):
-                        formatted.append(item[0])
-                    response["data"]["result_sets"][0]["rows"][j]["data"] = formatted
-                return response
+                return self._format_question_result(response)
 
         else:
             action_result.set_status(
