@@ -15,8 +15,8 @@
     "latest_tested_versions": [
         "Tanium: 7.8.2.1170"
     ],
-    "app_version": "3.0.0",
-    "utctime_updated": "2026-07-17T21:52:31.524060Z",
+    "app_version": "3.0.1",
+    "utctime_updated": "2026-07-21T13:56:58.175430Z",
     "package_name": "phantom_taniumrest",
     "main_module": "taniumrest_connector.py",
     "min_phantom_version": "6.3.0",
