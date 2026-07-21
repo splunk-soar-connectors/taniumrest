@@ -850,6 +850,22 @@ class TaniumRestConnector(BaseConnector):
         self.debug_print(f"Returning 'num_complete': {num_complete}, 'num_incomplete': {num_incomplete}")
         return num_complete, num_incomplete
 
+    def _format_question_result(self, response):
+        """Preserve every sensor value while retaining the existing first-value datapath."""
+        data = response.get("data", {})
+        result_sets = data.get("result_sets", [])
+        if not result_sets or not result_sets[0].get("columns"):
+            return response
+
+        for row in result_sets[0].get("rows", []):
+            formatted = []
+            for values in row.get("data", []):
+                first_value = dict(values[0]) if values else {}
+                first_value["entries"] = values
+                formatted.append(first_value)
+            row["data"] = formatted
+        return response
+
     def _question_result(
         self,
         timeout_seconds,
@@ -897,7 +913,7 @@ class TaniumRestConnector(BaseConnector):
                     self.debug_print(
                         f"Returning results because 'num_results_complete' ({num_results_complete}) >= 'return_when_n_results_available' ({return_when_n_results_available})"
                     )
-                    return response
+                    return self._format_question_result(response)
                 elif wait_for_n_results_available and num_results_complete < wait_for_n_results_available:
                     self.debug_print(f"Waiting for {wait_for_n_results_available} results to finish before completing")
                     continue
@@ -910,15 +926,8 @@ class TaniumRestConnector(BaseConnector):
             else:
                 continue
 
-            # reformat response data to simplify data path
             if data.get("result_sets", [])[0].get("columns"):
-                rows = data.get("result_sets")[0].get("rows")
-                for j in range(len(rows)):
-                    formatted = []
-                    for item in rows[j].get("data"):
-                        formatted.append(item[0])
-                    response["data"]["result_sets"][0]["rows"][j]["data"] = formatted
-                return response
+                return self._format_question_result(response)
 
         else:
             action_result.set_status(

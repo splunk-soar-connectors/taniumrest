@@ -334,6 +334,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.data.result_sets.*.rows.*.data.*.entries.*.text",
+                    "data_type": "string",
+                    "example_values": [
+                        "TaniumModuleServer.exe"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.data.result_sets.*.rows.*.id",
                     "data_type": "numeric",
                     "example_values": [
@@ -2606,6 +2613,13 @@
                 },
                 {
                     "data_path": "action_result.data.*.data.result_sets.*.rows.*.data.*.text",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.1.16.5"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.data.result_sets.*.rows.*.data.*.entries.*.text",
                     "data_type": "string",
                     "example_values": [
                         "10.1.16.5"
