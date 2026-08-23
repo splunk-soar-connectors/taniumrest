@@ -4,19 +4,9 @@ The latest tested Tanium version is 7.8.2.1170.
 
 ## Playbook Backward Compatibility
 
-- The existing action parameters have been modified for the action given below. Hence, it is
-  requested to the end-user to please update their existing playbooks by re-inserting | modifying
-  | deleting the corresponding action blocks or by providing appropriate values to these action
-  parameters to ensure the correct functioning of the playbooks created on the earlier versions of
+- The deprecated **wait_for_results_processing** parameter has been removed from the **run query**
+  action. Update existing playbooks that still pass this parameter before using this version of
   the app.
-
-  - Run Query - 3 new action parameters 'wait_for_results_processing',
-    'return_when_n_results_available', 'wait_for_n_results_available' are added which helps to
-    limit the data fetched from the Tanium server.
-
-- New action 'Get Question Results' has been added. Hence, it is requested to the end-user to
-  please update their existing playbooks by inserting the corresponding action blocks for this
-  action on the earlier versions of the app.
 
 ## Port Information
 
@@ -204,12 +194,6 @@ ports used by Splunk SOAR.
 - Parameter Information:\
   These parameters modify questions asked using one of the two modes of operation specified below.
 
-  - **wait_for_results_processing:** Some long-running sensors return intermediate results with
-    the contents "results currently unavailable", and then [later the sensor fills in the
-    results](https://docs.tanium.com/interact/interact/results.html#:~:text=Results%20Currently%20Unavailable)
-    . This option instructs the App to wait until the results are returned to Tanium and only
-    after that return the final results. The waiting is still time bounded by the
-    **timeout_seconds** setting.
   - **return_when_n_results_available:** When set, the Tanium REST App will return results to
     the playbook as soon as \`N\` results are returned, even if the **Consider question results
     complete at (% out of 100)** percentage has not been met. This is useful in scenarios where
