@@ -1,6 +1,1 @@
 **Unreleased**
-
-* Migrate app to use `soar_sdk` framework and add `make request` action
-* Added `wait_for_completion` to `execute action` and `terminate process`; it defaults to `true` so these actions continue waiting for Tanium endpoint completion before returning success unless explicitly disabled.
-* Added a compatibility note to `terminate process`: this action uses the same Tanium saved-action execution path as `execute action`, can be performed using `execute action`, and will be removed in a future release.
-* Removed the deprecated `wait_for_results_processing` parameter from `run query`; polling no longer uses sensor cell text to decide whether results are complete.
