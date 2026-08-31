@@ -1,0 +1,117 @@
+<!--
+ Copyright (c) 2026 Splunk Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+{% extends 'widgets/widget_template.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block widget_content %}
+  <style>
+  .taniumrest a:hover { text-decoration: underline; }
+  .taniumrest .wf-table-horizontal { border: 1px solid; font-size: 12px; }
+  .taniumrest .wf-table-horizontal th {
+    text-align: center; border: 1px solid; text-transform: uppercase;
+    font-weight: normal; padding: 5px;
+  }
+  .taniumrest .wf-table-horizontal td { border: 1px solid; padding: 5px; padding-left: 4px; }
+  .taniumrest .no-word-wrap { white-space: nowrap; }
+  .taniumrest .wf-h4-style { font-size: 16px; }
+  .taniumrest .panel-collapse { overflow-x: auto; }
+  </style>
+  <div class="taniumrest"
+       style="overflow: auto;
+              width: 100%;
+              height: 100%;
+              padding-left: 10px;
+              padding-right: 10px">
+    {% if not result_sets %}
+      <h4 class="wf-h4-style">No data found</h4>
+    {% else %}
+      {% for rs in result_sets %}
+        {% if rs.columns or rs.rows %}
+          <div class="results">
+            <h4 class="wf-h4-style">Results</h4>
+            <table id="result-table-{{ this_widget_uuid }}-{{ loop.index }}"
+                   class="wf-table-horizontal datatable">
+              <thead>
+                <tr>
+                  {% for col in rs.columns %}<th>{{ col.name }}</th>{% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in rs.rows %}
+                  <tr>
+                    {% for cell in row.data %}
+                      {% set col = rs.columns[loop.index0] if rs.columns and loop.index0 < rs.columns|length else none %}
+                      <td>
+                        <ul style="list-style: none; margin: 0; padding: 0;">
+                          {% set entries = cell.entries if cell.entries else [cell] %}
+                          {% for entry in entries %}
+                            {% if col and col.name|lower == "user name" %}
+                              <li>
+                                <a class="no-word-wrap"
+                                   href="javascript:;"
+                                   onclick="context_menu(this, [{'contains': ['user name'], 'value': {{ entry.text|to_json }}}], 0, {{ container }}, null, false);">
+                                  {{ entry.text }}
+                                  &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                                </a>
+                              </li>
+                            {% elif col and col.name|lower == "hash" %}
+                              <li>
+                                <a class="no-word-wrap"
+                                   href="javascript:;"
+                                   onclick="context_menu(this, [{'contains': ['hash', 'sha256'], 'value': {{ entry.text|to_json }}}], 0, {{ container }}, null, false);">
+                                  {{ entry.text }}
+                                  &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                                </a>
+                              </li>
+                            {% else %}
+                              <li>{{ entry.text }}</li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      </td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <br>
+        {% else %}
+          <h4 class="wf-h4-style">No data found</h4>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+  <script>
+  $.extend(true, $.fn.dataTable.defaults, {
+    searching: false,
+    bLengthChange: false,
+    ordering: true,
+    language: {
+      paginate: {
+        previous: "<i class='fa fa-angle-left fa-lg'></i>",
+        next: "<i class='fa fa-angle-right fa-lg'></i>"
+      }
+    },
+    dom: '<"top">rt<"bottom"p><"clear">',
+    drawCallback: function (settings) {
+      var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+      pagination.toggle(this.api().page.info().pages > 1);
+    }
+  });
+  $.fn.DataTable.ext.pager.numbers_length = 5;
+  $('[data-uuid="{{ this_widget_uuid }}"]').find('.datatable').DataTable({ order: [] });
+  </script>
+{% endblock %}
