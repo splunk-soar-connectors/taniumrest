@@ -1,4 +1,1 @@
 **Unreleased**
-
-* Fix intermittent SOAR authentication timeouts by updating the Splunk SOAR SDK to 7.1.2. [SOARHELP-7374]
-* Preserve Safe Mode eligibility for read-only query actions when upgrading from SDK 3.
