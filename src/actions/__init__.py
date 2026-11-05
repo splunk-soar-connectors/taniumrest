@@ -60,6 +60,7 @@ def register_actions(app: App) -> App:
     )
     app.register_action(
         action=find_groups,
+        read_only=True,
         description="Find Tanium manual computer groups matching hostnames or IP addresses",
         action_type="investigate",
         render_as="table",
@@ -67,6 +68,7 @@ def register_actions(app: App) -> App:
     )
     app.register_action(
         action=get_question_results,
+        read_only=True,
         description="Return the results for an already asked question",
         action_type="investigate",
         view_handler=get_question_results_view,
@@ -75,6 +77,7 @@ def register_actions(app: App) -> App:
     )
     app.register_action(
         action=list_processes,
+        read_only=True,
         description="List the running processes of the devices registered on the Tanium server",
         action_type="investigate",
         verbose="This action requires specifying a sensor to be used to list processes. A standard Tanium sensor, 'Process Details' is used by default but a different sensor can be specified instead. Note that the 'Process Details' sensor may not be available on all Tanium deployments. Note that at this time this action only supports limiting the query to specified computer groups, but a generic Run Query action can be constructed to query an in individual computer's processes. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.",
@@ -84,6 +87,7 @@ def register_actions(app: App) -> App:
     )
     app.register_action(
         action=list_questions,
+        read_only=True,
         description="Retrieves either a history of the most recent questions or a list of saved questions",
         action_type="investigate",
         verbose="If the <b>list_saved_questions</b> parameter is true, this action will return a list of saved questions. If the flag is not set, this action will return the history of recently asked questions. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call.",
@@ -92,6 +96,7 @@ def register_actions(app: App) -> App:
     )
     app.register_action(
         action=parse_question,
+        read_only=True,
         description="Parses the supplied text into a valid Tanium query string",
         action_type="investigate",
         verbose="<p>When asked a non-saved question in the <b>query_text</b> parameter, it will parse the given query and give a list of suggestions that are related to it.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.</p>",
@@ -100,6 +105,7 @@ def register_actions(app: App) -> App:
     )
     app.register_action(
         action=run_query,
+        read_only=True,
         description="Run a search query on the devices registered on the Tanium server",
         action_type="investigate",
         verbose="See top-level app documentation for example parameters. For manual questions only, the action waits for <b>timeout_seconds</b> provided by the user in intervals of 5 seconds to fetch the results. The action is a success as soon as the results are retrieved or else it will timeout and fail. As pagination is not implemented, the result(s) of the action will be the result(s) that are fetched in a single API call. If an endpoint takes longer than usual to evaluate a sensor, it might initially supply the answer[current results unavailable] to the answer message that it passes along the linear chain and ultimately to the Tanium Server. However, the sensor process continues on the endpoint after supplying that initial answer and, upon completing the process, the endpoint sends its updated answer. Reference Link: ~https://docs.tanium.com/interact/interact/results.html.",
